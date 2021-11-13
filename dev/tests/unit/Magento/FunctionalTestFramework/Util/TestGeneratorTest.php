@@ -116,7 +116,7 @@ class TestGeneratorTest extends MagentoTestCase
      *
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
      */
-    public function testFilter()
+    public function testSeverityFilter()
     {
         // Mock filters for TestGenerator
         AspectMock::double(
@@ -159,5 +159,105 @@ class TestGeneratorTest extends MagentoTestCase
         // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * Tests that TestGenerator createAllTestFiles correctly filters based on group included.
+     *
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testIncludeGroupFilter()
+    {
+        // Mock filters for TestGenerator
+        AspectMock::double(
+            MftfApplicationConfig::class,
+            ['getFilterList' => new FilterList(['includeGroup' => ["someGroupValue"]])]
+        );
+
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => $actionInput
+        ]);
+
+        $annotation1 = ['group' => ['someGroupValue']];
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+        $test1 = new TestObject(
+            "test1",
+            ["fakeAction" => $actionObject],
+            $annotation1,
+            [],
+            "filename"
+        );
+        $test2 = new TestObject(
+            "test2",
+            ["fakeAction" => $actionObject],
+            $annotation2,
+            [],
+            "filename"
+        );
+        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $test1, "test2" => $test2]]);
+
+        // Mock createCestFile to return name of tests that testGenerator tried to create
+        $generatedTests = [];
+        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests) {
+            $generatedTests[$arg2] = true;
+        }]);
+
+        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $test1, "test2" => $test2]);
+        $testGeneratorObject->createAllTestFiles(null, []);
+
+        // Ensure Test1 was Generated but not Test 2
+        $this->assertArrayHasKey('test1Cest', $generatedTests);
+        $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * Tests that TestGenerator createAllTestFiles correctly filters based on group not included.
+     *
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testExcludeGroupFilter()
+    {
+        // Mock filters for TestGenerator
+        AspectMock::double(
+            MftfApplicationConfig::class,
+            ['getFilterList' => new FilterList(['excludeGroup' => ['someGroupValue']])]
+        );
+
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => $actionInput
+        ]);
+
+        $annotation1 = ['group' => ['someGroupValue']];
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+        $test1 = new TestObject(
+            "test1",
+            ["fakeAction" => $actionObject],
+            $annotation1,
+            [],
+            "filename"
+        );
+        $test2 = new TestObject(
+            "test2",
+            ["fakeAction" => $actionObject],
+            $annotation2,
+            [],
+            "filename"
+        );
+        AspectMock::double(TestGenerator::class, ['loadAllTestObjects' => ["sampleTest" => $test1, "test2" => $test2]]);
+
+        // Mock createCestFile to return name of tests that testGenerator tried to create
+        $generatedTests = [];
+        AspectMock::double(TestGenerator::class, ['createCestFile' => function ($arg1, $arg2) use (&$generatedTests) {
+            $generatedTests[$arg2] = true;
+        }]);
+
+        $testGeneratorObject = TestGenerator::getInstance("", ["sampleTest" => $test1, "test2" => $test2]);
+        $testGeneratorObject->createAllTestFiles(null, []);
+
+        // Ensure Test2 was Generated but not Test 1
+        $this->assertArrayNotHasKey('test1Cest', $generatedTests);
+        $this->assertArrayHasKey('test2Cest', $generatedTests);
     }
 }
