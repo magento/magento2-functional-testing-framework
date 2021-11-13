@@ -162,7 +162,7 @@ class TestGeneratorTest extends MagentoTestCase
      * @return void
      * @throws TestReferenceException
      */
-    public function testFilter(): void
+    public function testSeverityFilter(): void
     {
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
         $fileList = new FilterList(['severity' => ['CRITICAL']]);
@@ -219,6 +219,136 @@ class TestGeneratorTest extends MagentoTestCase
         // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * Tests that TestGenerator createAllTestFiles correctly filters based on group.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testIncludeGroupFilter(): void
+    {
+        $mockConfig = $this->createMock(MftfApplicationConfig::class);
+        $fileList = new FilterList(['includeGroup' => ['someGroupValue']]);
+        $mockConfig
+            ->method('getFilterList')
+            ->willReturn($fileList);
+
+        $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
+        $property->setAccessible(true);
+        $property->setValue($mockConfig);
+
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => $actionInput
+        ]);
+
+        $annotation1 = ['group' => ['someGroupValue']];
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+        $test1 = new TestObject(
+            'test1',
+            ['fakeAction' => $actionObject],
+            $annotation1,
+            [],
+            'filename'
+        );
+        $test2 = new TestObject(
+            'test2',
+            ['fakeAction' => $actionObject],
+            $annotation2,
+            [],
+            'filename'
+        );
+
+        // Mock createCestFile to return name of tests that testGenerator tried to create
+        $generatedTests = [];
+        $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
+        $cestFileCreatorUtil
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function ($filename) use (&$generatedTests) {
+                        $generatedTests[$filename] = true;
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($cestFileCreatorUtil);
+
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
+        $testGeneratorObject->createAllTestFiles();
+
+        // Ensure Test1 was Generated but not Test 2
+        $this->assertArrayHasKey('test1Cest', $generatedTests);
+        $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * Tests that TestGenerator createAllTestFiles correctly filters based on group not included.
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function testExcludeGroupFilter(): void
+    {
+        $mockConfig = $this->createMock(MftfApplicationConfig::class);
+        $fileList = new FilterList(['excludeGroup' => ['someGroupValue']]);
+        $mockConfig
+            ->method('getFilterList')
+            ->willReturn($fileList);
+
+        $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
+        $property->setAccessible(true);
+        $property->setValue($mockConfig);
+
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => $actionInput
+        ]);
+
+        $annotation1 = ['group' => ['someGroupValue']];
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+        $test1 = new TestObject(
+            'test1',
+            ['fakeAction' => $actionObject],
+            $annotation1,
+            [],
+            'filename'
+        );
+        $test2 = new TestObject(
+            'test2',
+            ['fakeAction' => $actionObject],
+            $annotation2,
+            [],
+            'filename'
+        );
+
+        // Mock createCestFile to return name of tests that testGenerator tried to create
+        $generatedTests = [];
+        $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
+        $cestFileCreatorUtil
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function ($filename) use (&$generatedTests) {
+                        $generatedTests[$filename] = true;
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
+        $property->setAccessible(true);
+        $property->setValue($cestFileCreatorUtil);
+
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
+        $testGeneratorObject->createAllTestFiles();
+
+        // Ensure Test2 was Generated but not Test 1
+        $this->assertArrayNotHasKey('test1Cest', $generatedTests);
+        $this->assertArrayHasKey('test2Cest', $generatedTests);
     }
 
     /**
