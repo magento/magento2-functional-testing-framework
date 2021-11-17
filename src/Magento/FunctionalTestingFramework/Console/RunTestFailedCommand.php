@@ -59,6 +59,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
+        $failedTestList = $this->readFailedTestFile($this->testsFailedFile);
+
         $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
             "_generated" .
             DIRECTORY_SEPARATOR .
@@ -67,6 +71,9 @@ class RunTestFailedCommand extends BaseGenerateCommand
         $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
         for ($i = 0; $i < count($testManifestList); $i++) {
+            if (in_array($testManifestList[$i], $failedTestList) === false) {
+                continue;
+            }
             if ($this->pauseEnabled()) {
                 $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . $testManifestList[$i] . ' --debug ';
                 if ($i !== count($testManifestList) - 1) {
@@ -86,6 +93,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                         $output->write($buffer);
                     }
                 ));
+                $process->__destruct();
             }
 
             if (file_exists($this->testsFailedFile)) {
@@ -121,7 +129,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function readFailedTestFile($filePath)
     {
-        return file($filePath, FILE_IGNORE_NEW_LINES);
+        $failedTests = file($filePath, FILE_IGNORE_NEW_LINES);
+        if ($failedTests !== false) {
+            foreach ($failedTests as $key => $failedTest) {
+                list($filePath) = explode(":", $failedTest);
+                $failedTests[$key] = $filePath;
+            }
+        }
+        return $failedTests;
     }
 
     /**
