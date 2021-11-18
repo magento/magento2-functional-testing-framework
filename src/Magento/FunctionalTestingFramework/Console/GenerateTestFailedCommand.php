@@ -74,7 +74,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
         $testConfiguration = $this->getFailedTestList();
 
         if ($testConfiguration === null) {
-            // no failed tests found, run is a success
+            // No failed tests found, no tests generated
             return 0;
         }
 
@@ -89,7 +89,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
         ];
         $command->run(new ArrayInput($args), $output);
         $output->writeln("Test Failed Generated, now run:failed command");
-        return 1;
+        return 0;
     }
 
     /**
