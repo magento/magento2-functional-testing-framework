@@ -39,14 +39,14 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite unit --coverage-clover clover.xml
 
-      - name: Monitor coverage
-        if: github.event_name == 'pull_request'
-        uses: slavcodev/coverage-monitor-action@1.2.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          clover_file: "clover.xml"
-          threshold_alert: 10
-          threshold_warning: 20
+#      - name: Monitor coverage
+#        if: github.event_name == 'pull_request'
+#        uses: slavcodev/coverage-monitor-action@1.2.0
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          clover_file: "clover.xml"
+#          threshold_alert: 10
+#          threshold_warning: 20
 
   verification-tests:
     name: Verification Tests
