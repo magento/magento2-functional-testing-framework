@@ -54,6 +54,11 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $returnCode = $this->executeGenerateFailed($input, $output);
+        if ($returnCode !== 0) {
+            return $returnCode;
+        }
+
         $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
         $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
 
@@ -85,6 +90,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                     }
                 ));
                 $process->__destruct();
+                unset($process);
             }
 
             if (file_exists($this->testsFailedFile)) {
@@ -98,6 +104,35 @@ class RunTestFailedCommand extends BaseGenerateCommand
         foreach ($this->failedList as $test) {
             $this->writeFailedTestToFile($test, $this->testsFailedFile);
         }
+
+        return $returnCode;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @return mixed
+     */
+    private function executeGenerateFailed(InputInterface $input, OutputInterface $output)
+    {
+        $returnCode = 0;
+        $binMftf = PROJECT_ROOT . '/vendor/bin/mftf';
+        if (file_exists($binMftf) === false) {
+            $binMftf = PROJECT_ROOT . '/bin/mftf';
+        }
+        $forceGenerate = $input->getOption('force') ? ' -f' : '';
+        $mftfCommand = realpath($binMftf) . ' generate:failed' . $forceGenerate;
+
+        $process = new Process($mftfCommand);
+        $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
+        $returnCode = max($returnCode, $process->run(
+            function ($type, $buffer) use ($output) {
+                $output->write($buffer);
+            }
+        ));
+        $process->__destruct();
+        unset($process);
 
         return $returnCode;
     }
