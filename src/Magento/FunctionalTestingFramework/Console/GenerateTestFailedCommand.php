@@ -75,6 +75,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
 
         if ($testConfiguration === null) {
             // No failed tests found, no tests generated
+            $this->removeGeneratedDirectory($output, $verbose);
             return 0;
         }
 

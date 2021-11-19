@@ -68,6 +68,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
             "testManifest.txt";
 
         $testManifestList = $this->readTestManifestFile();
+        if ($testManifestList === false) {
+            // If there is no test manifest file then we have nothing to execute.
+            return 0;
+        }
         $returnCode = 0;
         for ($i = 0; $i < count($testManifestList); $i++) {
             if ($this->pauseEnabled()) {
@@ -150,7 +154,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function readTestManifestFile()
     {
-        return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
+        if (file_exists($this->testsManifestFile)) {
+            return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
+        }
+        return false;
     }
 
     /**
