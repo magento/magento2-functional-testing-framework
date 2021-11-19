@@ -109,8 +109,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
     }
 
     /**
+     * Execute generate failed tests command as a separate process, so that we can kill it and avoid high memory usage.
+     *
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return mixed
+     * @return integer
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function executeGenerateFailed(InputInterface $input, OutputInterface $output)
     {
