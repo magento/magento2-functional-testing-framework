@@ -20,3 +20,6 @@ dev/tests/docs/*
 dev/tests/_output
 dev/tests/functional.suite.yml
 /v2/
+dev/.credentials.example
+dev/tests/.phpunit.result.cache
+dev/tests/verification/TestModule/Test/testFile.xml

@@ -19,16 +19,6 @@ use Symfony\Component\Console\Input\InputOption;
 class RunTestFailedCommand extends BaseGenerateCommand
 {
     /**
-     * Default Test group to signify not in suite
-     */
-    const DEFAULT_TEST_GROUP = 'default';
-
-    /**
-     * @var string
-     */
-    private $testsReRunFile;
-
-    /**
      * @var string
      */
     private $testsManifestFile;
@@ -64,46 +54,24 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $returnCode = $this->executeGenerateFailed($input, $output);
+        if ($returnCode !== 0) {
+            return $returnCode;
+        }
+
         $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
         $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
+
         $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
             "_generated" .
             DIRECTORY_SEPARATOR .
             "testManifest.txt";
 
-        $force = $input->getOption('force');
-        $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
-        $allowSkipped = $input->getOption('allow-skipped');
-        $verbose = $output->isVerbose();
-
-        // Create Mftf Configuration
-        MftfApplicationConfig::create(
-            $force,
-            MftfApplicationConfig::EXECUTION_PHASE,
-            $verbose,
-            $debug,
-            $allowSkipped
-        );
-
-        $testConfiguration = $this->getFailedTestList();
-
-        if ($testConfiguration === null) {
-            // no failed tests found, run is a success
+        $testManifestList = $this->readTestManifestFile();
+        if ($testManifestList === false) {
+            // If there is no test manifest file then we have nothing to execute.
             return 0;
         }
-
-        $command = $this->getApplication()->find('generate:tests');
-        $args = [
-            '--tests' => $testConfiguration,
-            '--force' => $force,
-            '--remove' => true,
-            '--debug' => $debug,
-            '--allow-skipped' => $allowSkipped,
-            '-v' => $verbose
-        ];
-        $command->run(new ArrayInput($args), $output);
-
-        $testManifestList = $this->readTestManifestFile();
         $returnCode = 0;
         for ($i = 0; $i < count($testManifestList); $i++) {
             if ($this->pauseEnabled()) {
@@ -125,6 +93,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
                         $output->write($buffer);
                     }
                 ));
+                $process->__destruct();
+                unset($process);
             }
 
             if (file_exists($this->testsFailedFile)) {
@@ -143,64 +113,38 @@ class RunTestFailedCommand extends BaseGenerateCommand
     }
 
     /**
-     * Returns a json string of tests that failed on the last run
+     * Execute generate failed tests command as a separate process, so that we can kill it and avoid high memory usage.
      *
-     * @return string
-     */
-    private function getFailedTestList()
-    {
-        $failedTestDetails = ['tests' => [], 'suites' => []];
-
-        if (realpath($this->testsFailedFile)) {
-            $testList = $this->readFailedTestFile($this->testsFailedFile);
-
-            foreach ($testList as $test) {
-                if (!empty($test)) {
-                    $this->writeFailedTestToFile($test, $this->testsReRunFile);
-                    $testInfo = explode(DIRECTORY_SEPARATOR, $test);
-                    $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
-                    $suiteName = $testInfo[count($testInfo) - 2];
-
-                    if ($suiteName === self::DEFAULT_TEST_GROUP) {
-                        array_push($failedTestDetails['tests'], $testName);
-                    } else {
-                        $suiteName = $this->sanitizeSuiteName($suiteName);
-                        $failedTestDetails['suites'] = array_merge_recursive(
-                            $failedTestDetails['suites'],
-                            [$suiteName => [$testName]]
-                        );
-                    }
-                }
-            }
-        }
-        if (empty($failedTestDetails['tests']) & empty($failedTestDetails['suites'])) {
-            return null;
-        }
-        if (empty($failedTestDetails['tests'])) {
-            $failedTestDetails['tests'] = null;
-        }
-        if (empty($failedTestDetails['suites'])) {
-            $failedTestDetails['suites'] = null;
-        }
-        $testConfigurationJson = json_encode($failedTestDetails);
-        return $testConfigurationJson;
-    }
-
-    /**
-     * Trim potential suite_parallel_0_G to suite_parallel
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @return integer
      *
-     * @param string $suiteName
-     * @return string
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function sanitizeSuiteName($suiteName)
+    private function executeGenerateFailed(InputInterface $input, OutputInterface $output)
     {
-        $suiteNameArray = explode("_", $suiteName);
-        if (array_pop($suiteNameArray) === 'G') {
-            if (is_numeric(array_pop($suiteNameArray))) {
-                $suiteName = implode("_", $suiteNameArray);
-            }
+        $returnCode = 0;
+        $binMftf = PROJECT_ROOT . '/vendor/bin/mftf';
+        if (file_exists($binMftf) === false) {
+            $binMftf = PROJECT_ROOT . '/bin/mftf';
         }
-        return $suiteName;
+        $forceGenerate = $input->getOption('force') ? ' -f' : '';
+        $mftfCommand = realpath($binMftf) . ' generate:failed' . $forceGenerate;
+
+        $process = new Process($mftfCommand);
+        $process->setWorkingDirectory(TESTS_BP);
+        $process->setIdleTimeout(600);
+        $process->setTimeout(0);
+        $returnCode = max($returnCode, $process->run(
+            function ($type, $buffer) use ($output) {
+                $output->write($buffer);
+            }
+        ));
+        $process->__destruct();
+        unset($process);
+
+        return $returnCode;
     }
 
     /**
@@ -210,7 +154,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     private function readTestManifestFile()
     {
-        return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
+        if (file_exists($this->testsManifestFile)) {
+            return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
+        }
+        return false;
     }
 
     /**

@@ -36,6 +36,7 @@ class CommandList implements CommandListInterface
             'generate:tests' => new GenerateTestsCommand(),
             'generate:urn-catalog' => new GenerateDevUrnCommand(),
             'reset' => new CleanProjectCommand(),
+            'generate:failed' => new GenerateTestFailedCommand(),
             'run:failed' => new RunTestFailedCommand(),
             'run:group' => new RunTestGroupCommand(),
             'run:manifest' => new RunManifestCommand(),
