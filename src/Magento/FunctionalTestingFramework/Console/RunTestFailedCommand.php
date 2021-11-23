@@ -18,10 +18,12 @@ use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
+    const DEFAULT_TEST_GROUP = 'default';
+
     /**
      * @var string
      */
-    private $testsManifestFile;
+    private $testsReRunFile = "";
 
     /**
      * @var array
@@ -54,22 +56,14 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $returnCode = $this->executeGenerateFailed($input, $output);
-        if ($returnCode !== 0) {
-            return $returnCode;
-        }
-
         $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
         $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
 
-        $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
-            "_generated" .
-            DIRECTORY_SEPARATOR .
-            "testManifest.txt";
+        $failedTests = $this->readFailedTestFile($this->testsFailedFile);
+        $testManifestList = $this->filterTestsForExecution($failedTests);
 
-        $testManifestList = $this->readTestManifestFile();
-        if ($testManifestList === false) {
-            // If there is no test manifest file then we have nothing to execute.
+        if (empty($testManifestList)) {
+            // If there is no tests in manifest then we have nothing to execute.
             return 0;
         }
         $returnCode = 0;
@@ -113,51 +107,31 @@ class RunTestFailedCommand extends BaseGenerateCommand
     }
 
     /**
-     * Execute generate failed tests command as a separate process, so that we can kill it and avoid high memory usage.
+     * Returns a list of tests/suites which should have an additional run.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @return integer
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @param $failedTests
+     * @return array
      */
-    private function executeGenerateFailed(InputInterface $input, OutputInterface $output)
+    private function filterTestsForExecution($failedTests): array
     {
-        $returnCode = 0;
-        $binMftf = PROJECT_ROOT . '/vendor/bin/mftf';
-        if (file_exists($binMftf) === false) {
-            $binMftf = PROJECT_ROOT . '/bin/mftf';
-        }
-        $forceGenerate = $input->getOption('force') ? ' -f' : '';
-        $mftfCommand = realpath($binMftf) . ' generate:failed' . $forceGenerate;
+        $testsOrGroupsToRerun = [];
 
-        $process = new Process($mftfCommand);
-        $process->setWorkingDirectory(TESTS_BP);
-        $process->setIdleTimeout(600);
-        $process->setTimeout(0);
-        $returnCode = max($returnCode, $process->run(
-            function ($type, $buffer) use ($output) {
-                $output->write($buffer);
+        foreach ($failedTests as $test) {
+            if (!empty($test)) {
+                $this->writeFailedTestToFile($test, $this->testsReRunFile);
+                $testInfo = explode(DIRECTORY_SEPARATOR, $test);
+                $suiteName = $testInfo[count($testInfo) - 2];
+                list($testPath) = explode(":", $test);
+
+                if ($suiteName === self::DEFAULT_TEST_GROUP) {
+                    $testsOrGroupsToRerun[] = $testPath;
+                } else {
+                    $testsOrGroupsToRerun[] = "-g " . $suiteName;
+                }
             }
-        ));
-        $process->__destruct();
-        unset($process);
-
-        return $returnCode;
-    }
-
-    /**
-     * Returns an array of run commands read from the manifest file created post generation
-     *
-     * @return array|boolean
-     */
-    private function readTestManifestFile()
-    {
-        if (file_exists($this->testsManifestFile)) {
-            return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
         }
-        return false;
+
+        return $testsOrGroupsToRerun;
     }
 
     /**

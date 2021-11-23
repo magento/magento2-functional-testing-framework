@@ -1801,7 +1801,8 @@ class TestGenerator
             } else {
                 $skipString .= "No issues have been specified.";
             }
-            $steps = "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
+            $steps = "\t\t" . 'unlink(__FILE__);' . "\n";
+            $steps .= "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
             $dependencies .= ', \Codeception\Scenario $scenario';
         }
 
@@ -1809,6 +1810,13 @@ class TestGenerator
         $testPhp .= sprintf("\tpublic function %s(%s)\n", $testName, $dependencies);
         $testPhp .= "\t{\n";
         $testPhp .= $steps;
+        $testPhp .= "\t}\n";
+
+        $testPhp .= PHP_EOL;
+        $testPhp .= sprintf("\tpublic function _passed(%s)\n", $dependencies);
+        $testPhp .= "\t{\n";
+        $testPhp .= "\t\t// Deleting itself so that we can rerun only failed tests." . PHP_EOL;
+        $testPhp .= "\t\tunlink(__FILE__);" . PHP_EOL;
         $testPhp .= "\t}\n";
 
         return $testPhp;
