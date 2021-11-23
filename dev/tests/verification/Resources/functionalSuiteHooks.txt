@@ -208,12 +208,17 @@ class functionalSuiteHooks extends \Codeception\GroupObject
     private function getTestCount()
     {
         $config = $this->getGlobalConfig();
-        if (empty($config['groups']) && empty($config['groups'][self::$group])) {
+        if (empty($config['groups']) || empty($config['groups'][self::$group])) {
             return $this->testCount;
         }
         $pathToGroupDir = TESTS_BP . DIRECTORY_SEPARATOR . array_first($config['groups'][self::$group]);
-        $pathToGroupCests = $pathToGroupDir . DIRECTORY_SEPARATOR . "*Cest.php";
+        $pathToGroupCests = $pathToGroupDir . "*Cest.php";
 
-        return count(glob($pathToGroupCests));
+        $files = glob($pathToGroupCests);
+        if (is_array($files)) {
+            return count($files);
+        }
+
+        return $this->testCount;
     }
 }
