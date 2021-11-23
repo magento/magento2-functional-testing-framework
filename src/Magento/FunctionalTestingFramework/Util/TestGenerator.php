@@ -1812,12 +1812,14 @@ class TestGenerator
         $testPhp .= $steps;
         $testPhp .= "\t}\n";
 
-        $testPhp .= PHP_EOL;
-        $testPhp .= sprintf("\tpublic function _passed(%s)\n", $dependencies);
-        $testPhp .= "\t{\n";
-        $testPhp .= "\t\t// Deleting itself so that we can rerun only failed tests." . PHP_EOL;
-        $testPhp .= "\t\tunlink(__FILE__);" . PHP_EOL;
-        $testPhp .= "\t}\n";
+        if (!isset($skipString)) {
+            $testPhp .= PHP_EOL;
+            $testPhp .= sprintf("\tpublic function _passed(%s)\n", $dependencies);
+            $testPhp .= "\t{\n";
+            $testPhp .= "\t\t// Deleting itself so that we can rerun only failed tests." . PHP_EOL;
+            $testPhp .= "\t\tunlink(__FILE__);" . PHP_EOL;
+            $testPhp .= "\t}\n";
+        }
 
         return $testPhp;
     }
