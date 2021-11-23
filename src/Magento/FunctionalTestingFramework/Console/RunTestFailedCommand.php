@@ -23,7 +23,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * @var string
      */
-    private $testsReRunFile = "";
+    private $testsReRunFile = "rerun_tests";
 
     /**
      * @var array
