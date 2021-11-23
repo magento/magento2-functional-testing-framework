@@ -109,10 +109,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * Returns a list of tests/suites which should have an additional run.
      *
-     * @param string $failedTests
+     * @param array $failedTests
      * @return array
      */
-    private function filterTestsForExecution(string $failedTests): array
+    private function filterTestsForExecution(array $failedTests): array
     {
         $testsOrGroupsToRerun = [];
 
@@ -126,7 +126,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 if ($suiteName === self::DEFAULT_TEST_GROUP) {
                     $testsOrGroupsToRerun[] = $testPath;
                 } else {
-                    $testsOrGroupsToRerun[] = "-g " . $suiteName;
+                    $group = "-g " . $suiteName;
+                    if (!in_array($group, $testsOrGroupsToRerun)) {
+                        $testsOrGroupsToRerun[] = $group;
+                    }
                 }
             }
         }
@@ -138,11 +141,16 @@ class RunTestFailedCommand extends BaseGenerateCommand
      * Returns an array of tests read from the failed test file in _output
      *
      * @param string $filePath
-     * @return array|boolean
+     * @return array
      */
-    private function readFailedTestFile($filePath)
+    private function readFailedTestFile(string $filePath): array
     {
-        return file($filePath, FILE_IGNORE_NEW_LINES);
+        $data = [];
+        if (file_exists($filePath)) {
+            $file = file($filePath, FILE_IGNORE_NEW_LINES);
+            $data = $file === false ? [] : $file;
+        }
+        return $data;
     }
 
     /**
