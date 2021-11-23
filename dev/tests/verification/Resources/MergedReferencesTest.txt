@@ -60,4 +60,10 @@ class MergedReferencesTestCest
 		$I->fillField("#merge", "merged"); // stepKey: fillField1
 		$I->fillField("#newElement", "newField"); // stepKey: fillField2
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

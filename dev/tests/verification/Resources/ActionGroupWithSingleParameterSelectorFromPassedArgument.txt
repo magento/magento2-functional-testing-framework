@@ -32,4 +32,10 @@ class ActionGroupWithSingleParameterSelectorFromPassedArgumentCest
 		$I->see("Doe", "#element .John" . msq("UniquePerson")); // stepKey: seeLastNameActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

@@ -43,4 +43,10 @@ class DataActionsTestCest
 		$I->updateEntity("createdInBefore", "test", "entity",[]); // stepKey: updatedDataOutOfScope
 		$I->deleteEntity("createdInBefore", "test"); // stepKey: deleteDataOutOfScope
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

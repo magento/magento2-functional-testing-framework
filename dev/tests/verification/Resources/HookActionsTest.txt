@@ -57,4 +57,10 @@ class HookActionsTestCest
 	public function HookActionsTest(AcceptanceTester $I)
 	{
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

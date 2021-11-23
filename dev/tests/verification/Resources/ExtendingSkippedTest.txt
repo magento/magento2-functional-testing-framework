@@ -32,4 +32,10 @@ class ExtendingSkippedTestCest
 	{
 		$scenario->skip("This test is skipped due to the following issues:\nParentTestIsSkipped");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

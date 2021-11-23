@@ -63,4 +63,10 @@ class SectionReplacementTestCest
 		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,'')]"); // stepKey: selectorParamWithEmptyString
 		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,' ')]"); // stepKey: selectorParamWithASpace
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

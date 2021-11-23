@@ -68,4 +68,10 @@ class ArgumentWithSameNameAsElementCest
 		$I->seeElement("#element .John"); // stepKey: see2ActionGroup1
 		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroupWithTrickyArgument");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

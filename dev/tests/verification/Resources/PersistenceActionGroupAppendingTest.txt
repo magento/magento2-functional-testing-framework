@@ -49,4 +49,10 @@ class PersistenceActionGroupAppendingTestCest
 		$I->comment($I->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
 		$I->comment("Exiting Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

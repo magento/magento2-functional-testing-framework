@@ -37,4 +37,10 @@ class ExtendedActionGroupReturningValueTestCest
 		$I->see($actionGroupReturningValue, "#element .{$actionGroupReturningValue}"); // stepKey: see1ActionGroupWithStringUsage1
 		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

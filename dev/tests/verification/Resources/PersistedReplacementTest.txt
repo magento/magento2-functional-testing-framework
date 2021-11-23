@@ -59,4 +59,10 @@ class PersistedReplacementTestCest
 		$I->dontSeeInSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace11
 		$I->dontSeeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace12
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

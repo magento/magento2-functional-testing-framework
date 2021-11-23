@@ -109,10 +109,10 @@ class RunTestFailedCommand extends BaseGenerateCommand
     /**
      * Returns a list of tests/suites which should have an additional run.
      *
-     * @param $failedTests
+     * @param string $failedTests
      * @return array
      */
-    private function filterTestsForExecution($failedTests): array
+    private function filterTestsForExecution(string $failedTests): array
     {
         $testsOrGroupsToRerun = [];
 

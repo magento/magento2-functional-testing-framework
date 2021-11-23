@@ -33,4 +33,10 @@ class MergeMassViaInsertAfterCest
 		$I->click("#mergeThree"); // stepKey: clickThree
 		$I->fillField("#baz", "baz"); // stepKey: fillField3
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

@@ -35,4 +35,10 @@ class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . $I->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithParametrizedSelectors");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

@@ -59,4 +59,10 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 		$I->see($I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
 		$I->comment("Exiting Action Group [actionGroup7] actionGroupWithEntityUsage");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }
