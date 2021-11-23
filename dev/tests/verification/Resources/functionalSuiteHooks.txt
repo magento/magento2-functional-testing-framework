@@ -36,7 +36,6 @@ class functionalSuiteHooks extends \Codeception\GroupObject
 
     public function _before(\Codeception\Event\TestEvent $e)
     {
-        $this->testCount = $this->getTestCount();
         $this->webDriver = $this->getModule('\Magento\FunctionalTestingFramework\Module\MagentoWebDriver');
         $this->moduleContainer = $this->webDriver->getModuleContainer();
         // increment test count per execution
@@ -52,6 +51,8 @@ class functionalSuiteHooks extends \Codeception\GroupObject
     private function executePreConditions()
     {
         if ($this->currentTestRun == 1) {
+            $this->testCount = $this->getTestCount();
+
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
             try {
@@ -216,7 +217,9 @@ class functionalSuiteHooks extends \Codeception\GroupObject
 
         $files = glob($pathToGroupCests);
         if (is_array($files)) {
-            return count($files);
+            $qty = count($files);
+            print('In a group "' . self::$group . '" suite executor found ' . $qty . ' tests.' . PHP_EOL);
+            return $qty;
         }
 
         return $this->testCount;
