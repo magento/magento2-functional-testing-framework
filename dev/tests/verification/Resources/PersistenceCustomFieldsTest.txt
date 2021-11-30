@@ -61,4 +61,10 @@ class PersistenceCustomFieldsTestCest
 		$I->createEntity("createData3AGKEY", "test", "entity3", [], $createData3AGKEYFields); // stepKey: createData3AGKEY
 		$I->comment("Exiting Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

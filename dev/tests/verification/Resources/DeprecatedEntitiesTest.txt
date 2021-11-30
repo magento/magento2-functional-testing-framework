@@ -31,4 +31,10 @@ class DeprecatedEntitiesTestCest
 		$I->comment("Exiting Action Group [deprecatedActionGroup] DeprecatedActionGroup");
 		$I->amOnPage("/test.html"); // stepKey: amOnPage
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

@@ -89,4 +89,10 @@ class DataReplacementTestCest
 		$I->dontSeeInSource("#element"); // stepKey: htmlReplace35
 		$I->dontSeeInSource("StringBefore #element StringAfter"); // stepKey: htmlReplace36
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

@@ -30,6 +30,7 @@ class ExtendingSkippedTestCest
 	 */
 	public function ExtendingSkippedTest(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
+		unlink(__FILE__);
 		$scenario->skip("This test is skipped due to the following issues:\nParentTestIsSkipped");
 	}
 }

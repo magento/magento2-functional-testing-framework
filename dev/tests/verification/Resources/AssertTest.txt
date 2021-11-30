@@ -160,4 +160,10 @@ class AssertTestCest
 		$I->assertNotRegExp('/placeholder\/thumbnail\.jpg/', $getSimpleProductThumbnail); // stepKey: simpleThumbnailIsNotDefault
 		$I->assertRegExp("#var\s+adminAnalyticsMetadata\s+=\s+{\s+(\"[\w_]+\":\s+\"[^\"]*?\",\s+)*?(\"[\w_]+\":\s+\"[^\"]*?\"\s+)};#s", $pageSource, "adminAnalyticsMetadata object is invalid"); // stepKey: validateadminAnalyticsMetadata
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

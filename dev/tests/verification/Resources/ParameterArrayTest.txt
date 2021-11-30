@@ -50,4 +50,10 @@ class ParameterArrayTestCest
 		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], 0, [$I->retrieveEntityField('simpleDataKey', 'name', 'test'), $I->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: pressKey005
 		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [msq("simpleParamData") . "prename", "postname" . msq("simpleParamData")]); // stepKey: pressKey006
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

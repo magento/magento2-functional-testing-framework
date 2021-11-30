@@ -185,4 +185,10 @@ class BasicFunctionalTestCest
 		$I->waitForJS("someJsFunction", 30); // stepKey: waitForJSKey1
 		$I->waitForText("someInput", 30, ".functionalTestSelector"); // stepKey: waitForText1
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

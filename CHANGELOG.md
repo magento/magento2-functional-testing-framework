@@ -1,5 +1,21 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.7.1
+---------
+
+### GitHub Pull Requests:
+* [#873](https://github.com/magento/magento2-functional-testing-framework/pull/873) -- Add check for isBuiltin method (for PHP 8 compatibility) by @karyna-tsymbal-atwix
+
+### Updates
+* Moved `hoa/console` to suggest section to avoid issues with PHP8.0
+* Update `vlucas/phpdotenv` to the latest versions
+* `<seeInCurrentUrl />` encodes special character which caused test failed
+* Add filter for groups, now we can generate tests with specific group annotation
+* Seprated a `run:failed` command to `generate:failed` and `run:failed`
+  * `run:failed` command can execute failed tests without need to regenerate failed tests
+* Deleting MagentoPwaWebDriver file and moving it to Pwa_tests repo
+
+
 3.7.0
 ---------
 

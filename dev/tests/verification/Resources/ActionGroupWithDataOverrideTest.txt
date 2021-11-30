@@ -73,4 +73,10 @@ class ActionGroupWithDataOverrideTestCest
 		$I->comment("Exiting Action Group [actionGroupWithDataOverride1] FunctionalActionGroupWithData");
 		$I->click("loginButton"); // stepKey: step6
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

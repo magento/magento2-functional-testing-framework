@@ -55,4 +55,10 @@ class ActionGroupWithStepKeyReferencesCest
 		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup); // stepKey: action16ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

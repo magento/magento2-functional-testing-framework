@@ -70,4 +70,10 @@ class XmlCommentedTestCest
 		$I->comment("<cancelPopup stepKey=\"cancelPopupKey1\"/>");
 		$I->checkOption(".functionalTestSelector"); // stepKey: checkOptionKey1
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }
