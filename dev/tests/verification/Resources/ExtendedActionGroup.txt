@@ -34,4 +34,10 @@ class ExtendedActionGroupCest
 		$I->assertCount(8000, $grabProductsActionGroup); // stepKey: assertSecondCountActionGroup
 		$I->comment("Exiting Action Group [actionGroup] extendTestActionGroup");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

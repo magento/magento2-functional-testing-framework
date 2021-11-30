@@ -40,4 +40,10 @@ class LocatorFunctionTestCest
 		$I->click(Locator::contains("string1", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix2
 		$I->click(Locator::contains("John", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix3
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

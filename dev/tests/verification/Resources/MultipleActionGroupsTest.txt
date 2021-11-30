@@ -80,4 +80,10 @@ class MultipleActionGroupsTestCest
 		$I->see("#element .John"); // stepKey: see1ActionGroupWithDataOverride2
 		$I->comment("Exiting Action Group [actionGroupWithDataOverride2] FunctionalActionGroupWithData");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

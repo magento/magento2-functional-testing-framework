@@ -32,4 +32,10 @@ class ExtendParentDataTestCest
 		$I->searchAndMultiSelectOption("#selector", [msq("extendParentData") . "prename"]);
 		$I->searchAndMultiSelectOption("#selector", ["postnameExtend" . msq("extendParentData")]);
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }

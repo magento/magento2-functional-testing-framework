@@ -30,4 +30,10 @@ class PersistedAndXmlEntityArgumentsCest
 		$I->seeInCurrentUrl("/" . $I->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John"); // stepKey: checkUrlAfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
 	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Deleting itself so that we can rerun only failed tests.
+		unlink(__FILE__);
+	}
 }
