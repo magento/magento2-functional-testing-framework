@@ -24,17 +24,6 @@ class SkippedTestCest
 	private $isSuccess = false;
 
 	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _after(AcceptanceTester $I)
-	{
-		if ($this->isSuccess) {
-			unlink(__FILE__);
-		}
-	}
-
-	/**
 	 * @Stories({"skipped"})
 	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})

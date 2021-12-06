@@ -42,21 +42,13 @@ class ActionGroupWithDataTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		if ($this->isSuccess) {
-			unlink(__FILE__);
-		}
-	}
-
-	/**
-	  * @param AcceptanceTester $I
-	  * @throws \Exception
-	  */
-	public function _after(AcceptanceTester $I)
-	{
 		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**

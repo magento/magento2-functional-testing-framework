@@ -26,20 +26,20 @@ class PersistedReplacementTestCest
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
-	public function _after(AcceptanceTester $I)
+	public function _before(AcceptanceTester $I)
 	{
-		if ($this->isSuccess) {
-			unlink(__FILE__);
-		}
+		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
 	}
 
 	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
-	public function _before(AcceptanceTester $I)
+	public function _after(AcceptanceTester $I)
 	{
-		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
