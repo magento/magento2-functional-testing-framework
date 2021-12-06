@@ -571,7 +571,7 @@ class MagentoWebDriver extends WebDriver
             $apiURL,
             [
                 'token' => WebApiAuth::getAdminToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => urlencode($command),
                 'arguments' => $arguments,
                 'timeout'   => $timeout,
             ],
