@@ -18,12 +18,28 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistedReplacementTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
 	public function _before(AcceptanceTester $I)
 	{
 		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -62,7 +78,7 @@ class PersistedReplacementTestCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

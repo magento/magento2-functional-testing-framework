@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class XmlCommentedTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -38,6 +43,9 @@ class XmlCommentedTestCest
 		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_1\">/");
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_2\">/");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -73,7 +81,7 @@ class XmlCommentedTestCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }
