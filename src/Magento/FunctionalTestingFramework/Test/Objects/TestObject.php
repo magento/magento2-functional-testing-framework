@@ -21,12 +21,20 @@ class TestObject
 
     const TEST_ACTION_WEIGHT = [
         'waitForPageLoad' => 1500,
-        'amOnPage' => 1000,
+        'amOnPage' => 1500,
         'waitForLoadingMaskToDisappear' => 500,
         'wait' => self::WAIT_TIME_ATTRIBUTE,
+        'waitForAjaxLoad' => 500,
+        'waitForJS' => 500,
         'comment' => 5,
         'assertCount' => 5,
-        'closeAdminNotification' => 10
+        'closeAdminNotification' => 10,
+        'magentoCLI' => 1000,
+        'magentoCron' => 3000,
+        'createData' =>  500,
+        'deleteData' =>  100,
+        'updateData' =>  100,
+        'getOTP' => 200,
     ];
 
     /**
