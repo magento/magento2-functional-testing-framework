@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupUsingCreateDataCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -27,6 +32,17 @@ class ActionGroupUsingCreateDataCest
 		$I->createEntity("createCategoryKey1", "hook", "ApiCategory", [], []); // stepKey: createCategoryKey1
 		$I->createEntity("createConfigProductKey1", "hook", "ApiConfigurableProduct", ["createCategoryKey1"], []); // stepKey: createConfigProductKey1
 		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -42,7 +58,7 @@ class ActionGroupUsingCreateDataCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

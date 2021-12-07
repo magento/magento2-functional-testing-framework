@@ -279,6 +279,10 @@ class TestGenerator
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
         $cestPhp .= "{\n";
+        $cestPhp .= "\t/**\n";
+        $cestPhp .= "\t * @var bool\n";
+        $cestPhp .= "\t */\n";
+        $cestPhp .= "\tprivate \$isSuccess = false;\n\n";
         $cestPhp .= $this->generateInjectMethod();
         $cestPhp .= $hookPhp;
         $cestPhp .= $testsPhp;
@@ -1743,6 +1747,10 @@ class TestGenerator
     {
         $hooks = "";
 
+        if (!isset($hookObjects['after'])) {
+            $hookObjects['after'] = new TestHookObject('after', '', []);
+        }
+
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
@@ -1764,6 +1772,11 @@ class TestGenerator
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
+            if ($type === 'after') {
+                $hooks .= "\t\t" . 'if ($this->isSuccess) {' . "\n";
+                $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
+                $hooks .= "\t\t" . '}' . "\n";
+            }
             $hooks .= "\t}\n\n";
         }
 
@@ -1816,8 +1829,8 @@ class TestGenerator
             $testPhp .= PHP_EOL;
             $testPhp .= sprintf("\tpublic function _passed(%s)\n", $dependencies);
             $testPhp .= "\t{\n";
-            $testPhp .= "\t\t// Deleting itself so that we can rerun only failed tests." . PHP_EOL;
-            $testPhp .= "\t\tunlink(__FILE__);" . PHP_EOL;
+            $testPhp .= "\t\t// Test passed successfully." . PHP_EOL;
+            $testPhp .= "\t\t\$this->isSuccess = true;" . PHP_EOL;
             $testPhp .= "\t}\n";
         }
 

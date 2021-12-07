@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupContainsStepKeyInArgTextCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -26,6 +31,17 @@ class ActionGroupContainsStepKeyInArgTextCest
 		$I->comment("Entering Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
 		$I->see("arg1", ".selector"); // stepKey: arg1ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupContainsStepKeyInArgValue");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -44,7 +60,7 @@ class ActionGroupContainsStepKeyInArgTextCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

@@ -1,5 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.7.2
+---------
+
+### Bug fix:
+* Failed tests weren't logged correctly to `failed` file which caused a failure during run:failed command execution
+
+
 3.7.1
 ---------
 
