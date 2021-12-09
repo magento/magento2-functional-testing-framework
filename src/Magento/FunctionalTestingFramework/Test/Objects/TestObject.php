@@ -32,9 +32,9 @@ class TestObject
         'magentoCLI' => 1000,
         'magentoCron' => 3000,
         'createData' =>  500,
-        'deleteData' =>  100,
-        'updateData' =>  100,
-        'getOTP' => 200,
+        'deleteData' =>  200,
+        'updateData' =>  200,
+        'getOTP' => 1000,
     ];
 
     /**
