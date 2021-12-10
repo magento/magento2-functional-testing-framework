@@ -156,7 +156,7 @@ class RunTestCommand extends BaseGenerateCommand
 
             if ($this->pauseEnabled()) {
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps --debug';
-                if ($i != count($tests) - 1) {
+                if ($i !== count($tests) - 1) {
                     $fullCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
@@ -195,7 +195,7 @@ class RunTestCommand extends BaseGenerateCommand
 
             $index += 1;
             if ($this->pauseEnabled()) {
-                if ($index != $count) {
+                if ($index !== $count) {
                     $fullCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
@@ -215,7 +215,7 @@ class RunTestCommand extends BaseGenerateCommand
      * @param OutputInterface $output
      * @return integer
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function executeTestCommand(string $command, OutputInterface $output)
     {

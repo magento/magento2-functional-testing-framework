@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class SkippedTestWithHooksCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	 * @Stories({"skippedWithHooks"})
 	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
@@ -29,6 +34,7 @@ class SkippedTestWithHooksCest
 	 */
 	public function SkippedTestWithHooks(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
+		unlink(__FILE__);
 		$scenario->skip("This test is skipped due to the following issues:\nSkippedValue");
 	}
 }

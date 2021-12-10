@@ -63,7 +63,7 @@ class MagentoAllureAdapter extends AllureCodeception
      */
     private function getGroup()
     {
-        if ($this->options['groups'] != null) {
+        if ($this->options['groups'] !== null) {
             return $this->options['groups'][0];
         }
         return null;
@@ -79,7 +79,7 @@ class MagentoAllureAdapter extends AllureCodeception
     {
         $changeSuiteEvent = $suiteEvent;
 
-        if ($this->getGroup() != null) {
+        if ($this->getGroup() !== null) {
             $suite = $suiteEvent->getSuite();
             $suiteName = ($suite->getName()) . "\\" . $this->sanitizeGroupName($this->getGroup());
 
@@ -414,8 +414,8 @@ class MagentoAllureAdapter extends AllureCodeception
     private function formatAllureTestClassName($test)
     {
         if ($this->getGroup() !== null) {
-            foreach ($test->getLabels() as $name => $label) {
-                if ($label->getName() == 'testClass') {
+            foreach ($test->getLabels() as $label) {
+                if ($label->getName() === 'testClass') {
                     $originalTestClass = $this->sanitizeTestClassLabel($label->getValue());
                     call_user_func(\Closure::bind(
                         function () use ($label, $originalTestClass) {

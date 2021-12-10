@@ -3,16 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Util;
 
-use AspectMock\Test as AspectMock;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Logger\MftfLogger;
 use Monolog\Handler\TestHandler;
-use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
-class TestLoggingUtil extends Assert
+class TestLoggingUtil extends TestCase
 {
     /**
      * @var TestLoggingUtil
@@ -25,24 +26,23 @@ class TestLoggingUtil extends Assert
     private $testLogHandler;
 
     /**
-     * TestLoggingUtil constructor.
+     * Private constructor.
      */
     private function __construct()
     {
-        // private constructor
+        parent::__construct(null, [], '');
     }
 
     /**
-     * Static singleton get function
+     * Static singleton get function.
      *
      * @return TestLoggingUtil
      */
-    public static function getInstance()
+    public static function getInstance(): TestLoggingUtil
     {
-        if (self::$instance == null) {
+        if (self::$instance === null) {
             self::$instance = new TestLoggingUtil();
         }
-
         return self::$instance;
     }
 
@@ -51,21 +51,28 @@ class TestLoggingUtil extends Assert
      *
      * @return void
      */
-    public function setMockLoggingUtil()
+    public function setMockLoggingUtil(): void
     {
         $this->testLogHandler = new TestHandler();
         $testLogger = new MftfLogger('testLogger');
         $testLogger->pushHandler($this->testLogHandler);
-        $mockLoggingUtil = AspectMock::double(
-            LoggingUtil::class,
-            ['getLogger' => $testLogger]
-        )->make();
-        $property = new \ReflectionProperty(LoggingUtil::class, 'instance');
+
+        $mockLoggingUtil = $this->createMock(LoggingUtil::class);
+        $mockLoggingUtil
+            ->method('getLogger')
+            ->willReturn($testLogger);
+
+        $property = new ReflectionProperty(LoggingUtil::class, 'instance');
         $property->setAccessible(true);
         $property->setValue($mockLoggingUtil);
     }
 
-    public function validateMockLogEmpty()
+    /**
+     * Check if mock log is empty.
+     *
+     * @return void
+     */
+    public function validateMockLogEmpty(): void
     {
         $records = $this->testLogHandler->getRecords();
         $this->assertTrue(empty($records));
@@ -77,9 +84,10 @@ class TestLoggingUtil extends Assert
      * @param string $type
      * @param string $message
      * @param array $context
+     *
      * @return void
      */
-    public function validateMockLogStatement($type, $message, $context)
+    public function validateMockLogStatement(string $type, string $message, array $context): void
     {
         $records = $this->testLogHandler->getRecords();
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
@@ -88,7 +96,16 @@ class TestLoggingUtil extends Assert
         $this->assertEquals($context, $record['context']);
     }
 
-    public function validateMockLogStatmentRegex($type, $regex, $context)
+    /**
+     * Check mock log statement regular expression.
+     *
+     * @param string $type
+     * @param string $regex
+     * @param array $context
+     *
+     * @return void
+     */
+    public function validateMockLogStatmentRegex(string $type, string $regex, array $context): void
     {
         $records = $this->testLogHandler->getRecords();
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
@@ -103,8 +120,10 @@ class TestLoggingUtil extends Assert
      *
      * @return void
      */
-    public function clearMockLoggingUtil()
+    public function clearMockLoggingUtil(): void
     {
-        AspectMock::clean(LoggingUtil::class);
+        $property = new ReflectionProperty(LoggingUtil::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue(null);
     }
 }

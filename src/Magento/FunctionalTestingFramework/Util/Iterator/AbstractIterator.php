@@ -33,6 +33,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     abstract public function current();
     // @codingStandardsIgnoreEnd
 
@@ -48,14 +49,14 @@ abstract class AbstractIterator implements \Iterator, \Countable
      *
      * @return boolean
      */
-    abstract protected function isValid();
+    abstract protected function isValid() : bool;
 
     /**
      * Initialize Data Array
      *
      * @return void
      */
-    public function rewind()
+    public function rewind() : void
     {
         reset($this->data);
         if (!$this->isValid()) {
@@ -68,7 +69,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
      *
      * @return void
      */
-    public function next()
+    public function next() : void
     {
         $this->current = next($this->data);
 
@@ -86,7 +87,7 @@ abstract class AbstractIterator implements \Iterator, \Countable
      *
      * @return boolean
      */
-    public function valid()
+    public function valid() : bool
     {
         $current = current($this->data);
         if ($current === false || $current === null) {
@@ -96,22 +97,25 @@ abstract class AbstractIterator implements \Iterator, \Countable
         }
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Get data key of the current data element
      *
      * @return integer|string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->data);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * To make iterator countable
      *
      * @return integer
      */
-    public function count()
+    public function count() : int
     {
         return count($this->data);
     }

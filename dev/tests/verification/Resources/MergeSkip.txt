@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class MergeSkipCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -26,6 +31,7 @@ class MergeSkipCest
 	 */
 	public function MergeSkip(AcceptanceTester $I, \Codeception\Scenario $scenario)
 	{
+		unlink(__FILE__);
 		$scenario->skip("This test is skipped due to the following issues:\nIssue5");
 	}
 }

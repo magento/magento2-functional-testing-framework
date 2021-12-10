@@ -1,0 +1,32 @@
+{
+    "templateVersion": "0.1",
+    "product": {
+        "name": "Magento2 Functional Testing Framework (MFTF)",
+        "description": "MFTF is a framework to write and execute UI Functional tests for Magento 2 projects"
+    },
+    "contacts": {
+        "team": {
+            "name": "Magento Quality Engineering / Pangolin",
+            "DL": "GRP-Pangolin",
+            "slackChannel": "mftf"
+        }
+    },
+    "ticketTracker": {
+        "functionalJiraQueue": {
+            "projectKey": "MQE",
+            "component": "Framework - MFTF"
+        },
+        "securityJiraQueue": {
+            "projectKey": "MAGREQ",
+            "component": "Test Infrastructure"
+        }
+    },
+    "staticScan": {
+        "enable": true,
+        "frequency": "monthly",
+        "customName": "",
+        "branchesToScan": [
+            "develop"
+        ]
+    }
+}

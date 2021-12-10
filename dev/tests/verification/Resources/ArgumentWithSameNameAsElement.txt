@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ArgumentWithSameNameAsElementCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -41,6 +46,9 @@ class ArgumentWithSameNameAsElementCest
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -67,5 +75,11 @@ class ArgumentWithSameNameAsElementCest
 		$I->seeElement("#element"); // stepKey: see1ActionGroup1
 		$I->seeElement("#element .John"); // stepKey: see2ActionGroup1
 		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroupWithTrickyArgument");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

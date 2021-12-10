@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendedActionGroupCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -33,5 +49,11 @@ class ExtendedActionGroupCest
 		$I->assertCount(99, $grabProductsActionGroup); // stepKey: assertCountActionGroup
 		$I->assertCount(8000, $grabProductsActionGroup); // stepKey: assertSecondCountActionGroup
 		$I->comment("Exiting Action Group [actionGroup] extendTestActionGroup");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

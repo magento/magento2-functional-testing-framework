@@ -8,12 +8,12 @@ namespace Magento\FunctionalTestingFramework\Suite;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\Generators\GroupClassGenerator;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Objects\SuiteObject;
+use Magento\FunctionalTestingFramework\Suite\Service\SuiteGeneratorService;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Filesystem\DirSetupUtil;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
@@ -21,7 +21,6 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\BaseTestManifest;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
-use Symfony\Component\Yaml\Yaml;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
@@ -207,7 +206,7 @@ class SuiteGenerator
             $this->appendEntriesToConfig($suiteName, $fullPath, $groupNamespace);
 
             if (MftfApplicationConfig::getConfig()->verboseEnabled()
-                && MftfApplicationConfig::getConfig()->getPhase() == MftfApplicationConfig::GENERATION_PHASE) {
+                && MftfApplicationConfig::getConfig()->getPhase() === MftfApplicationConfig::GENERATION_PHASE) {
                 print("suite {$suiteName} generated\n");
             }
             LoggingUtil::getInstance()->getLogger(self::class)->info(
@@ -265,7 +264,16 @@ class SuiteGenerator
     private function generateSplitSuiteFromTest($suiteName, $suiteContent)
     {
         foreach ($suiteContent as $suiteSplitName => $tests) {
-            $this->generateSuiteFromTest($suiteSplitName, $tests, $suiteName);
+            try {
+                $this->generateSuiteFromTest($suiteSplitName, $tests, $suiteName);
+            } catch (FastFailException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                // There are suites that include tests that reference tests from other Magento editions
+                // To keep backward compatibility, we will catch such exceptions with no error.
+                // This might inevitably hide some suite errors that are resulted by tests with broken references
+                //TODO MQE-2484
+            }
         }
     }
 
@@ -296,7 +304,7 @@ class SuiteGenerator
         } else {
             $suiteObject = SuiteObjectHandler::getInstance()->getObject($suiteName);
             // we have to handle the case when there is a custom configuration for an existing suite.
-            if (count($suiteObject->getTests()) != count($tests)) {
+            if (count($suiteObject->getTests()) !== count($tests)) {
                 return $this->generateGroupFile($suiteName, $tests, $suiteName);
             }
         }
@@ -322,21 +330,7 @@ class SuiteGenerator
      */
     private function appendEntriesToConfig($suiteName, $suitePath, $groupNamespace)
     {
-        $relativeSuitePath = substr($suitePath, strlen(TESTS_BP));
-        $relativeSuitePath = ltrim($relativeSuitePath, DIRECTORY_SEPARATOR);
-
-        $ymlArray = self::getYamlFileContents();
-        if (!array_key_exists(self::YAML_GROUPS_TAG, $ymlArray)) {
-            $ymlArray[self::YAML_GROUPS_TAG]= [];
-        }
-
-        if ($groupNamespace) {
-            $ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][] = $groupNamespace;
-        }
-        $ymlArray[self::YAML_GROUPS_TAG][$suiteName] = [$relativeSuitePath];
-
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($ymlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        SuiteGeneratorService::getInstance()->appendEntriesToConfig($suiteName, $suitePath, $groupNamespace);
     }
 
     /**
@@ -347,43 +341,23 @@ class SuiteGenerator
      */
     private static function clearPreviousSessionConfigEntries()
     {
-        $ymlArray = self::getYamlFileContents();
-        $newYmlArray = $ymlArray;
-        // if the yaml entries haven't already been cleared
-        if (array_key_exists(self::YAML_EXTENSIONS_TAG, $ymlArray)) {
-            foreach ($ymlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] as $key => $entry) {
-                if (preg_match('/(Group\\\\.*)/', $entry)) {
-                    unset($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG][$key]);
-                }
-            }
-
-            // needed for proper yml file generation based on indices
-            $newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG] =
-                array_values($newYmlArray[self::YAML_EXTENSIONS_TAG][self::YAML_ENABLED_TAG]);
-        }
-
-        if (array_key_exists(self::YAML_GROUPS_TAG, $newYmlArray)) {
-            unset($newYmlArray[self::YAML_GROUPS_TAG]);
-        }
-
-        $ymlText = self::YAML_COPYRIGHT_TEXT . Yaml::dump($newYmlArray, 10);
-        file_put_contents(self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME, $ymlText);
+        SuiteGeneratorService::getInstance()->clearPreviousSessionConfigEntries();
     }
 
     /**
      * Function which takes a string which is the desired output directory (under _generated) and an array of tests
-     * relevant to the suite to be generated. The function takes this information and creates a new instance of the test
-     * generator which is then called to create all the test files for the suite.
+     * relevant to the suite to be generated. The function takes this information and creates a new instance of the
+     * test generator which is then called to create all the test files for the suite.
      *
      * @param string $path
      * @param array  $tests
+     *
      * @return void
      * @throws TestReferenceException
      */
     private function generateRelevantGroupTests($path, $tests)
     {
-        $testGenerator = TestGenerator::getInstance($path, $tests);
-        $testGenerator->createAllTestFiles(null, []);
+        SuiteGeneratorService::getInstance()->generateRelevantGroupTests($path, $tests);
     }
 
     /**
@@ -395,37 +369,6 @@ class SuiteGenerator
     {
         $groupFilePath = GroupClassGenerator::getGroupDirPath();
         array_map('unlink', glob("$groupFilePath*.php"));
-    }
-
-    /**
-     * Function to return contents of codeception.yml file for config changes.
-     *
-     * @return array
-     */
-    private static function getYamlFileContents()
-    {
-        $configYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_CONFIG_FILENAME;
-        $defaultConfigYmlFile = self::getYamlConfigFilePath() . self::YAML_CODECEPTION_DIST_FILENAME;
-
-        $ymlContents = null;
-        if (file_exists($configYmlFile)) {
-            $ymlContents = file_get_contents($configYmlFile);
-        } else {
-            $ymlContents = file_get_contents($defaultConfigYmlFile);
-        }
-
-        return Yaml::parse($ymlContents) ?? [];
-    }
-
-    /**
-     * Static getter for the Config yml filepath (as path cannot be stored in a const)
-     *
-     * @return string
-     * @throws TestFrameworkException
-     */
-    private static function getYamlConfigFilePath()
-    {
-        return FilePathFormatter::format(TESTS_BP);
     }
 
     /**

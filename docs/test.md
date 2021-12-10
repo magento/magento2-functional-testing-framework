@@ -87,7 +87,7 @@ Allure annotations provide metadata for reporting.
 `<before>` may contain these child elements:
 
 *  Any [Action][actions]
-*  [`<actionGroup>`]s
+*  [`<actionGroup>`]
 
 ### after {#after-tag}
 

@@ -3,43 +3,54 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\StaticCheck;
 
-use AspectMock\Test as AspectMock;
+use InvalidArgumentException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\OperationDefinitionObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
+use Magento\FunctionalTestingFramework\DataGenerator\Parsers\OperationDefinitionParser;
+use Magento\FunctionalTestingFramework\ObjectManager;
+use Magento\FunctionalTestingFramework\ObjectManagerFactory;
 use Magento\FunctionalTestingFramework\Page\Objects\ElementObject;
 use Magento\FunctionalTestingFramework\Page\Objects\PageObject;
 use Magento\FunctionalTestingFramework\Page\Objects\SectionObject;
 use Magento\FunctionalTestingFramework\StaticCheck\DeprecatedEntityUsageCheck;
 use Magento\FunctionalTestingFramework\Test\Objects\TestObject;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
 use Symfony\Component\Console\Input\InputInterface;
 use tests\unit\Util\MagentoTestCase;
-use ReflectionClass;
-use InvalidArgumentException;
-use tests\unit\Util\ObjectHandlerUtil;
 
+/**
+ * Class DeprecatedEntityUsageCheckTest
+ */
 class DeprecatedEntityUsageCheckTest extends MagentoTestCase
 {
-    /** @var  DeprecatedEntityUsageCheck */
+    /** @var DeprecatedEntityUsageCheck */
     private $staticCheck;
 
     /** @var ReflectionClass*/
     private $staticCheckClass;
 
+    /**
+     * @inheritDoc
+     */
     public function setUp(): void
     {
         $this->staticCheck = new DeprecatedEntityUsageCheck();
-        $this->staticCheckClass = new \ReflectionClass($this->staticCheck);
+        $this->staticCheckClass = new ReflectionClass($this->staticCheck);
     }
 
-    public function tearDown(): void
-    {
-        AspectMock::clean();
-    }
-
-    public function testInvalidPathOption()
+    /**
+     * Validate testInvalidPathOption.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testInvalidPathOption(): void
     {
         $input = $this->getMockBuilder(InputInterface::class)
             ->disableOriginalConstructor()
@@ -56,7 +67,13 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $loadAllXmlFiles->invoke($this->staticCheck, $input);
     }
 
-    public function testViolatingElementReferences()
+    /**
+     * Validate testViolatingElementReferences.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testViolatingElementReferences(): void
     {
         //variables for assertions
         $elementName = 'elementOne';
@@ -79,13 +96,19 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testViolatingPageReferences()
+    /**
+     * Validate testViolatingPageReferences.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testViolatingPageReferences(): void
     {
         //Page variables for assertions
         $pageName = 'Page';
         $fileName = 'page.xml';
 
-        $page = new PageObject($pageName, '/url.html', 'Test', [], false, "test", $fileName, 'deprecated');
+        $page = new PageObject($pageName, '/url.html', 'Test', [], false, 'test', $fileName, 'deprecated');
         $references = ['Page' => $page];
         $actual = $this->callViolatingReferences($references);
         $expected = [
@@ -99,7 +122,13 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testViolatingDataReferences()
+    /**
+     * Validate testViolatingDataReferences.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testViolatingDataReferences(): void
     {
         //Data entity variables for assertions
         $entityName = 'EntityOne';
@@ -129,7 +158,13 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testViolatingTestReferences()
+    /**
+     * Validate testViolatingTestReferences.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testViolatingTestReferences(): void
     {
         // test variables for assertions
         $testName = 'Test1';
@@ -149,12 +184,18 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testViolatingMetaDataReferences()
+    /**
+     * Validate testViolatingMetaDataReferences.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testViolatingMetaDataReferences(): void
     {
         // Data Variables for Assertions
-        $dataType1 = "type1";
-        $operationType1 = "create";
-        $operationType2 = "update";
+        $dataType1 = 'type1';
+        $operationType1 = 'create';
+        $operationType2 = 'update';
 
         /**
          * Parser Output.
@@ -167,34 +208,34 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
          *              key=id, value=integer
          */
         $mockData = [OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
-            "testOperationName" => [
+            'testOperationName' => [
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType1,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1",
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "POST",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1',
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'POST',
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
                     0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
                     ],
                 ],
                 OperationDefinitionObjectHandler::OBJ_DEPRECATED => 'deprecated'
             ],[
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_DATA_TYPE => $dataType1,
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_TYPE => $operationType2,
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => "auth",
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => "V1/Type1/{id}",
-                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => "PUT",
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_AUTH => 'auth',
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_URL => 'V1/Type1/{id}',
+                OperationDefinitionObjectHandler::ENTITY_OPERATION_METHOD => 'PUT',
                 OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY => [
                     0 => [
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => "id",
-                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => "integer"
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_KEY => 'id',
+                        OperationDefinitionObjectHandler::ENTITY_OPERATION_ENTRY_VALUE => 'integer'
                     ],
                 ]
             ]]];
 
-        ObjectHandlerUtil::mockOperationHandlerWithData($mockData);
+        $this->mockOperationHandlerWithData($mockData);
         $dataName = 'dataName1';
         $references = [
             $dataName => [
@@ -219,7 +260,13 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $this->assertEquals($actual, $expected);
     }
 
-    public function testIsDeprecated()
+    /**
+     * Validate testIsDeprecated.
+     *
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testIsDeprecated(): void
     {
         // Test Data
         $contents = '<tests>
@@ -237,15 +284,85 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
     }
 
     /**
-     * Invoke findViolatingReferences
-     * @param $references
-     * @return mixed
-     * @throws \ReflectionException
+     * Create mock operation handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
      */
-    public function callViolatingReferences($references)
+    private function mockOperationHandlerWithData(array $mockData): void
+    {
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $mockOperationParser = $this->createMock(OperationDefinitionParser::class);
+        $mockOperationParser
+            ->method('readOperationMetadata')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use (
+                        $objectManager,
+                        $mockOperationParser
+                    ) {
+                        if ($class === OperationDefinitionParser::class) {
+                            return $mockOperationParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        $operationDefinitionObjectHandlerProperty = new ReflectionProperty(
+            OperationDefinitionObjectHandler::class,
+            'INSTANCE'
+        );
+        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+        $operationDefinitionObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
+    }
+
+    /**
+     * Invoke findViolatingReferences.
+     *
+     * @param array $references
+     *
+     * @return mixed
+     * @throws ReflectionException
+     */
+    public function callViolatingReferences(array $references)
     {
         $property = $this->staticCheckClass->getMethod('findViolatingReferences');
         $property->setAccessible(true);
+
         return $property->invoke($this->staticCheck, $references);
     }
 }

@@ -104,9 +104,9 @@ class UpdateAssertionSchema implements UpgradeInterface
                 $value = rtrim(ltrim($value, "'"), "'");
             }
             // If value is empty string (" " or ' '), trim again to become empty
-            if (str_replace(" ", "", $value) == "''") {
+            if (str_replace(" ", "", $value) === "''") {
                 $value = "";
-            } elseif (str_replace(" ", "", $value) == '""') {
+            } elseif (str_replace(" ", "", $value) === '""') {
                 $value = "";
             }
 
@@ -119,20 +119,20 @@ class UpdateAssertionSchema implements UpgradeInterface
             }
 
             // Store in subtype for child element creation
-            if ($type == "actual") {
+            if ($type === "actual") {
                 $subElements["actual"]["value"] = $value;
-            } elseif ($type == "actualType") {
+            } elseif ($type === "actualType") {
                 $subElements["actual"]["type"] = $value;
-            } elseif ($type == "expected" or $type == "expectedValue") {
+            } elseif ($type === "expected" or $type === "expectedValue") {
                 $subElements["expected"]["value"] = $value;
-            } elseif ($type == "expectedType") {
+            } elseif ($type === "expectedType") {
                 $subElements["expected"]["type"] = $value;
             }
         }
         $newString .= ">\n";
 
         // Assert type is very edge-cased, completely different schema
-        if ($assertType == 'assertElementContainsAttribute') {
+        if ($assertType === 'assertElementContainsAttribute') {
             // assertElementContainsAttribute type defaulted to string if not present
             if (!isset($subElements["expected"]['type'])) {
                 $subElements["expected"]['type'] = "string";

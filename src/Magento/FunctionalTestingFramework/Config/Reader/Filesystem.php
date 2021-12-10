@@ -148,7 +148,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
         /** @var \Magento\FunctionalTestingFramework\Config\Dom $configMerger */
         $configMerger = null;
         $debugLevel = MftfApplicationConfig::getConfig()->getDebugLevel();
-        foreach ($fileList as $key => $content) {
+        foreach ($fileList as $content) {
             //check if file is empty and continue to next if it is
             if (!$this->verifyFileEmpty($content, $fileList->getFilename())) {
                 continue;
@@ -159,7 +159,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
                 } else {
                     $configMerger->merge($content);
                 }
-                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) == 0) {
+                if (strcasecmp($debugLevel, MftfApplicationConfig::LEVEL_DEVELOPER) === 0) {
                     $this->validateSchema($configMerger, $fileList->getFilename());
                 }
             } catch (\Magento\FunctionalTestingFramework\Config\Dom\ValidationException $e) {
@@ -210,7 +210,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
     {
         if (empty($content)) {
             if (MftfApplicationConfig::getConfig()->verboseEnabled()) {
-                LoggingUtil::getInstance()->getLogger(Filesystem::class)->warn(
+                LoggingUtil::getInstance()->getLogger(Filesystem::class)->warning(
                     "XML File is empty.",
                     ["File" => $fileName]
                 );

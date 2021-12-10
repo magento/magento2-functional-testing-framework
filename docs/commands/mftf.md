@@ -80,13 +80,22 @@ vendor/bin/mftf run:manifest path/to/your/testManifest.txt
 
 This command runs all tests specified in a `testManifest.txt` file. When you generate tests, a `testManifest.txt` file is also generated for you. You can pass this file directly to the `run:manifest` command and it will execute all listed tests. You can also create your own file in the same format to execute a subset of tests. Note: This command does not generate tests.
 
-### Generate and run previously failed tests
+### Generate previously failed tests
+
+```bash
+vendor/bin/mftf generate:failed
+```
+
+This command cleans up the previously generated tests; generates the tests listed in `dev/tests/acceptance/tests/_output/failed`.
+For more details about `failed`, refer to [Reporting][].
+
+### Run previously failed tests
 
 ```bash
 vendor/bin/mftf run:failed
 ```
 
-This command cleans up the previously generated tests; generates and runs the tests listed in `dev/tests/acceptance/tests/_output/failed`.
+This command runs the tests listed in `dev/tests/acceptance/tests/_output/failed`.
 For more details about `failed`, refer to [Reporting][].
 
 ## Error tolerance during generation
@@ -160,9 +169,10 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | Option | Description|
 | ---| --- |
 | `--config=[<default> or <singleRun> or <parallel>]` | Creates a single manifest file with a list of all tests. The default location is `tests/functional/Magento/FunctionalTest/_generated/testManifest.txt`.<br/> You can split the list into multiple groups using `--config=parallel`; the groups will be generated in `_generated/groups/` like `_generated/groups/group1.txt, group2.txt, ...`.<br/> Available values: `default` (default), `singleRun`(same as `default`), and `parallel`.<br/> Example: `generate:tests --config=parallel`. |
-| `--filter` | Option to filter tests to be generated.<br/>Template: '&lt;filterName&gt;:&lt;filterValue&gt;'.<br/>Existing filter types: severity.<br/>Existing severity values: BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.<br/>Example: --filter=severity:CRITICAL|
+| `--filter` | Option to filter tests to be generated.<br/>Template: '&lt;filterName&gt;:&lt;filterValue&gt;'.<br/>Existing filter types: severity, includeGroup, excludeGroup.<br/>Existing severity values: BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.<br/>Example: `vendor/bin/mftf generate:tests --filter=severity:CRITICAL --filter=severity:BLOCKER --filter=includeGroup:customer`|
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
-| `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. The __default value__ is `10`. Example: `generate:tests --config=parallel --time=15`|
+| `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. <br/>Example: `generate:tests --config=parallel --time=15` <br/>Option `--time` will be the default and the __default value__ is `10` when neither `--time` nor `--groups` is specified. <br/>Example: `generate:tests --config=parallel`|
+| `-g,--groups` | Set number of groups to be split into when `--config=parallel` is used. <br>Example: `generate:tests --config=parallel --groups=300` <br/>Options `--time` and `--groups` are mutually exclusive and only one should be used.|
 | `--tests` | Defines the test configuration as a JSON string.|
 | `--allow-skipped` | Allows MFTF to generate and run tests marked with `<skip>.`|
 | `--debug` | Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.<br/>|

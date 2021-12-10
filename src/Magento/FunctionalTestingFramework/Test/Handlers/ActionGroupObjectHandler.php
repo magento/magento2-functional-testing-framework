@@ -151,9 +151,9 @@ class ActionGroupObjectHandler implements ObjectHandlerInterface
     private function extendActionGroup($actionGroupObject): ActionGroupObject
     {
         if ($actionGroupObject->getParentName() !== null) {
-            if ($actionGroupObject->getParentName() == $actionGroupObject->getName()) {
+            if ($actionGroupObject->getParentName() === $actionGroupObject->getName()) {
                 throw new TestFrameworkException(
-                    "Mftf Action Group can not extend from itself: " . $actionGroupObject->getName()
+                    'Mftf Action Group can not extend from itself: ' . $actionGroupObject->getName()
                 );
             }
             return $this->extendUtil->extendActionGroup($actionGroupObject);

@@ -10,9 +10,12 @@ Check [pause on codeception.com][] for documentation and a video to see `Interac
  
 In short, when a test gets to `$I->pause()` step, it stops and shows a console where you can try all available commands with auto-completion, stash commands, save screenshots, etc. 
 
-## MFTF Run Commands
+## How to Configure Interactive Pause
 
-The following MFTF run commands support `Interactive Pause` when `ENABLE_PAUSE` is set to `true`.
+To be able to use Interactive console you need to install `hoa/console` library by running `composer require hoa/console` command in your project. This will allow `<pause />` action to work.
+MFTF supports `Interactive Pause` when `ENABLE_PAUSE` is set to `true` in `<project_root>/dev/tests/acceptance/.env` file.
+
+## MFTF Run Commands
 
 ```bash
 vendor/bin/mftf run:group

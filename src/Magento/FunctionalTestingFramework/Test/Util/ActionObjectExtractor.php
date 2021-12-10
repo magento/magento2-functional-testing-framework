@@ -90,7 +90,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
             $actions = $this->extractFieldActions($actionData, $actions);
             $actionAttributes = $this->extractFieldReferences($actionData, $actionAttributes);
 
-            if ($linkedAction['stepKey'] != null) {
+            if ($linkedAction['stepKey'] !== null) {
                 $stepKeyRefs[$linkedAction['stepKey']][] = $stepKey;
             }
 
@@ -157,7 +157,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
-            if ($attributeDataKey == self::ACTION_GROUP_REF) {
+            if ($attributeDataKey === self::ACTION_GROUP_REF) {
                 $actionAttributeArgData[self::ACTION_GROUP_REF] = $attributeDataValues;
                 continue;
             }
@@ -187,7 +187,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         $actionAttributeArgData = [];
         foreach ($actionAttributeData as $attributeDataKey => $attributeDataValues) {
-            if (isset($attributeDataValues['nodeName']) && $attributeDataValues['nodeName'] == 'argument') {
+            if (isset($attributeDataValues['nodeName']) && $attributeDataValues['nodeName'] === 'argument') {
                 if (isset($attributeDataValues['name'])
                     && in_array($attributeDataValues['name'], $reservedHelperVariableNames)) {
                     $message = 'Helper argument names ' . implode(',', $reservedHelperVariableNames);
@@ -225,7 +225,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
         $fieldActions = [];
         foreach ($actionData as $type => $data) {
             // determine if field type is entity passed in
-            if (!is_array($data) || $data[self::NODE_NAME] != self::DATA_PERSISTENCE_CUSTOM_FIELD) {
+            if (!is_array($data) || $data[self::NODE_NAME] !== self::DATA_PERSISTENCE_CUSTOM_FIELD) {
                 continue;
             }
 
@@ -258,7 +258,8 @@ class ActionObjectExtractor extends BaseObjectExtractor
 
         $attributes = [];
         foreach ($actionAttributes as $attributeName => $attributeValue) {
-            if (!is_array($attributeValue) || $attributeValue[self::NODE_NAME] != self::DATA_PERSISTENCE_CUSTOM_FIELD) {
+            if (!is_array($attributeValue) ||
+                $attributeValue[self::NODE_NAME] !== self::DATA_PERSISTENCE_CUSTOM_FIELD) {
                 $attributes[$attributeName] = $attributeValue;
                 continue;
             }
@@ -305,7 +306,7 @@ class ActionObjectExtractor extends BaseObjectExtractor
         });
 
         foreach ($atRiskStepRef as $stepKey => $stepRefs) {
-            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warn(
+            LoggingUtil::getInstance()->getLogger(ActionObjectExtractor::class)->warning(
                 'multiple actions referencing step key',
                 ['test' => $testName, 'stepKey' => $stepKey, 'ref' => $stepRefs]
             );

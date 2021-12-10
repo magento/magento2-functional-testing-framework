@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class BasicActionGroupTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -29,6 +34,17 @@ class BasicActionGroupTestCest
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
 		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -48,5 +64,11 @@ class BasicActionGroupTestCest
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2ActionGroup1
 		$I->comment("Exiting Action Group [actionGroup1] FunctionalActionGroup");
 		$I->click("loginButton"); // stepKey: step6
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

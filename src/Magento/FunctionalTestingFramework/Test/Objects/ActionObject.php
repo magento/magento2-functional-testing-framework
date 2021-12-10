@@ -290,7 +290,7 @@ class ActionObject
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
             $this->validateTimezoneAttribute();
-            if ($this->getType() == "deleteData") {
+            if ($this->getType() === 'deleteData') {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
             }
         }
@@ -561,24 +561,24 @@ class ActionObject
                 continue;
             }
 
-            if ($obj == null) {
+            if ($obj === null) {
                 // keep initial values for subsequent logic
                 $replacement = null;
                 $parameterized = false;
-            } elseif (get_class($obj) == PageObject::class) {
+            } elseif (get_class($obj) === PageObject::class) {
                 if ($obj->getDeprecated() !== null) {
                     $this->deprecatedUsage[] = "DEPRECATED PAGE in Test: " . $match . ' ' . $obj->getDeprecated();
                 }
                 $this->validateUrlAreaAgainstActionType($obj);
                 $replacement = $obj->getUrl();
                 $parameterized = $obj->isParameterized();
-            } elseif (get_class($obj) == SectionObject::class) {
+            } elseif (get_class($obj) === SectionObject::class) {
                 if ($obj->getDeprecated() !== null) {
                     $this->deprecatedUsage[] = "DEPRECATED SECTION in Test: " . $match . ' ' . $obj->getDeprecated();
                 }
                 list(,$objField) = $this->stripAndSplitReference($match);
 
-                if ($obj->getElement($objField) == null) {
+                if ($obj->getElement($objField) === null) {
                     throw new TestReferenceException(
                         "Could not resolve entity reference \"{$inputString}\" "
                         . "in Action with stepKey \"{$this->getStepKey()}\"",
@@ -592,7 +592,7 @@ class ActionObject
                     $this->deprecatedUsage[] = "DEPRECATED ELEMENT in Test: " . $match . ' '
                         . $obj->getElement($objField)->getDeprecated();
                 }
-            } elseif (get_class($obj) == EntityDataObject::class) {
+            } elseif (get_class($obj) === EntityDataObject::class) {
                 if ($obj->getDeprecated() !== null) {
                     $this->deprecatedUsage[] = "DEPRECATED DATA ENTITY in Test: "
                         . $match . ' ' . $obj->getDeprecated();
@@ -638,7 +638,7 @@ class ActionObject
                 . implode("', '", $attributes) . "'",
                 ["type" => $this->getType(), "attributes" => $attributes]
             );
-        } elseif (count($matches) == 0) {
+        } elseif (count($matches) === 0) {
             throw new TestReferenceException(
                 "Actions of type '{$this->getType()}' must contain at least one attribute of types '"
                 . implode("', '", $attributes) . "'",
@@ -656,7 +656,7 @@ class ActionObject
      */
     private function validateUrlAreaAgainstActionType($obj)
     {
-        if ($obj->getArea() == 'external' &&
+        if ($obj->getArea() === 'external' &&
             in_array($this->getType(), self::EXTERNAL_URL_AREA_INVALID_ACTIONS)) {
             throw new TestReferenceException(
                 "Page of type 'external' is not compatible with action type '{$this->getType()}'",
@@ -697,7 +697,7 @@ class ActionObject
     {
         list(,$objField) = $this->stripAndSplitReference($match);
 
-        if (strpos($objField, '[') == true) {
+        if (strpos($objField, '[') !== false) {
             // Access <array>...</array>
             $parts = explode('[', $objField);
             $name = $parts[0];
@@ -726,7 +726,7 @@ class ActionObject
         } else {
             $resolvedReplacement = $replacement;
         }
-        if (get_class($object) == PageObject::class && $object->getArea() == PageObject::ADMIN_AREA) {
+        if (get_class($object) === PageObject::class && $object->getArea() === PageObject::ADMIN_AREA) {
             $urlSegments = [
                 '{{_ENV.MAGENTO_BACKEND_BASE_URL}}',
                 '{{_ENV.MAGENTO_BACKEND_NAME}}',
@@ -794,7 +794,7 @@ class ActionObject
         if (count($matches) > count($parameters)) {
             if (is_array($parameters)) {
                 $parametersGiven = implode(",", $parameters);
-            } elseif ($parameters == null) {
+            } elseif ($parameters === null) {
                 $parametersGiven = "NONE";
             } else {
                 $parametersGiven = $parameters;
@@ -810,7 +810,7 @@ class ActionObject
                 $reference . ". Parameters Given: " . implode(", ", $parameters),
                 ["reference" => $reference, "parametersGiven" => $parameters]
             );
-        } elseif (count($matches) == 0) {
+        } elseif (count($matches) === 0) {
             throw new TestReferenceException(
                 "Parameter Resolution Failed: No parameter matches found in parameterized element with selector " .
                 $reference,

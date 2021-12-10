@@ -408,6 +408,36 @@ Example:
 REMOTE_STORAGE_AWSS3_PREFIX=local
 ```
 
+### REMOTE_STORAGE_AWSS3_ACCESS_KEY
+
+The optional access key for the S3 bucket.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_ACCESS_KEY=access-key
+```
+
+### REMOTE_STORAGE_AWSS3_SECRET_KEY
+
+The optional secret key for the S3 bucket.
+
+Example:
+
+```conf
+REMOTE_STORAGE_AWSS3_SECRET_KEY=secret-key
+```
+
+### MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME
+
+The lifetime (in seconds) of Magento Admin WebAPI token; if token is older than this value a refresh attempt will be made just before the next WebAPI call.
+
+Example:
+
+```conf
+MAGENTO_ADMIN_WEBAPI_TOKEN_LIFETIME=10800
+```
+
 <!-- Link definitions -->
 
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path

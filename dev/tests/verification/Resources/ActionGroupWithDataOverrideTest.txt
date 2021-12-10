@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithDataOverrideTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -41,6 +46,9 @@ class ActionGroupWithDataOverrideTestCest
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -72,5 +80,11 @@ class ActionGroupWithDataOverrideTestCest
 		$I->see("#element .John"); // stepKey: see1ActionGroupWithDataOverride1
 		$I->comment("Exiting Action Group [actionGroupWithDataOverride1] FunctionalActionGroupWithData");
 		$I->click("loginButton"); // stepKey: step6
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

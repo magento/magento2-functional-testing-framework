@@ -67,7 +67,7 @@ class BuildProjectCommand extends Command
      * @param OutputInterface $output
      * @return void
      * @throws \Exception
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

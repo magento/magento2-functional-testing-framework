@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExecuteJsEscapingTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -31,5 +47,11 @@ class ExecuteJsEscapingTestCest
 		$persistedDataNotEscaped = $I->executeJS("return " . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: persistedDataNotEscaped
 		$hookPersistedDataNotEscaped = $I->executeJS("return " . $I->retrieveEntityField('persisted', 'data', 'test')); // stepKey: hookPersistedDataNotEscaped
 		$addNewAttributeForRule = $I->executeJS("document.querySelector('entity option[value=" . $I->retrieveEntityField('productAttribute', 'attribute_code', 'test') . "]').setAttribute('selected', 'selected')"); // stepKey: addNewAttributeForRule
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

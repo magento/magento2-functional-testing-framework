@@ -19,6 +19,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
@@ -58,5 +74,11 @@ class ActionGroupWithSimpleDataUsageFromPassedArgumentCest
 		$I->comment("Entering Action Group [actionGroup7] actionGroupWithEntityUsage");
 		$I->see($I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test'), "#element ." . $I->retrieveEntityField('simpleData', 'firstname[data_index]', 'test')); // stepKey: see1ActionGroup7
 		$I->comment("Exiting Action Group [actionGroup7] actionGroupWithEntityUsage");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

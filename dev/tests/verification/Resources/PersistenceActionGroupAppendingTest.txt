@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistenceActionGroupAppendingTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -30,6 +35,17 @@ class PersistenceActionGroupAppendingTestCest
 		$I->getEntity("getDataACTIONGROUPBEFORE", "hook", "someEneity", [], null); // stepKey: getDataACTIONGROUPBEFORE
 		$I->comment($I->retrieveEntityField('createData', 'field', 'hook'));
 		$I->comment("Exiting Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -48,5 +64,11 @@ class PersistenceActionGroupAppendingTestCest
 		$I->getEntity("getDataACTIONGROUP", "test", "someEneity", [], null); // stepKey: getDataACTIONGROUP
 		$I->comment($I->retrieveEntityField('createDataACTIONGROUP', 'field', 'test'));
 		$I->comment("Exiting Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

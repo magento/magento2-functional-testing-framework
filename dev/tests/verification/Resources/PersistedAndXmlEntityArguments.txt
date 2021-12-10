@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistedAndXmlEntityArgumentsCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -29,5 +45,11 @@ class PersistedAndXmlEntityArgumentsCest
 		$I->comment("Entering Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
 		$I->seeInCurrentUrl("/" . $I->retrieveEntityField('persistedInTest', 'urlKey', 'test') . ".html?___store=" . msq("uniqueData") . "John"); // stepKey: checkUrlAfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroupWithXmlAndPersistedData");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

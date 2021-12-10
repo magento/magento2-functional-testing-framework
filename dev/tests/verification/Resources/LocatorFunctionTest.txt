@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class LocatorFunctionTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -39,5 +55,11 @@ class LocatorFunctionTestCest
 		$I->click(Locator::contains("string1", "John")); // stepKey: TwoParamMix1
 		$I->click(Locator::contains("string1", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix2
 		$I->click(Locator::contains("John", $I->retrieveEntityField('data', 'key1', 'test'))); // stepKey: TwoParamMix3
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

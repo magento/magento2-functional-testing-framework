@@ -66,7 +66,7 @@ class LoggingUtil
      */
     public function getLogger($className): MftfLogger
     {
-        if ($className == null) {
+        if ($className === null) {
             throw new TestFrameworkException("You must pass a class name to receive a logger");
         }
 

@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithStepKeyReferencesCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -54,5 +70,11 @@ class ActionGroupWithStepKeyReferencesCest
 		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup); // stepKey: action15ActionGroup
 		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup); // stepKey: action16ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

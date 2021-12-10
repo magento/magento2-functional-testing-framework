@@ -178,7 +178,8 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
     {
         $type = $this->config->getInstanceType($requestedType);
         $parameters = $this->definitions->getParameters($type);
-        if ($parameters == null) {
+
+        if ($parameters === null) {
             return new $type();
         }
         if (isset($this->creationStack[$requestedType])) {

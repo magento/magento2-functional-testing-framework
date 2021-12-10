@@ -400,5 +400,33 @@
             <expectedResult type="string">Cat</expectedResult>
             <actualResult type="string">Dog</actualResult>
         </assertNotEqualsIgnoringCase>
+
+        <!-- assertions.md examples -->
+        <assertElementContainsAttribute stepKey="assertElementContainsAttribute">
+            <expectedResult selector=".admin__menu-overlay" attribute="style" type="string">color: #333;</expectedResult>
+        </assertElementContainsAttribute>
+        <assertStringContainsString stepKey="assertDropDownTierPriceTextProduct1">
+            <expectedResult type="string">Buy 5 for $5.00 each and save 50%</expectedResult>
+            <actualResult type="variable">DropDownTierPriceTextProduct1</actualResult>
+        </assertStringContainsString>
+        <assertEmpty stepKey="assertSearchButtonEnabled">
+            <actualResult type="string">$grabSearchButtonAttribute</actualResult>
+        </assertEmpty>
+        <assertGreaterThanOrEqual stepKey="checkStatusSortOrderAsc">
+            <actualResult type="const">$getOrderStatusSecondRow</actualResult>
+            <expectedResult type="const">$getOrderStatusFirstRow</expectedResult>
+        </assertGreaterThanOrEqual>
+        <assertNotEquals stepKey="assertNotEqualsExample">
+            <actualResult type="string">{$grabTotalAfter}</actualResult>
+            <expectedResult type="string">{$grabTotalBefore}</expectedResult>
+        </assertNotEquals>
+        <assertNotRegExp stepKey="simpleThumbnailIsNotDefault">
+            <actualResult type="const">$getSimpleProductThumbnail</actualResult>
+            <expectedResult type="const">'/placeholder\/thumbnail\.jpg/'</expectedResult>
+        </assertNotRegExp>
+        <assertRegExp message="adminAnalyticsMetadata object is invalid" stepKey="validateadminAnalyticsMetadata">
+            <expectedResult type="string">#var\s+adminAnalyticsMetadata\s+=\s+{\s+("[\w_]+":\s+"[^"]*?",\s+)*?("[\w_]+":\s+"[^"]*?"\s+)};#s</expectedResult>
+            <actualResult type="variable">$pageSource</actualResult>
+        </assertRegExp>
     </test>
 </tests>

@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistenceCustomFieldsTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -28,6 +33,17 @@ class PersistenceCustomFieldsTestCest
 		$I->createEntity("createData1", "hook", "DefaultPerson", [], $createData1Fields); // stepKey: createData1
 		$createData2Fields['firstname'] = $I->retrieveEntityField('createData1', 'firstname', 'hook');
 		$I->createEntity("createData2", "hook", "uniqueData", ["createData1"], $createData2Fields); // stepKey: createData2
+	}
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -60,5 +76,11 @@ class PersistenceCustomFieldsTestCest
 		$createData3AGKEYFields['key2'] = $I->retrieveEntityField('createData2AGKEY', 'field', 'test');
 		$I->createEntity("createData3AGKEY", "test", "entity3", [], $createData3AGKEYFields); // stepKey: createData3AGKEY
 		$I->comment("Exiting Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

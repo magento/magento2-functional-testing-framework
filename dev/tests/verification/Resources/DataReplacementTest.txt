@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class DataReplacementTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -88,5 +104,11 @@ class DataReplacementTestCest
 		$I->dontSeeInSource("#Doe" . msq("uniqueData")); // stepKey: htmlReplace34
 		$I->dontSeeInSource("#element"); // stepKey: htmlReplace35
 		$I->dontSeeInSource("StringBefore #element StringAfter"); // stepKey: htmlReplace36
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

@@ -29,9 +29,9 @@ class InterfaceNameSniff implements Sniff
         $declarationLine = $tokens[$stackPtr]['line'];
         $suffixLength = strlen(self::INTERFACE_SUFFIX);
         // Find first T_STRING after 'interface' keyword in the line and verify it
-        while ($tokens[$stackPtr]['line'] == $declarationLine) {
-            if ($tokens[$stackPtr]['type'] == 'T_STRING') {
-                if (substr($tokens[$stackPtr]['content'], 0 - $suffixLength) != self::INTERFACE_SUFFIX) {
+        while ($tokens[$stackPtr]['line'] === $declarationLine) {
+            if ($tokens[$stackPtr]['type'] === 'T_STRING') {
+                if (substr($tokens[$stackPtr]['content'], 0 - $suffixLength) !== self::INTERFACE_SUFFIX) {
                     $sourceFile->addError(
                         'Interface should have name that ends with "Interface" suffix.',
                         $stackPtr,

@@ -3,17 +3,19 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace tests\unit\Magento\FunctionalTestFramework\DataGenerator\Handlers;
 
-use AspectMock\Test as AspectMock;
+use Exception;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Objects\EntityDataObject;
 use Magento\FunctionalTestingFramework\DataGenerator\Parsers\DataProfileSchemaParser;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
-use tests\unit\Util\ObjectHandlerUtil;
 use tests\unit\Util\TestLoggingUtil;
 
 /**
@@ -22,9 +24,9 @@ use tests\unit\Util\TestLoggingUtil;
 class DataObjectHandlerTest extends MagentoTestCase
 {
     /**
-     * Setup method
+     * @inheritDoc
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         TestLoggingUtil::getInstance()->setMockLoggingUtil();
     }
@@ -145,11 +147,14 @@ class DataObjectHandlerTest extends MagentoTestCase
     ];
 
     /**
-     * getAllObjects should contain the expected data object
+     * Validate getAllObjects should contain the expected data object.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetAllObjects()
+    public function testGetAllObjects(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getAllObjects();
@@ -161,29 +166,35 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * test deprecated data object
+     * Validate test deprecated data object.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testDeprecatedDataObject()
+    public function testDeprecatedDataObject(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_DEPRECATED);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT_DEPRECATED);
 
         // Call the method under test
-        $actual = DataObjectHandler::getInstance()->getAllObjects();
+        DataObjectHandler::getInstance()->getAllObjects();
 
         //validate deprecation warning
         TestLoggingUtil::getInstance()->validateMockLogStatement(
             'warning',
-            "DEPRECATION: The data entity 'EntityOne' is deprecated.",
-            ["fileName" => "filename.xml", "deprecatedMessage" => "deprecation message"]
+            'DEPRECATION: The data entity \'EntityOne\' is deprecated.',
+            ['fileName' => 'filename.xml', 'deprecatedMessage' => 'deprecation message']
         );
     }
 
     /**
-     * getObject should return the expected data object if it exists
+     * Validate getObject should return the expected data object if it exists.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetObject()
+    public function testGetObject(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getObject('EntityOne');
@@ -194,22 +205,28 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * getAllObjects should return the expected data object if it exists
+     * Validate getAllObjects should return the expected data object if it exists.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetObjectNull()
+    public function testGetObjectNull(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT);
 
         $actual = DataObjectHandler::getInstance()->getObject('h953u789h0g73t521'); // doesnt exist
         $this->assertNull($actual);
     }
 
     /**
-     * getAllObjects should contain the expected data object with extends
+     * Validate getAllObjects should contain the expected data object with extends.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetAllObjectsWithDataExtends()
+    public function testGetAllObjectsWithDataExtends(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getAllObjects();
@@ -229,11 +246,14 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * getObject should return the expected data object with extended data if it exists
+     * Validate getObject should return the expected data object with extended data if it exists.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetObjectWithDataExtends()
+    public function testGetObjectWithDataExtends(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND);
 
         // Call the method under test
         $actual = DataObjectHandler::getInstance()->getObject('EntityTwo');
@@ -252,15 +272,18 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * getAllObjects should throw TestFrameworkException exception if some data extends itself
+     * Validate getAllObjects should throw TestFrameworkException exception if some data extends itself.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetAllObjectsWithDataExtendsItself()
+    public function testGetAllObjectsWithDataExtendsItself(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
 
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
+        $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage(
-            "Mftf Data can not extend from itself: "
+            'Mftf Data can not extend from itself: '
             . self::PARSER_OUTPUT_WITH_EXTEND_INVALID['entity']['EntityOne']['name']
         );
 
@@ -269,15 +292,18 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * getObject should throw TestFrameworkException exception if requested data extends itself
+     * Validate getObject should throw TestFrameworkException exception if requested data extends itself.
+     *
+     * @return void
+     * @throws Exception
      */
-    public function testGetObjectWithDataExtendsItself()
+    public function testGetObjectWithDataExtendsItself(): void
     {
-        ObjectHandlerUtil::mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
+        $this->mockDataObjectHandlerWithData(self::PARSER_OUTPUT_WITH_EXTEND_INVALID);
 
-        $this->expectException(\Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException::class);
+        $this->expectException(TestFrameworkException::class);
         $this->expectExceptionMessage(
-            "Mftf Data can not extend from itself: "
+            'Mftf Data can not extend from itself: '
             . self::PARSER_OUTPUT_WITH_EXTEND_INVALID['entity']['EntityOne']['name']
         );
 
@@ -288,10 +314,65 @@ class DataObjectHandlerTest extends MagentoTestCase
     }
 
     /**
-     * clean up function runs after all tests
+     * Create mock data object handler with data.
+     *
+     * @param array $mockData
+     *
+     * @return void
+     */
+    private function mockDataObjectHandlerWithData(array $mockData): void
+    {
+        $dataObjectHandlerProperty = new ReflectionProperty(DataObjectHandler::class, "INSTANCE");
+        $dataObjectHandlerProperty->setAccessible(true);
+        $dataObjectHandlerProperty->setValue(null);
+
+        $mockDataProfileSchemaParser =  $this->createMock(DataProfileSchemaParser::class);
+        $mockDataProfileSchemaParser
+            ->method('readDataProfiles')
+            ->willReturn($mockData);
+
+        $objectManager = ObjectManagerFactory::getObjectManager();
+        $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
+        $mockObjectManagerInstance
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function (
+                        string $class,
+                        array $arguments = []
+                    ) use (
+                        $objectManager,
+                        $mockDataProfileSchemaParser
+                    ) {
+                        if ($class === DataProfileSchemaParser::class) {
+                            return $mockDataProfileSchemaParser;
+                        }
+
+                        return $objectManager->create($class, $arguments);
+                    }
+                )
+            );
+
+        $property = new ReflectionProperty(ObjectManager::class, 'instance');
+        $property->setAccessible(true);
+        $property->setValue($mockObjectManagerInstance);
+    }
+
+    /**
+     * @inheritDoc
      */
     public static function tearDownAfterClass(): void
     {
+        parent::tearDownAfterClass();
+
+        $dataObjectHandlerProperty = new ReflectionProperty(DataObjectHandler::class, "INSTANCE");
+        $dataObjectHandlerProperty->setAccessible(true);
+        $dataObjectHandlerProperty->setValue(null);
+
+        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue(null);
+
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
 }

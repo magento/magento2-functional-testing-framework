@@ -116,7 +116,7 @@ class ComposerPackage extends AbstractComposer
      */
     public function isMftfTestPackage()
     {
-        return ($this->getType() == self::TEST_MODULE_PACKAGE_TYPE) ? true : false;
+        return $this->getType() === self::TEST_MODULE_PACKAGE_TYPE;
     }
 
     /**

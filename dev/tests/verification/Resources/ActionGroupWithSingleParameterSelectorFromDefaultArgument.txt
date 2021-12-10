@@ -19,6 +19,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithSingleParameterSelectorFromDefaultArgumentCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
@@ -31,5 +47,11 @@ class ActionGroupWithSingleParameterSelectorFromDefaultArgumentCest
 		$I->comment("Entering Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
 		$I->see("Doe", "#element .John"); // stepKey: seeLastNameActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithSingleParameterSelectorFromArgument");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

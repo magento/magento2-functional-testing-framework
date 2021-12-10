@@ -106,9 +106,9 @@ class PersistedObjectHandler
         
         $persistedObject->createEntity($storeCode);
 
-        if ($scope == self::TEST_SCOPE) {
+        if ($scope === self::TEST_SCOPE) {
             $this->testObjects[$key] = $persistedObject;
-        } elseif ($scope == self::HOOK_SCOPE) {
+        } elseif ($scope === self::HOOK_SCOPE) {
             $this->hookObjects[$key] = $persistedObject;
         } else {
             $this->suiteObjects[$key] = $persistedObject;
@@ -170,9 +170,9 @@ class PersistedObjectHandler
         );
         $persistedObject->getEntity($index, $storeCode);
 
-        if ($scope == self::TEST_SCOPE) {
+        if ($scope === self::TEST_SCOPE) {
             $this->testObjects[$key] = $persistedObject;
-        } elseif ($scope == self::HOOK_SCOPE) {
+        } elseif ($scope === self::HOOK_SCOPE) {
             $this->hookObjects[$key] = $persistedObject;
         } else {
             $this->suiteObjects[$key] = $persistedObject;
@@ -193,7 +193,7 @@ class PersistedObjectHandler
             $warnMsg = "Undefined field {$field} in entity object with a stepKey of {$stepKey}\n";
             $warnMsg .= "Please fix the invalid reference. This will result in fatal error in next major release.";
             //TODO: change this to throw an exception in next major release
-            LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warn($warnMsg);
+            LoggingUtil::getInstance()->getLogger(PersistedObjectHandler::class)->warning($warnMsg);
             if (MftfApplicationConfig::getConfig()->verboseEnabled()
                 && MftfApplicationConfig::getConfig()->getPhase() !== MftfApplicationConfig::UNIT_TEST_PHASE) {
                 print("\n$warnMsg\n");
@@ -214,7 +214,7 @@ class PersistedObjectHandler
         // Assume TEST_SCOPE is default
         $entityArrays = [$this->testObjects, $this->hookObjects, $this->suiteObjects];
 
-        if ($scope == self::HOOK_SCOPE) {
+        if ($scope === self::HOOK_SCOPE) {
             $entityArrays[0] = $this->hookObjects;
             $entityArrays[1] = $this->testObjects;
         }

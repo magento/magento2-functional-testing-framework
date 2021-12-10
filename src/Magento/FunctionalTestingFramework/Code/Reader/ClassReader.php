@@ -13,6 +13,7 @@ class ClassReader implements ClassReaderInterface
      * @param string $className
      * @return array|null
      * @throws \ReflectionException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getConstructor($className)
     {
@@ -24,9 +25,13 @@ class ClassReader implements ClassReaderInterface
             /** @var $parameter \ReflectionParameter */
             foreach ($constructor->getParameters() as $parameter) {
                 try {
+                    $paramType = $parameter->getType();
+                    $name = ($paramType && method_exists($paramType, 'isBuiltin') && !$paramType->isBuiltin())
+                        ? new \ReflectionClass($paramType->getName())
+                        : null;
                     $result[] = [
                         $parameter->getName(),
-                        $parameter->getClass() !== null ? $parameter->getClass()->getName() : null,
+                        $name !== null ? $name->getName() : null,
                         !$parameter->isOptional(),
                         $parameter->isOptional()
                             ? ($parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null)

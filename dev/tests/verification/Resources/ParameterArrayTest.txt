@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ParameterArrayTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -49,5 +65,11 @@ class ParameterArrayTestCest
 		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [$I->retrieveEntityField('simpleDataKey', 'name', 'test'),  'a', "name"]); // stepKey: pressKey004
 		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], 0, [$I->retrieveEntityField('simpleDataKey', 'name', 'test'), $I->retrieveEntityField('simpleDataKey', 'name', 'test')]); // stepKey: pressKey005
 		$I->pressKey("#selector", ['ctrl', 'a'],'new', 1, ['ctrl'], ['shift',  'ctrl',  'del'], [msq("simpleParamData") . "prename", "postname" . msq("simpleParamData")]); // stepKey: pressKey006
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

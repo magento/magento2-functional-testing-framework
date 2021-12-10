@@ -51,5 +51,6 @@
             <actualResult type="array">{{ExtendedMessageData.numbers}}</actualResult>
             <expectedResult type="array">["Something New", "0", "1", "2", "3", "TESTING CASE"]</expectedResult>
         </assertEqualsCanonicalizing>
+        <pause stepKey="testingPause" />
     </test>
 </tests>

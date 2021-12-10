@@ -52,7 +52,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
      * @return integer
      * @throws \Exception
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
@@ -115,7 +115,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $codeceptionCommandString = $commandString . ' -g ' . $groups[$i];
 
             if ($this->pauseEnabled()) {
-                if ($i != count($groups) - 1) {
+                if ($i !== count($groups) - 1) {
                     $codeceptionCommandString .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
                 $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
@@ -139,7 +139,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
         $this->applyAllFailed();
 
         foreach ($returnCodes as $returnCode) {
-            if ($returnCode != 0) {
+            if ($returnCode !== 0) {
                 return $returnCode;
             }
             $exitCode = 0;

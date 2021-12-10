@@ -273,7 +273,7 @@ class ScriptUtil
      */
     public function findEntity($name)
     {
-        if ($name == '_ENV' || $name == '_CREDS') {
+        if ($name === '_ENV' || $name === '_CREDS') {
             return null;
         }
 
