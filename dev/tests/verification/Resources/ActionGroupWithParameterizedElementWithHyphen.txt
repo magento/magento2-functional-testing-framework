@@ -18,6 +18,22 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithParameterizedElementWithHyphenCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
 	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
@@ -33,7 +49,7 @@ class ActionGroupWithParameterizedElementWithHyphenCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

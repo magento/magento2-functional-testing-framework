@@ -20,6 +20,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendingSkippedTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"Child"})

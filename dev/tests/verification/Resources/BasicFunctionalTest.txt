@@ -20,6 +20,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class BasicFunctionalTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -35,6 +40,9 @@ class BasicFunctionalTestCest
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -188,7 +196,7 @@ class BasicFunctionalTestCest
 
 	public function _passed(AcceptanceTester $I)
 	{
-		// Deleting itself so that we can rerun only failed tests.
-		unlink(__FILE__);
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }
