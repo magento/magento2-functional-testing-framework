@@ -25,6 +25,10 @@ class TestObject
         'waitForLoadingMaskToDisappear' => 500,
         'wait' => self::WAIT_TIME_ATTRIBUTE,
         'waitForAjaxLoad' => 500,
+        'waitForElementNotVisible' => 500,
+        'waitForElementVisible' => 500,
+        'waitForText' => 500,
+        'waitForElement' => 500,
         'waitForJS' => 500,
         'comment' => 5,
         'assertCount' => 5,
@@ -104,8 +108,10 @@ class TestObject
 
     /**
      * Indicates if a test contains an action that requires Web API authentication.
+     *
+     * @var boolean
      */
-    private bool $hasWebApiAuthAction;
+    private $hasWebApiAuthAction;
 
     /**
      * TestObject constructor.
