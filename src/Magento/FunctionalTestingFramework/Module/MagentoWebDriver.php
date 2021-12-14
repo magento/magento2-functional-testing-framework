@@ -72,6 +72,7 @@ class MagentoWebDriver extends WebDriver
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
         '//div[contains(@class, "admin__form-loading-mask")]',
         '//div[@data-role="spinner"]',
+        '//div[@class="file-uploader-spinner"]',
     ];
 
     /**
