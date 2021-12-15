@@ -74,7 +74,7 @@ class MagentoWebDriver extends WebDriver
         '//div[@data-role="spinner"]',
         '//div[contains(@class,"file-uploader-spinner")]',
         '//div[contains(@class,"image-uploader-spinner")]',
-        '//div[contains(@class,"progressbar")]//ancestor::div[@class="file-row"]',
+        '//div[contains(@class,"uploader")]//div[@class="file-row"]',
     ];
 
     /**
