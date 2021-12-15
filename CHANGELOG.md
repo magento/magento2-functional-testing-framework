@@ -1,5 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.7.3
+---------
+
+### Updates:
+* Fix encoding issue when secret key contains plus sign
+* Adding pagebuilder file upload spinner to loadingMaskLocators
+
+
 3.7.2
 ---------
 
