@@ -525,11 +525,7 @@ class TestGenerator
                 break;
 
             case null:
-                $annotationToAppend = sprintf(
-                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
-                    "AcceptanceTester",
-                    "I"
-                );
+                $annotationToAppend = "";
                 $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
                 $annotationToAppend .= "{$indent} * @return void\n";
                 $annotationToAppend .= "{$indent} * @throws \Exception\n";
