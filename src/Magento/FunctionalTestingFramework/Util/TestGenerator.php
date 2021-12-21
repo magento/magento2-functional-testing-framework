@@ -2042,10 +2042,10 @@ class TestGenerator
     /**
      * Wrap parameters into a function call with a return value.
      *
-     * @param string $returnVariable
-     * @param string $actor
+     * @param string       $returnVariable
+     * @param string       $actor
      * @param actionObject $action
-     * @param array  ...$args
+     * @param array        ...$args
      * @return string
      * @throws \Exception
      */
