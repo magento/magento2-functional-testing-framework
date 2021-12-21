@@ -2044,7 +2044,7 @@ class TestGenerator
      *
      * @param string $returnVariable
      * @param string $actor
-     * @param string $action
+     * @param actionObject $action
      * @param array  ...$args
      * @return string
      * @throws \Exception
