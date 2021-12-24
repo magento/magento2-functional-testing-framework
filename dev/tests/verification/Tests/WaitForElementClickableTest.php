@@ -10,7 +10,7 @@ use tests\util\MftfTestCase;
 class WaitForElementClickableTest extends MftfTestCase
 {
     /**
-     * WaitForElementClickable:
+     * BasicFunctionalTest:
      * Tests flat generation of a hardcoded test file with no external references.
      *
      * @throws \Exception
@@ -20,5 +20,4 @@ class WaitForElementClickableTest extends MftfTestCase
     {
         $this->generateAndCompareTest('WaitForElementClickableTest');
     }
-
 }
