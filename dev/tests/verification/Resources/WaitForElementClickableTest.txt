@@ -15,7 +15,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 /**
  * @Description("<h3>Test files</h3>vendor/magento/module-page-builder/Test/Mftf/Test/AdminPageBuilderColumnTest/WaitForElementClickableTest.xml<br>")
  */
-class WaitForElementClickableTest
+class WaitForElementClickableTestCest
 {
 	/**
 	  * @param AcceptanceTester $I
