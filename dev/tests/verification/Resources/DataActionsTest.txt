@@ -31,6 +31,7 @@ class DataActionsTestCest
 		$I->createEntity("createdInBefore", "hook", "entity", [], []); // stepKey: createdInBefore
 		$I->updateEntity("createdInBefore", "hook", "entity",[]); // stepKey: updateInBefore
 		$I->deleteEntity("createdInBefore", "hook"); // stepKey: deleteInBefore
+		$I->waitForElementClickable(".functionalTestSelector"); // stepKey: waitForElementClickable
 	}
 
 	/**
