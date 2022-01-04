@@ -23,6 +23,8 @@
             <xs:element type="waitForPwaElementNotVisibleType" name="waitForPwaElementNotVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForPwaElementVisibleType" name="waitForPwaElementVisible" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="waitForTextType" name="waitForText" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="waitForElementClickableType" name="waitForElementClickable" minOccurs="0" maxOccurs="unbounded"/>
+
         </xs:choice>
     </xs:group>
 
@@ -220,6 +222,21 @@
                 <xs:attribute ref="userInput"/>
                 <xs:attribute ref="time"/>
                 <xs:attribute ref="selector"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="waitForElementClickableType">
+        <xs:annotation>
+            <xs:documentation>
+                Waits up to $timeout seconds for the given element to be clickable.
+                If element doesn’t become clickable, a timeout exception is thrown.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute ref="selector" use="required"/>
+                <xs:attribute ref="time"/>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
