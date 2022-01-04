@@ -46,4 +46,15 @@ class CustomHelper extends Helper
         print('$bla = ' . $bla . PHP_EOL);
         print('array $arraysomething = [' . implode(', ', $arraysomething) . ']' . PHP_EOL);
     }
+
+    /**
+     * Returns value of provided param $text
+     *
+     * @param string $text
+     * @return string
+     */
+    public function getText(string $text): string
+    {
+        return $text;
+    }
 }

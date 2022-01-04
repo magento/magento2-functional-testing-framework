@@ -13,8 +13,9 @@
             <createData entity="entity" stepKey="createdInBefore"/>
             <updateData entity="entity" createDataKey="createdInBefore" stepKey="updateInBefore"/>
             <deleteData createDataKey="createdInBefore" stepKey="deleteInBefore"/>
-        </before>
 
+        </before>
+        <waitForElementClickable selector=".functionalTestSelector" time="30" stepKey="waitForElementClickable" />
         <createData entity="entity" stepKey="createdInTest"/>
         <updateData entity="entity" createDataKey="createdInTest" stepKey="updateInTest"/>
         <deleteData createDataKey="createdInTest" stepKey="deleteInTest"/>
