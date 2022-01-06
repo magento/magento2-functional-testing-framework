@@ -1,5 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.8.0
+---------
+
+### Updates:
+* Allow MFTF Helpers to Return Data to MFTF Test
+* Improve parallel grouping and fix an issue with unbalanced groups
+* Added new action WaitForElementClickable
+
 3.7.3
 ---------
 
