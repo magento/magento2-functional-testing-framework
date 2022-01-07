@@ -2374,8 +2374,26 @@ Attribute|Type|Use|Description
 #### Example
 
 ```xml
-<!-- Wait up to 30 seconds for `<div id="changedElement" ... >...</div>` to become visible on the page before continuing. -->
 <waitForElementVisible selector="#changedElement" stepKey="waitForElementVisible"/>
+```
+
+### waitForElementClickable
+
+See [waitForElementClickable docs on codeception.com](http://codeception.com/docs/modules/WebDriver#waitForElementClickable).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`selector`|string|optional| The selector identifying the corresponding HTML element.
+`time`|string|optional| The number of seconds to wait for the element to appear.
+`stepKey`|string|required| A unique identifier of the action.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of preceding action.
+
+#### Example
+
+```xml
+<!-- Waits up to $timeout seconds for the given element to be clickable. If element doesn’t become clickable, a timeout exception is thrown. -->
+<waitForElementClickable selector="#changedElement" stepKey="waitForElementClickable"/>
 ```
 
 ### waitForJS
