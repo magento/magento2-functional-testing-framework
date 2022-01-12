@@ -101,7 +101,7 @@ class FileStorage extends BaseStorage
             if (substr($credValue, 0, 1) === '#' || empty($credValue)) {
                 continue;
             }
-            elseif (is_bool(strpos($credValue, "="))){
+            elseif (strpos($credValue, "=") === false){
               throw new TestFrameworkException(
                 $credValue." not configured correctly in .credentials file"
               );
