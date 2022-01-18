@@ -894,7 +894,12 @@ class TestGenerator
                         $stepKey,
                         $customActionAttributes['class'] . '::' . $customActionAttributes['method']
                     );
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $arguments);
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $arguments
+                    );
                     break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -2012,16 +2017,7 @@ class TestGenerator
      */
     private function wrapFunctionCall($actor, $action, ...$args)
     {
-        $isFirst = true;
-        $isActionHelper = $action->getType() === 'helper';
-        $actionType = $action->getType();
-        if ($isActionHelper) {
-            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
-            $args = $args[0];
-            $actionType = $action->getCustomActionAttributes()['method'];
-        }
-
-        $output = sprintf("\t\t$%s->%s(", $actor, $actionType);
+        $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;
@@ -2042,17 +2038,22 @@ class TestGenerator
     /**
      * Wrap parameters into a function call with a return value.
      *
-     * @param string $returnVariable
-     * @param string $actor
-     * @param string $action
-     * @param array  ...$args
+     * @param string       $returnVariable
+     * @param string       $actor
+     * @param actionObject $action
+     * @param array        ...$args
      * @return string
      * @throws \Exception
      */
     private function wrapFunctionCallWithReturnValue($returnVariable, $actor, $action, ...$args)
     {
-        $isFirst = true;
-        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action->getType());
+        $actionType = $action->getType();
+        if ($actionType === 'helper') {
+            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
+            $args = $args[0];
+            $actionType = $action->getCustomActionAttributes()['method'];
+        }
+        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $actionType);
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;

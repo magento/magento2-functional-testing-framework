@@ -52,6 +52,7 @@ class DataActionsTestCest
 	 */
 	public function DataActionsTest(AcceptanceTester $I)
 	{
+		$I->waitForElementClickable(".functionalTestSelector"); // stepKey: waitForElementClickable
 		$I->createEntity("createdInTest", "test", "entity", [], []); // stepKey: createdInTest
 		$I->updateEntity("createdInTest", "test", "entity",[]); // stepKey: updateInTest
 		$I->deleteEntity("createdInTest", "test"); // stepKey: deleteInTest

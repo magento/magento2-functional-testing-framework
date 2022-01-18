@@ -42,6 +42,14 @@
             <argument name="int">987</argument>
         </helper>
 
+        <helper class="\MFTF\DevDocs\Helper\CustomHelper" method="getText" stepKey="getText">
+            <argument name="text">some text</argument>
+        </helper>
+        <assertEquals stepKey="assertHelperReturnValue" message="Method getText of CustomHelper should return value which may be used as variable in test">
+            <expectedResult type="string">some text</expectedResult>
+            <actualResult type="variable">getText</actualResult>
+        </assertEquals>
+
         <actionGroup ref="HelperActionGroup" stepKey="actionGroupWithCustomHelper">
             <argument name="test" value="{{HelperData.entityField}}" />
             <argument name="entityTest" value="HelperData" />
