@@ -47,7 +47,6 @@ class ActionGroupUsingCreateDataCest
 
 	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception

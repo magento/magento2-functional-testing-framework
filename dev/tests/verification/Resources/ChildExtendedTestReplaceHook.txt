@@ -58,7 +58,6 @@ class ChildExtendedTestReplaceHookCest
 	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
