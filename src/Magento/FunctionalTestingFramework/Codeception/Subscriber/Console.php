@@ -193,7 +193,7 @@ class Console extends \Codeception\Subscriber\Console
         $stepString = str_replace(
             [ActionGroupObject::ACTION_GROUP_CONTEXT_START, ActionGroupObject::ACTION_GROUP_CONTEXT_END],
             '',
-            $step->toString(150)
+            $step->toString(10000)
         );
 
         $msg->append(OutputFormatter::escape($stepString));
