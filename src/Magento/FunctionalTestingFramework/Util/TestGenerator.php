@@ -279,6 +279,10 @@ class TestGenerator
         $cestPhp .= $classAnnotationsPhp;
         $cestPhp .= sprintf("class %s\n", $className);
         $cestPhp .= "{\n";
+        $cestPhp .= "\t/**\n";
+        $cestPhp .= "\t * @var bool\n";
+        $cestPhp .= "\t */\n";
+        $cestPhp .= "\tprivate \$isSuccess = false;\n\n";
         $cestPhp .= $this->generateInjectMethod();
         $cestPhp .= $hookPhp;
         $cestPhp .= $testsPhp;
@@ -521,11 +525,7 @@ class TestGenerator
                 break;
 
             case null:
-                $annotationToAppend = sprintf(
-                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
-                    "AcceptanceTester",
-                    "I"
-                );
+                $annotationToAppend = "";
                 $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
                 $annotationToAppend .= "{$indent} * @return void\n";
                 $annotationToAppend .= "{$indent} * @throws \Exception\n";
@@ -894,7 +894,12 @@ class TestGenerator
                         $stepKey,
                         $customActionAttributes['class'] . '::' . $customActionAttributes['method']
                     );
-                    $testSteps .= $this->wrapFunctionCall($actor, $actionObject, $arguments);
+                    $testSteps .= $this->wrapFunctionCallWithReturnValue(
+                        $stepKey,
+                        $actor,
+                        $actionObject,
+                        $arguments
+                    );
                     break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
@@ -1743,6 +1748,10 @@ class TestGenerator
     {
         $hooks = "";
 
+        if (!isset($hookObjects['after'])) {
+            $hookObjects['after'] = new TestHookObject('after', '', []);
+        }
+
         foreach ($hookObjects as $hookObject) {
             $type = $hookObject->getType();
             $dependencies = 'AcceptanceTester $I';
@@ -1764,6 +1773,11 @@ class TestGenerator
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
+            if ($type === 'after') {
+                $hooks .= "\t\t" . 'if ($this->isSuccess) {' . "\n";
+                $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
+                $hooks .= "\t\t" . '}' . "\n";
+            }
             $hooks .= "\t}\n\n";
         }
 
@@ -1801,7 +1815,8 @@ class TestGenerator
             } else {
                 $skipString .= "No issues have been specified.";
             }
-            $steps = "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
+            $steps = "\t\t" . 'unlink(__FILE__);' . "\n";
+            $steps .= "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
             $dependencies .= ', \Codeception\Scenario $scenario';
         }
 
@@ -1810,6 +1825,15 @@ class TestGenerator
         $testPhp .= "\t{\n";
         $testPhp .= $steps;
         $testPhp .= "\t}\n";
+
+        if (!isset($skipString)) {
+            $testPhp .= PHP_EOL;
+            $testPhp .= sprintf("\tpublic function _passed(%s)\n", $dependencies);
+            $testPhp .= "\t{\n";
+            $testPhp .= "\t\t// Test passed successfully." . PHP_EOL;
+            $testPhp .= "\t\t\$this->isSuccess = true;" . PHP_EOL;
+            $testPhp .= "\t}\n";
+        }
 
         return $testPhp;
     }
@@ -1993,16 +2017,7 @@ class TestGenerator
      */
     private function wrapFunctionCall($actor, $action, ...$args)
     {
-        $isFirst = true;
-        $isActionHelper = $action->getType() === 'helper';
-        $actionType = $action->getType();
-        if ($isActionHelper) {
-            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
-            $args = $args[0];
-            $actionType = $action->getCustomActionAttributes()['method'];
-        }
-
-        $output = sprintf("\t\t$%s->%s(", $actor, $actionType);
+        $output = sprintf("\t\t$%s->%s(", $actor, $action->getType());
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;
@@ -2023,17 +2038,22 @@ class TestGenerator
     /**
      * Wrap parameters into a function call with a return value.
      *
-     * @param string $returnVariable
-     * @param string $actor
-     * @param string $action
-     * @param array  ...$args
+     * @param string       $returnVariable
+     * @param string       $actor
+     * @param actionObject $action
+     * @param array        ...$args
      * @return string
      * @throws \Exception
      */
     private function wrapFunctionCallWithReturnValue($returnVariable, $actor, $action, ...$args)
     {
-        $isFirst = true;
-        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $action->getType());
+        $actionType = $action->getType();
+        if ($actionType === 'helper') {
+            $actor = "this->helperContainer->get('" . $action->getCustomActionAttributes()['class'] . "')";
+            $args = $args[0];
+            $actionType = $action->getCustomActionAttributes()['method'];
+        }
+        $output = sprintf("\t\t$%s = $%s->%s(", $returnVariable, $actor, $actionType);
         for ($i = 0; $i < count($args); $i++) {
             if (null === $args[$i]) {
                 continue;

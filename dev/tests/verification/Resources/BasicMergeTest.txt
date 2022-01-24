@@ -21,6 +21,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class BasicMergeTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -37,6 +42,9 @@ class BasicMergeTestCest
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl1"); // stepKey: after1
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -52,7 +60,6 @@ class BasicMergeTestCest
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -74,5 +81,11 @@ class BasicMergeTestCest
 		$I->see("#element .Jane"); // stepKey: see1Step8Merge
 		$I->comment("Exiting Action Group [step8Merge] FunctionalActionGroupWithData");
 		$I->click("#step10MergedInResult"); // stepKey: step10
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

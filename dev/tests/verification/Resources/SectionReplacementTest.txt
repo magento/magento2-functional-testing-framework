@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class SectionReplacementTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -62,5 +77,11 @@ class SectionReplacementTestCest
 		$I->click("#element .1#element .{$data}"); // stepKey: selectorReplaceTwoParamMixedTypes
 		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,'')]"); // stepKey: selectorParamWithEmptyString
 		$I->click("(//div[@data-role='slide'])[1]/a[@data-element='link'][contains(@href,' ')]"); // stepKey: selectorParamWithASpace
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

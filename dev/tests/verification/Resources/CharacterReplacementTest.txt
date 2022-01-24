@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class CharacterReplacementTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -34,5 +49,11 @@ class CharacterReplacementTestCest
 		$I->click("#abcdefghijklmnopqrstuvwxyz1234567890 .abcdefghijklmnopqrstuvwxyz1234567890"); // stepKey: allChars4
 		$I->click("#`~!@#$%^&*()-_=+{}[]|\;:\".,></?() .`~!@#$%^&*()-_=+{}[]|\;:\".,></?()"); // stepKey: allChars5
 		$I->click("#words, and, commas, and, spaces .words, and, commas, and, spaces"); // stepKey: allChars6
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

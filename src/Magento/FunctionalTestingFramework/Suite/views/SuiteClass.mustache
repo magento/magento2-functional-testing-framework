@@ -65,6 +65,8 @@ class {{suiteName}} extends \Codeception\GroupObject
     private function executePreConditions()
     {
         if ($this->currentTestRun == 1) {
+            $this->testCount = $this->getTestCount();
+
             print sprintf(self::$HOOK_EXECUTION_INIT, "before");
 
             try {
@@ -170,5 +172,29 @@ class {{suiteName}} extends \Codeception\GroupObject
             throw new TestFrameworkException('Invalid action "' . $action . '"' . PHP_EOL);
         }
         return $module;
+    }
+
+    /**
+     * Counts how many tests in group.
+     *
+     * @return integer
+     */
+    private function getTestCount()
+    {
+        $config = $this->getGlobalConfig();
+        if (empty($config['groups']) || empty($config['groups'][self::$group])) {
+            return $this->testCount;
+        }
+        $pathToGroupDir = TESTS_BP . DIRECTORY_SEPARATOR . array_first($config['groups'][self::$group]);
+        $pathToGroupCests = $pathToGroupDir . "*Cest.php";
+
+        $files = glob($pathToGroupCests);
+        if (is_array($files)) {
+            $qty = count($files);
+            print('In a group "' . self::$group . '" suite executor found ' . $qty . ' tests.' . PHP_EOL);
+            return $qty;
+        }
+
+        return $this->testCount;
     }
 }

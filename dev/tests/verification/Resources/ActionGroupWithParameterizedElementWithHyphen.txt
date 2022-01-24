@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithParameterizedElementWithHyphenCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -29,5 +44,11 @@ class ActionGroupWithParameterizedElementWithHyphenCest
 		$I->comment("Entering Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
 		$keyoneActionGroup = $I->executeJS("#element .full-width"); // stepKey: keyoneActionGroup
 		$I->comment("Exiting Action Group [actionGroup] SectionArgumentWithParameterizedSelector");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

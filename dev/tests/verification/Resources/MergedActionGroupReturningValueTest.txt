@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class MergedActionGroupReturningValueTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -41,6 +46,9 @@ class MergedActionGroupReturningValueTestCest
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -56,7 +64,6 @@ class MergedActionGroupReturningValueTestCest
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -73,5 +80,11 @@ class MergedActionGroupReturningValueTestCest
 		$I->comment("Entering Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
 		$I->see($actionGroupWithReturnValue1, "#element .{$actionGroupWithReturnValue1}"); // stepKey: see1ActionGroupWithStringUsage1
 		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

@@ -20,6 +20,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class MergedReferencesTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -35,6 +40,9 @@ class MergedReferencesTestCest
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl"); // stepKey: after1
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -50,7 +58,6 @@ class MergedReferencesTestCest
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -59,5 +66,11 @@ class MergedReferencesTestCest
 	{
 		$I->fillField("#merge", "merged"); // stepKey: fillField1
 		$I->fillField("#newElement", "newField"); // stepKey: fillField2
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

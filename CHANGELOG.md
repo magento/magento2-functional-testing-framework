@@ -1,5 +1,44 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.8.0
+---------
+
+### Updates:
+* Allow MFTF Helpers to Return Data to MFTF Test
+* Improve parallel grouping and fix an issue with unbalanced groups
+* Added new action WaitForElementClickable
+
+3.7.3
+---------
+
+### Updates:
+* Fix encoding issue when secret key contains plus sign
+* Adding pagebuilder file upload spinner to loadingMaskLocators
+
+
+3.7.2
+---------
+
+### Bug fix:
+* Failed tests weren't logged correctly to `failed` file which caused a failure during run:failed command execution
+
+
+3.7.1
+---------
+
+### GitHub Pull Requests:
+* [#873](https://github.com/magento/magento2-functional-testing-framework/pull/873) -- Add check for isBuiltin method (for PHP 8 compatibility) by @karyna-tsymbal-atwix
+
+### Updates
+* Moved `hoa/console` to suggest section to avoid issues with PHP8.0
+* Update `vlucas/phpdotenv` to the latest versions
+* `<seeInCurrentUrl />` encodes special character which caused test failed
+* Add filter for groups, now we can generate tests with specific group annotation
+* Seprated a `run:failed` command to `generate:failed` and `run:failed`
+  * `run:failed` command can execute failed tests without need to regenerate failed tests
+* Deleting MagentoPwaWebDriver file and moving it to Pwa_tests repo
+
+
 3.7.0
 ---------
 

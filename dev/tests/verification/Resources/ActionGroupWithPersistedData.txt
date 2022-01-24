@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithPersistedDataCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -41,6 +46,9 @@ class ActionGroupWithPersistedDataCest
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1AfterGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2AfterGroup
 		$I->comment("Exiting Action Group [afterGroup] FunctionalActionGroup");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -56,7 +64,6 @@ class ActionGroupWithPersistedDataCest
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"MQE-433"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -71,5 +78,11 @@ class ActionGroupWithPersistedDataCest
 		$I->searchAndMultiSelectOption("#foo", [$I->retrieveEntityField('createPerson', 'firstname', 'test'), $I->retrieveEntityField('createPerson', 'lastname', 'test')]); // stepKey: multi1ActionGroupWithPersistedData1
 		$I->see("#element ." . $I->retrieveEntityField('createPerson', 'firstname', 'test')); // stepKey: see1ActionGroupWithPersistedData1
 		$I->comment("Exiting Action Group [actionGroupWithPersistedData1] FunctionalActionGroupWithData");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

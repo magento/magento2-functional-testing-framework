@@ -20,6 +20,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ChildExtendedTestReplaceCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -35,6 +40,9 @@ class ChildExtendedTestReplaceCest
 	public function _after(AcceptanceTester $I)
 	{
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -50,7 +58,6 @@ class ChildExtendedTestReplaceCest
 	 * @Severity(level = SeverityLevel::TRIVIAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -58,5 +65,11 @@ class ChildExtendedTestReplaceCest
 	public function ChildExtendedTestReplace(AcceptanceTester $I)
 	{
 		$I->comment("Different Input");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

@@ -21,13 +21,34 @@ class TestObject
 
     const TEST_ACTION_WEIGHT = [
         'waitForPageLoad' => 1500,
-        'amOnPage' => 1000,
+        'amOnPage' => 1500,
         'waitForLoadingMaskToDisappear' => 500,
         'wait' => self::WAIT_TIME_ATTRIBUTE,
+        'waitForAjaxLoad' => 500,
+        'waitForElementNotVisible' => 500,
+        'waitForElementVisible' => 500,
+        'waitForText' => 500,
+        'waitForElement' => 500,
+        'waitForJS' => 500,
         'comment' => 5,
         'assertCount' => 5,
-        'closeAdminNotification' => 10
+        'closeAdminNotification' => 10,
+        'magentoCLI' => 1000,
+        'magentoCron' => 3000,
+        'createData' =>  500,
+        'deleteData' =>  200,
+        'updateData' =>  200,
+        'getOTP' => 1000,
     ];
+
+    const WEBAPI_AUTH_TEST_ACTIONS = [
+        'createData',
+        'deleteData',
+        'updateData',
+        'getData',
+    ];
+
+    const WEBAPI_AUTH_TEST_ACTION_WEIGHT = 6000;
 
     /**
      * Name of the test
@@ -86,6 +107,13 @@ class TestObject
     private $deprecated;
 
     /**
+     * Indicates if a test contains an action that requires Web API authentication.
+     *
+     * @var boolean
+     */
+    private $hasWebApiAuthAction;
+
+    /**
      * TestObject constructor.
      *
      * @param string           $name
@@ -112,6 +140,7 @@ class TestObject
         $this->filename = $filename;
         $this->parentTest = $parentTest;
         $this->deprecated = $deprecated;
+        $this->hasWebApiAuthAction = false;
     }
 
     /**
@@ -222,7 +251,11 @@ class TestObject
 
         $testTime = $this->calculateWeightedActionTimes($this->getOrderedActions());
 
-        return $hookTime + $testTime;
+        if ($this->hasWebApiAuthAction) {
+            return $hookTime + $testTime + self::WEBAPI_AUTH_TEST_ACTION_WEIGHT;
+        } else {
+            return $hookTime + $testTime;
+        }
     }
 
     /**
@@ -237,6 +270,11 @@ class TestObject
         // search for any actions of special type
         foreach ($actions as $action) {
             /** @var ActionObject $action */
+
+            if (!$this->hasWebApiAuthAction && in_array($action->getType(), self::WEBAPI_AUTH_TEST_ACTIONS)) {
+                $this->hasWebApiAuthAction = true;
+            }
+
             if (array_key_exists($action->getType(), self::TEST_ACTION_WEIGHT)) {
                 $weight = self::TEST_ACTION_WEIGHT[$action->getType()];
                 if ($weight === self::WAIT_TIME_ATTRIBUTE) {

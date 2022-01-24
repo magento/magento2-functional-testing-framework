@@ -24,11 +24,6 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
     const DEFAULT_TEST_GROUP = 'default';
 
     /**
-     * @var string
-     */
-    private $testsReRunFile;
-
-    /**
      * Configures the current command.
      *
      * @return void
@@ -54,9 +49,6 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
-        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
-
         $force = $input->getOption('force');
         $debug = $input->getOption('debug') ?? MftfApplicationConfig::LEVEL_DEVELOPER; // for backward compatibility
         $allowSkipped = $input->getOption('allow-skipped');
@@ -71,10 +63,13 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
-        $testConfiguration = $this->getFailedTestList();
+        $testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+        $testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
+        $testConfiguration = $this->getFailedTestList($testsFailedFile, $testsReRunFile);
 
         if ($testConfiguration === null) {
-            // no failed tests found, run is a success
+            // No failed tests found, no tests generated
+            $this->removeGeneratedDirectory($output, $verbose);
             return 0;
         }
 
@@ -89,7 +84,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
         ];
         $command->run(new ArrayInput($args), $output);
         $output->writeln("Test Failed Generated, now run:failed command");
-        return 1;
+        return 0;
     }
 
     /**
@@ -97,16 +92,16 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
      *
      * @return string
      */
-    private function getFailedTestList()
+    public function getFailedTestList($testsFailedFile, $testsReRunFile)
     {
         $failedTestDetails = ['tests' => [], 'suites' => []];
 
-        if (realpath($this->testsFailedFile)) {
-            $testList = $this->readFailedTestFile($this->testsFailedFile);
+        $testList = $this->readFailedTestFile($testsFailedFile);
 
+        if (!empty($testList)) {
             foreach ($testList as $test) {
                 if (!empty($test)) {
-                    $this->writeFailedTestToFile($test, $this->testsReRunFile);
+                    $this->writeFailedTestToFile($test, $testsReRunFile);
                     $testInfo = explode(DIRECTORY_SEPARATOR, $test);
                     $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
                     $suiteName = $testInfo[count($testInfo) - 2];
@@ -159,9 +154,12 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
      * @param string $filePath
      * @return array|boolean
      */
-    private function readFailedTestFile($filePath)
+    public function readFailedTestFile($filePath)
     {
-        return file($filePath, FILE_IGNORE_NEW_LINES);
+        if (realpath($filePath)) {
+            return file($filePath, FILE_IGNORE_NEW_LINES);
+        }
+        return "";
     }
 
     /**
@@ -171,7 +169,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
      * @param string $filePath
      * @return void
      */
-    private function writeFailedTestToFile($test, $filePath)
+    public function writeFailedTestToFile($test, $filePath)
     {
         if (file_exists($filePath)) {
             if (strpos(file_get_contents($filePath), $test) === false) {

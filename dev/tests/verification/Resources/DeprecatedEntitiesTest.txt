@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class DeprecatedEntitiesTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -30,5 +45,11 @@ class DeprecatedEntitiesTestCest
 		$I->see("deprecated", "#element"); // stepKey: deprecatedSeeDeprecatedActionGroup
 		$I->comment("Exiting Action Group [deprecatedActionGroup] DeprecatedActionGroup");
 		$I->amOnPage("/test.html"); // stepKey: amOnPage
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

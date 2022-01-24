@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupMergedViaInsertBeforeCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -34,5 +49,11 @@ class ActionGroupMergedViaInsertBeforeCest
 		$I->fillField("#bar", "bar"); // stepKey: fillField2Keyone
 		$I->fillField("#baz", "baz"); // stepKey: fillField3Keyone
 		$I->comment("Exiting Action Group [keyone] FunctionalActionGroupForMassMergeBefore");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

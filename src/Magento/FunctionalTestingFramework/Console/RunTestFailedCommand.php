@@ -18,15 +18,12 @@ use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
-    /**
-     * Default Test group to signify not in suite
-     */
     const DEFAULT_TEST_GROUP = 'default';
 
     /**
      * @var string
      */
-    private $testsManifestFile;
+    private $testsReRunFile = "rerun_tests";
 
     /**
      * @var array
@@ -59,12 +56,16 @@ class RunTestFailedCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->testsManifestFile= FilePathFormatter::format(TESTS_MODULE_PATH) .
-            "_generated" .
-            DIRECTORY_SEPARATOR .
-            "testManifest.txt";
+        $this->testsFailedFile = $this->getTestsOutputDir() . self::FAILED_FILE;
+        $this->testsReRunFile = $this->getTestsOutputDir() . "rerun_tests";
 
-        $testManifestList = $this->readTestManifestFile();
+        $failedTests = $this->readFailedTestFile($this->testsFailedFile);
+        $testManifestList = $this->filterTestsForExecution($failedTests);
+
+        if (empty($testManifestList)) {
+            // If there is no tests in manifest then we have nothing to execute.
+            return 0;
+        }
         $returnCode = 0;
         for ($i = 0; $i < count($testManifestList); $i++) {
             if ($this->pauseEnabled()) {
@@ -86,6 +87,8 @@ class RunTestFailedCommand extends BaseGenerateCommand
                         $output->write($buffer);
                     }
                 ));
+                $process->__destruct();
+                unset($process);
             }
 
             if (file_exists($this->testsFailedFile)) {
@@ -104,24 +107,50 @@ class RunTestFailedCommand extends BaseGenerateCommand
     }
 
     /**
-     * Returns an array of run commands read from the manifest file created post generation
+     * Returns a list of tests/suites which should have an additional run.
      *
-     * @return array|boolean
+     * @param array $failedTests
+     * @return array
      */
-    private function readTestManifestFile()
+    private function filterTestsForExecution(array $failedTests): array
     {
-        return file($this->testsManifestFile, FILE_IGNORE_NEW_LINES);
+        $testsOrGroupsToRerun = [];
+
+        foreach ($failedTests as $test) {
+            if (!empty($test)) {
+                $this->writeFailedTestToFile($test, $this->testsReRunFile);
+                $testInfo = explode(DIRECTORY_SEPARATOR, $test);
+                $suiteName = $testInfo[count($testInfo) - 2];
+                list($testPath) = explode(":", $test);
+
+                if ($suiteName === self::DEFAULT_TEST_GROUP) {
+                    $testsOrGroupsToRerun[] = $testPath;
+                } else {
+                    $group = "-g " . $suiteName;
+                    if (!in_array($group, $testsOrGroupsToRerun)) {
+                        $testsOrGroupsToRerun[] = $group;
+                    }
+                }
+            }
+        }
+
+        return $testsOrGroupsToRerun;
     }
 
     /**
      * Returns an array of tests read from the failed test file in _output
      *
      * @param string $filePath
-     * @return array|boolean
+     * @return array
      */
-    private function readFailedTestFile($filePath)
+    private function readFailedTestFile(string $filePath): array
     {
-        return file($filePath, FILE_IGNORE_NEW_LINES);
+        $data = [];
+        if (file_exists($filePath)) {
+            $file = file($filePath, FILE_IGNORE_NEW_LINES);
+            $data = $file === false ? [] : $file;
+        }
+        return $data;
     }
 
     /**

@@ -19,9 +19,24 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendedChildActionGroupReturningValueTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -39,5 +54,11 @@ class ExtendedChildActionGroupReturningValueTestCest
 		$I->comment("Entering Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
 		$I->see($extendedActionGroupReturningValue, "#element .{$extendedActionGroupReturningValue}"); // stepKey: see1ActionGroupWithStringUsage1
 		$I->comment("Exiting Action Group [actionGroupWithStringUsage1] actionGroupWithStringUsage");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

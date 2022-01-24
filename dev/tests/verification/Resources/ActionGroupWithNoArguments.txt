@@ -19,9 +19,24 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithNoArgumentsCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Severity(level = SeverityLevel::BLOCKER)
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -31,5 +46,11 @@ class ActionGroupWithNoArgumentsCest
 		$I->comment("Entering Action Group [actionGroup] actionGroupWithoutArguments");
 		$I->wait(1); // stepKey: waitForNothingActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithoutArguments");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

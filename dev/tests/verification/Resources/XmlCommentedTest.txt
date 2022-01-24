@@ -19,6 +19,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class XmlCommentedTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -38,6 +43,9 @@ class XmlCommentedTestCest
 		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_1\">/");
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
 		$I->comment("< > & \$abc \" abc ' <click stepKey=\"click\" userInput=\"\$\$createDataHook.firstname\$\$\" selector=\"#id_2\">/");
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
 	}
 
 	/**
@@ -52,7 +60,6 @@ class XmlCommentedTestCest
 	/**
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -69,5 +76,11 @@ class XmlCommentedTestCest
 		$I->attachFile(".functionalTestSelector", "testFileAttachment"); // stepKey: attachFileKey1
 		$I->comment("<cancelPopup stepKey=\"cancelPopupKey1\"/>");
 		$I->checkOption(".functionalTestSelector"); // stepKey: checkOptionKey1
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

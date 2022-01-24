@@ -72,6 +72,9 @@ class MagentoWebDriver extends WebDriver
         '//div[contains(@class, "admin__data-grid-loading-mask")]',
         '//div[contains(@class, "admin__form-loading-mask")]',
         '//div[@data-role="spinner"]',
+        '//div[contains(@class,"file-uploader-spinner")]',
+        '//div[contains(@class,"image-uploader-spinner")]',
+        '//div[contains(@class,"uploader")]//div[@class="file-row"]',
     ];
 
     /**
@@ -340,7 +343,7 @@ class MagentoWebDriver extends WebDriver
         $actualUrl = $this->webDriver->getCurrentURL();
         $comparison = "Expected: $needle\nActual: $actualUrl";
         AllureHelper::addAttachmentToCurrentStep($comparison, 'Comparison');
-        $this->assertStringContainsString($needle, $actualUrl);
+        $this->assertStringContainsString(urldecode($needle), urldecode($actualUrl));
     }
 
     /**
@@ -571,7 +574,7 @@ class MagentoWebDriver extends WebDriver
             $apiURL,
             [
                 'token' => WebApiAuth::getAdminToken(),
-                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => $command,
+                getenv('MAGENTO_CLI_COMMAND_PARAMETER') => urlencode($command),
                 'arguments' => $arguments,
                 'timeout'   => $timeout,
             ],

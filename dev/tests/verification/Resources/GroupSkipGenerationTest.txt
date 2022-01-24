@@ -20,15 +20,36 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class GroupSkipGenerationTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Stories({"GroupSkipGenerationTestStory"})
 	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
 	public function GroupSkipGenerationTest(AcceptanceTester $I)
 	{
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

@@ -18,6 +18,11 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class PersistedReplacementTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
 	  * @param AcceptanceTester $I
 	  * @throws \Exception
 	  */
@@ -27,8 +32,18 @@ class PersistedReplacementTestCest
 	}
 
 	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -58,5 +73,11 @@ class PersistedReplacementTestCest
 		$I->dontSeeInSource("StringBefore " . $I->retrieveEntityField('createdData', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace10
 		$I->dontSeeInSource("StringBefore " . $I->retrieveEntityField('createData1', 'firstname', 'test') . " StringAfter"); // stepKey: htmlReplace11
 		$I->dontSeeInSource("#" . getenv("MAGENTO_BASE_URL") . "#" . $I->retrieveEntityField('createdData', 'firstname', 'test')); // stepKey: htmlReplace12
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

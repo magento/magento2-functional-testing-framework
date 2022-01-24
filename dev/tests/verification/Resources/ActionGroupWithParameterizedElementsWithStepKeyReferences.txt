@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -34,5 +49,11 @@ class ActionGroupWithParameterizedElementsWithStepKeyReferencesCest
 		$I->click("#Doe-" . msq("simpleParamData") . "prename .{$testVariableActionGroup}"); // stepKey: click2ActionGroup
 		$I->seeElement("//div[@name='Tiberius'][@class={$testVariableActionGroup}][@data-element='{$testVariable2ActionGroup}'][" . $I->retrieveEntityField('createSimpleData', 'name', 'test') . "]"); // stepKey: see1ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] actionGroupWithParametrizedSelectors");
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }

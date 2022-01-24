@@ -18,8 +18,23 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class ExtendParentDataTestCest
 {
 	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -32,5 +47,11 @@ class ExtendParentDataTestCest
 		$I->searchAndMultiSelectOption("#selector", ["item"]); // stepKey: emptyPost
 		$I->searchAndMultiSelectOption("#selector", [msq("extendParentData") . "prename"]); // stepKey: originalPre
 		$I->searchAndMultiSelectOption("#selector", ["postnameExtend" . msq("extendParentData")]); // stepKey: secondUniquePre
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
 	}
 }
