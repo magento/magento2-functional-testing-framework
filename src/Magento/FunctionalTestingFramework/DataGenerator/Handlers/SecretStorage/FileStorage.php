@@ -6,8 +6,8 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 
@@ -93,6 +93,7 @@ class FileStorage extends BaseStorage
      *
      * @param array $credContents
      * @return array
+     * @throws TestFrameworkException
      */
     private function encryptCredFileContents($credContents)
     {
@@ -100,6 +101,10 @@ class FileStorage extends BaseStorage
         foreach ($credContents as $credValue) {
             if (substr($credValue, 0, 1) === '#' || empty($credValue)) {
                 continue;
+            } elseif (strpos($credValue, "=") === false) {
+                throw new TestFrameworkException(
+                    $credValue . " not configured correctly in .credentials file"
+                );
             }
 
             list($key, $value) = explode("=", $credValue, 2);
