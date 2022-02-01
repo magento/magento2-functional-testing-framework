@@ -32,7 +32,7 @@ class DataActionsTestCest
 		$I->createEntity("createdInBefore", "hook", "entity", [], []); // stepKey: createdInBefore
 		$I->updateEntity("createdInBefore", "hook", "entity",[]); // stepKey: updateInBefore
 		$I->deleteEntity("createdInBefore", "hook"); // stepKey: deleteInBefore
-		$customerFields['lastname'] = "foo61f90e3156e25";
+		$customerFields['firstname'] = "foo61f90e3156e25";
 		$I->createEntity("customer", "hook", "Simple_Customer_Without_Address", [], $customerFields); // stepKey: customer
 		$I->comment('[END BEFORE HOOK]');
 	}
