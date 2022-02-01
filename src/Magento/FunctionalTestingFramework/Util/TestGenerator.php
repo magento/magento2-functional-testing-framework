@@ -1770,29 +1770,29 @@ class TestGenerator
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
-            if ($type == 'before') {
-              $steps = sprintf(
-              "\t\t$%s->comment('[%s]');" . PHP_EOL,
-              'I',
-              'START BEFORE HOOK'
-              ) . $steps;
-              $steps = $steps . sprintf(
-                  "\t\t$%s->comment('[%s]');" . PHP_EOL,
-                  'I',
-                  'END BEFORE HOOK'
+            if ($type === 'before' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START BEFORE HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END BEFORE HOOK'
                 );
             }
 
-            if ($type == 'after') {
-              $steps = sprintf(
-                  "\t\t$%s->comment('[%s]');" . PHP_EOL,
-                  'I',
-                  'START AFTER HOOK'
+            if ($type === 'after' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START AFTER HOOK'
                 ) . $steps;
-              $steps = $steps . sprintf(
-                  "\t\t$%s->comment('[%s]');" . PHP_EOL,
-                  'I',
-                  'END AFTER HOOK'
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END AFTER HOOK'
                 );
             }
 
