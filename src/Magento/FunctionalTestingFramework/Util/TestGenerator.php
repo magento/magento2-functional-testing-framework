@@ -1808,7 +1808,7 @@ class TestGenerator
             $hooks .= $steps;
             if ($type === 'after') {
                 $hooks .= "\t\t" . 'if ($this->isSuccess) {' . "\n";
-               $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
+                $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
                 $hooks .= "\t\t" . '}' . "\n";
             }
             $hooks .= "\t}\n\n";
