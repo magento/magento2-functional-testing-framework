@@ -14,7 +14,7 @@
             <updateData entity="entity" createDataKey="createdInBefore" stepKey="updateInBefore"/>
             <deleteData createDataKey="createdInBefore" stepKey="deleteInBefore"/>
             <createData stepKey="customer" entity="Simple_Customer_Without_Address">
-                <field key="firstname" unique="suffix" >foo</field>
+                <field key="lastname">foo</field>
             </createData>
 
         </before>
