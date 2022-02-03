@@ -28,7 +28,9 @@ class PersistedReplacementTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->createEntity("createData1", "hook", "ReplacementPerson", [], []); // stepKey: createData1
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**

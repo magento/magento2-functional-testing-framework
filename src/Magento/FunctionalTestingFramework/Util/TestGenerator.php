@@ -1770,6 +1770,32 @@ class TestGenerator
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
+            if ($type === 'before' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START BEFORE HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END BEFORE HOOK'
+                );
+            }
+
+            if ($type === 'after' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START AFTER HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END AFTER HOOK'
+                );
+            }
+
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
