@@ -37,7 +37,7 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
 {
     const ACTIONGROUP_REGEX_PATTERN = '/\$(\$)*([\w.]+)(\$)*\$/';
     const ERROR_LOG_FILENAME = 'create-data-from-outside-action-group';
-    const ERROR_LOG_MESSAGE = 'Created Data From Outside Action Group';
+    const ERROR_MESSAGE = 'Created Data From Outside Action Group';
 
     /**
      * Array containing all errors found after running the execute() function
@@ -61,13 +61,6 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
     private $scriptUtil;
 
     /**
-     * Action group xml files to scan
-     *
-     * @var Finder|array
-     */
-    private $actionGroupXmlFiles = [];
-
-    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
@@ -79,11 +72,12 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
         $this->scriptUtil = new ScriptUtil();
         $this->loadAllXmlFiles($input);
         $this->errors = [];
-        $this->errors += $this->findReferenceErrorsInActionFiles($this->actionGroupXmlFiles);
+        $this->errors += $this->findReferenceErrorsInActionFiles($this->actionGroupXmlFile);
+        // hold on to the output and print any errors to a file
         $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
             StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
-            self::ERROR_LOG_MESSAGE
+            self::ERROR_MESSAGE
         );
     }
 
@@ -118,7 +112,6 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
     private function loadAllXmlFiles($input)
     {
         $modulePaths = [];
-        $includeRootPath = true;
         $path = $input->getOption('path');
         if ($path) {
             if (!realpath($path)) {
@@ -132,15 +125,14 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
                 true
             );
             $modulePaths[] = realpath($path);
-            $includeRootPath = false;
         } else {
             $modulePaths = $this->scriptUtil->getAllModulePaths();
         }
 
         // These files can contain references to other entities
-        $this->actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
+        $this->actionGroupXmlFile = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
       
-        if (empty($this->actionGroupXmlFiles)) {
+        if (empty($this->actionGroupXmlFile)) {
             if ($path) {
                 throw new InvalidArgumentException(
                     'Invalid --path option: '
