@@ -35,173 +35,167 @@ use DOMElement;
  */
 class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
 {
-  const ACTIONGROUP_REGEX_PATTERN = '/\$(\$)*([\w.]+)(\$)*\$/';
+    const ACTIONGROUP_REGEX_PATTERN = '/\$(\$)*([\w.]+)(\$)*\$/';
+    const ERROR_LOG_FILENAME = 'create-data-from-outside-action-group';
+    const ERROR_LOG_MESSAGE = 'Created Data From Outside Action Group';
 
-  const ERROR_LOG_FILENAME = 'create-data-from-outside-action-group';
-  const ERROR_LOG_MESSAGE = 'Created Data From Outside Action Group';
+    /**
+     * Array containing all errors found after running the execute() function
+     *
+     * @var array
+     */
+      private $errors = [];
 
-  /**
-   * Array containing all errors found after running the execute() function
-   *
-   * @var array
-   */
-  private $errors = [];
+    /**
+     * String representing the output summary found after running the execute() function
+     *
+     * @var string
+     */
+    private $output;
 
-  /**
-   * String representing the output summary found after running the execute() function
-   *
-   * @var string
-   */
-  private $output;
+    /**
+     * ScriptUtil instance
+     *
+     * @var ScriptUtil
+     */
+    private $scriptUtil;
 
-  /**
-   * ScriptUtil instance
-   *
-   * @var ScriptUtil
-   */
-  private $scriptUtil;
+    /**
+     * Action group xml files to scan
+     *
+     * @var Finder|array
+     */
+    private $actionGroupXmlFiles = [];
 
-  /**
-   * Action group xml files to scan
-   *
-   * @var Finder|array
-   */
-  private $actionGroupXmlFiles = [];
-
-  /**
-   * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
-   *
-   * @param InputInterface $input
-   * @return void
-   * @throws Exception
-   */
-  public function execute(InputInterface $input)
-  {
+    /**
+     * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
+     *
+     * @param InputInterface $input
+     * @return void
+     * @throws Exception
+     */
+    public function execute(InputInterface $input)
+    {
         $this->scriptUtil = new ScriptUtil();
         $this->loadAllXmlFiles($input);
         $this->errors = [];
-        
         $this->errors += $this->findReferenceErrorsInActionFiles($this->actionGroupXmlFiles);
-        
         $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
             StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
-  }
-
-  /**
-   * Return array containing all errors found after running the execute() function
-   *
-   * @return array
-   */
-  public function getErrors()
-  {
-    return $this->errors;
-  }
-
-  /**
-   * Return string of a short human readable result of the check. For example: "No Dependency errors found."
-   *
-   * @return string
-   */
-  public function getOutput()
-  {
-    return $this->output;
-  }
-
-  /**
-   * Read all XML files for scanning
-   *
-   * @param InputInterface $input
-   * @return void
-   * @throws Exception
-   * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-   */
-  private function loadAllXmlFiles($input)
-  {
-    $modulePaths = [];
-    $includeRootPath = true;
-    $path = $input->getOption('path');
-    if ($path) {
-      if (!realpath($path)) {
-        throw new InvalidArgumentException('Invalid --path option: ' . $path);
-      }
-      MftfApplicationConfig::create(
-        true,
-        MftfApplicationConfig::UNIT_TEST_PHASE,
-        false,
-        MftfApplicationConfig::LEVEL_DEFAULT,
-        true
-      );
-      $modulePaths[] = realpath($path);
-      $includeRootPath = false;
-    } else {
-      $modulePaths = $this->scriptUtil->getAllModulePaths();
     }
 
-    // These files can contain references to other entities
-    $this->actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
-   
-    if (empty($this->actionGroupXmlFiles)) {
-      if ($path) {
-        throw new InvalidArgumentException(
-          'Invalid --path option: '
-          . $path
-          . PHP_EOL
-          . 'Please make sure --path points to a valid MFTF Test Module.'
-        );
-      } elseif (empty($this->rootSuiteXmlFiles)) {
-        throw new TestFrameworkException('No xml file to scan.');
-      }
+    /**
+     * Return array containing all errors found after running the execute() function
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
-  }
 
-  /**
-   * Find reference errors in set of action files
-   *
-   * @param Finder  $files
-   * @return array
-   * @throws XmlException
-   */
-  private function findReferenceErrorsInActionFiles($files)
-  {
-    $testErrors = [];
-    /** @var SplFileInfo $filePath */
-    foreach ($files as $filePath) {
-        $contents = file_get_contents($filePath);
-        preg_match_all(self::ACTIONGROUP_REGEX_PATTERN, $contents, $actionGroupReferences);
-        if(count( $actionGroupReferences) > 0) {
-          $testErrors = array_merge($testErrors, $this->setErrorOutput($actionGroupReferences, $filePath));
+    /**
+     * Return string of a short human readable result of the check. For example: "No Dependency errors found."
+     *
+     * @return string
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * Read all XML files for scanning
+     *
+     * @param InputInterface $input
+     * @return void
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function loadAllXmlFiles($input)
+    {
+        $modulePaths = [];
+        $includeRootPath = true;
+        $path = $input->getOption('path');
+        if ($path) {
+            if (!realpath($path)) {
+                throw new InvalidArgumentException('Invalid --path option: ' . $path);
+            }
+            MftfApplicationConfig::create(
+                true,
+                MftfApplicationConfig::UNIT_TEST_PHASE,
+                false,
+                MftfApplicationConfig::LEVEL_DEFAULT,
+                true
+            );
+            $modulePaths[] = realpath($path);
+            $includeRootPath = false;
+        } else {
+            $modulePaths = $this->scriptUtil->getAllModulePaths();
+        }
+
+        // These files can contain references to other entities
+        $this->actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'ActionGroup');
+      
+        if (empty($this->actionGroupXmlFiles)) {
+            if ($path) {
+                throw new InvalidArgumentException(
+                    'Invalid --path option: '
+                    . $path
+                    . PHP_EOL
+                    . 'Please make sure --path points to a valid MFTF Test Module.'
+                );
+            } elseif (empty($this->rootSuiteXmlFiles)) {
+                throw new TestFrameworkException('No xml file to scan.');
+            }
         }
     }
 
-    return $testErrors;
-  }
-
-  /**
-   * Build and return error output for violating references
-   *
-   * @param array  $actionGroupReferences
-   * @param SplFileInfo $path
-   * @return mixed
-   */
-   private function setErrorOutput( $actionGroupReferences , $path)
-   {
-      $testErrors = [];  
-        $errorOutput = "";
-        $filePath = StaticChecksList::getFilePath($path->getRealPath());
-       
-        foreach($actionGroupReferences as $key => $actionGroupReferencesData) {
-          foreach($actionGroupReferencesData as $actionGroupReferencesDataResult) {
-           
-            $errorOutput .= "\nFile \"{$filePath}\" contains: ". "\n\t {$actionGroupReferencesDataResult}  in {$filePath}";
-            $testErrors[$filePath][] = $errorOutput;
-          }
-          
-            
+    /**
+     * Find reference errors in set of action files
+     *
+     * @param Finder $files
+     * @return array
+     * @throws XmlException
+     */
+    private function findReferenceErrorsInActionFiles($files)
+    {
+        $testErrors = [];
+        /** @var SplFileInfo $filePath */
+        foreach ($files as $filePath) {
+            $contents = file_get_contents($filePath);
+            preg_match_all(self::ACTIONGROUP_REGEX_PATTERN, $contents, $actionGroupReferences);
+            if (count($actionGroupReferences) > 0) {
+                $testErrors = array_merge($testErrors, $this->setErrorOutput($actionGroupReferences, $filePath));
+            }
         }
+
         return $testErrors;
     }
 
+     /**
+      * Build and return error output for violating references
+      *
+      * @param array       $actionGroupReferences
+      * @param SplFileInfo $path
+      * @return mixed
+      */
+    private function setErrorOutput($actionGroupReferences, $path)
+    {
+        $testErrors = [];
+        $errorOutput = "";
+        $filePath = StaticChecksList::getFilePath($path->getRealPath());
+       
+        foreach ($actionGroupReferences as $key => $actionGroupReferencesData) {
+            foreach ($actionGroupReferencesData as $actionGroupReferencesDataResult) {
+                $errorOutput .= "\nFile \"{$filePath}\" contains: ". "\n\t 
+                {$actionGroupReferencesDataResult}  in {$filePath}";
+                $testErrors[$filePath][] = $errorOutput;
+            }
+        }
+        return $testErrors;
+    }
 }
