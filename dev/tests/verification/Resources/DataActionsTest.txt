@@ -28,9 +28,11 @@ class DataActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->createEntity("createdInBefore", "hook", "entity", [], []); // stepKey: createdInBefore
 		$I->updateEntity("createdInBefore", "hook", "entity",[]); // stepKey: updateInBefore
 		$I->deleteEntity("createdInBefore", "hook"); // stepKey: deleteInBefore
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
