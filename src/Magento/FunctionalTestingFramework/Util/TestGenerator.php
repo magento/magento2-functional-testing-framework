@@ -525,7 +525,11 @@ class TestGenerator
                 break;
 
             case null:
-                $annotationToAppend = "";
+                $annotationToAppend = sprintf(
+                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
+                    "AcceptanceTester",
+                    "I"
+                );
                 $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
                 $annotationToAppend .= "{$indent} * @return void\n";
                 $annotationToAppend .= "{$indent} * @throws \Exception\n";
@@ -1462,11 +1466,14 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    if (isset($actionObject->getCustomActionAttributes()['unique'])) {
+                        $input = ($actionObject->getCustomActionAttributes()['unique'] == 'prefix')
+                            ? '"'.uniqid().str_replace('"', '', $input).'"'
+                            : '"'.str_replace('"', '', $input).uniqid().'"';
+                    }
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
-
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
@@ -1801,7 +1808,7 @@ class TestGenerator
             $hooks .= $steps;
             if ($type === 'after') {
                 $hooks .= "\t\t" . 'if ($this->isSuccess) {' . "\n";
-                $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
+//                $hooks .= "\t\t\t" . 'unlink(__FILE__);' . "\n";
                 $hooks .= "\t\t" . '}' . "\n";
             }
             $hooks .= "\t}\n\n";
@@ -1841,7 +1848,7 @@ class TestGenerator
             } else {
                 $skipString .= "No issues have been specified.";
             }
-            $steps = "\t\t" . 'unlink(__FILE__);' . "\n";
+//            $steps = "\t\t" . 'unlink(__FILE__);' . "\n";
             $steps .= "\t\t" . '$scenario->skip("' . $skipString . '");' . "\n";
             $dependencies .= ', \Codeception\Scenario $scenario';
         }
@@ -1861,6 +1868,8 @@ class TestGenerator
             $testPhp .= "\t}\n";
         }
 
+        echo $testPhp;
+        exit;
         return $testPhp;
     }
 

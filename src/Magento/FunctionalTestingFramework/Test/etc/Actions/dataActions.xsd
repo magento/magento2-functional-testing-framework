@@ -125,14 +125,32 @@
         </xs:simpleContent>
     </xs:complexType>
 
+
     <xs:complexType name="additionalFieldType">
-        <xs:annotation>
-            <xs:documentation>field used to override defined fields from metadata or existing data definitions, during operation.</xs:documentation>
-        </xs:annotation>
         <xs:simpleContent>
             <xs:extension base="xs:string">
-                <xs:attribute name="key" use="required"/>
+                <xs:attribute type="xs:string" name="key" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>xp
+                            Key attribute of data/value pair.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="uniquenessEnumType" name="unique" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Add suite or test wide unique sequence as "prefix" or "suffix" to the data value if specified.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:simpleType name="uniquenessEnumType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="prefix" />
+            <xs:enumeration value="suffix" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

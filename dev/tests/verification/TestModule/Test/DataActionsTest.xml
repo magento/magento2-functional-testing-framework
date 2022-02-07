@@ -13,6 +13,9 @@
             <createData entity="entity" stepKey="createdInBefore"/>
             <updateData entity="entity" createDataKey="createdInBefore" stepKey="updateInBefore"/>
             <deleteData createDataKey="createdInBefore" stepKey="deleteInBefore"/>
+            <createData stepKey="customer" entity="Simple_Customer_Without_Address">
+                <field key="lastname" unique="suffix" >foo</field>
+            </createData>
 
         </before>
         <waitForElementClickable selector=".functionalTestSelector" time="30" stepKey="waitForElementClickable" />
