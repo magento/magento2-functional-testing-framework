@@ -28,11 +28,13 @@ class PersistenceCustomFieldsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$createData1Fields['firstname'] = "Mac";
 		$createData1Fields['lastname'] = "Doe";
 		$I->createEntity("createData1", "hook", "DefaultPerson", [], $createData1Fields); // stepKey: createData1
 		$createData2Fields['firstname'] = $I->retrieveEntityField('createData1', 'firstname', 'hook');
 		$I->createEntity("createData2", "hook", "uniqueData", ["createData1"], $createData2Fields); // stepKey: createData2
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**

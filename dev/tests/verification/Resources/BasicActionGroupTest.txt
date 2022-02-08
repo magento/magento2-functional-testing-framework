@@ -29,11 +29,13 @@ class BasicActionGroupTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->createEntity("createPersonParam", "hook", "ReplacementPerson", [], []); // stepKey: createPersonParam
 		$I->comment("Entering Action Group [beforeGroup] FunctionalActionGroup");
 		$I->fillField("#foo", "myData1"); // stepKey: fillField1BeforeGroup
 		$I->fillField("#bar", "myData2"); // stepKey: fillField2BeforeGroup
 		$I->comment("Exiting Action Group [beforeGroup] FunctionalActionGroup");
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
