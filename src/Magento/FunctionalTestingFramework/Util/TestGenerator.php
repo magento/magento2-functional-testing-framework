@@ -258,6 +258,7 @@ class TestGenerator
      */
     public function assembleTestPhp($testObject)
     {
+        $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
         $className = $testObject->getCodeceptionName();
