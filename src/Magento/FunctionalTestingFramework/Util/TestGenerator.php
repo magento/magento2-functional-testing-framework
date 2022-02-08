@@ -2097,18 +2097,20 @@ class TestGenerator
 
         foreach ($args as $key => $arg) {
             $newArgs[$key] = $arg;
-            preg_match_all($regex, $arg, $matches);
-            if (!empty($matches[0])) {
-                foreach ($matches[0] as $matchKey => $fullMatch) {
-                    $refVariable = $matches[1][$matchKey];
+            if($arg !== null) {
+                preg_match_all($regex, $arg, $matches);
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $matchKey => $fullMatch) {
+                      $refVariable = $matches[1][$matchKey];
 
-                    $replacement = $this->getReplacement($func, $refVariable);
+                      $replacement = $this->getReplacement($func, $refVariable);
 
-                    $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
-                    $newArgs[$key] = $outputArg;
+                      $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
+                      $newArgs[$key] = $outputArg;
+                    }
+                    unset($matches);
+                    continue;
                 }
-                unset($matches);
-                continue;
             }
         }
 
