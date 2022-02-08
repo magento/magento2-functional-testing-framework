@@ -2097,7 +2097,7 @@ class TestGenerator
 
         foreach ($args as $key => $arg) {
             $newArgs[$key] = $arg;
-            if($arg !== null) {
+            if ($arg !== null) {
                 preg_match_all($regex, $arg, $matches);
                 if (!empty($matches[0])) {
                     foreach ($matches[0] as $matchKey => $fullMatch) {
