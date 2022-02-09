@@ -128,6 +128,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
             return 1;
         }
 
+        if ($json !== null && is_file($json)) {
+            $json = file_get_contents($json);
+        }
+
         if (!empty($tests)) {
             $json = $this->getTestAndSuiteConfiguration($tests);
         }
