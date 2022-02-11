@@ -123,7 +123,7 @@ class PrExcludeGroupStaticCheck implements StaticCheckInterface
     /**
      * Finds violating pr_exclude group
      * @param \DomNode $entity
-     * @return bool
+     * @return boolean
      */
     private function isViolatingPrExcludeTests($entity)
     {
