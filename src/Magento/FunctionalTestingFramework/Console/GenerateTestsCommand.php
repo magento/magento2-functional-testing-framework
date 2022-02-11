@@ -69,7 +69,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'tests',
                 't',
                 InputOption::VALUE_REQUIRED,
-                'A parameter accepting a JSON string used to determine the test configuration'
+                'A parameter accepting a JSON string or JSON file path used to determine the test configuration'
             )->addOption(
                 'filter',
                 null,

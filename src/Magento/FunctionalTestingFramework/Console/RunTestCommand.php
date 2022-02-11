@@ -40,15 +40,19 @@ class RunTestCommand extends BaseGenerateCommand
             ->setDescription("generation and execution of test(s) defined in xml")
             ->addArgument(
                 'name',
-                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
                 "name of tests to generate and execute"
             )->addOption(
                 'skip-generate',
                 'k',
                 InputOption::VALUE_NONE,
                 "skip generation and execute existing test"
+            )->addOption(
+                'tests',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'A parameter accepting a JSON string or JSON file path used to determine the test configuration'
             );
-
         parent::configure();
     }
 
@@ -63,6 +67,7 @@ class RunTestCommand extends BaseGenerateCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tests = $input->getArgument('name');
+        $json = $input->getOption('tests'); // for backward compatibility
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $remove = $input->getOption('remove');
@@ -86,7 +91,18 @@ class RunTestCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
-        $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
+        if ($json !== null && is_file($json)) {
+            $testConfiguration = file_get_contents($json);
+        }
+
+        if (!empty($tests)) {
+            $testConfiguration = $this->getTestAndSuiteConfiguration($tests);
+        }
+
+        if ($testConfiguration !== null && !json_decode($testConfiguration)) {
+            // stop execution if we have failed to properly parse any json passed in by the user
+            throw new TestFrameworkException("JSON could not be parsed: " . json_last_error_msg());
+        }
 
         $generationErrorCode = 0;
 
@@ -98,7 +114,8 @@ class RunTestCommand extends BaseGenerateCommand
                 '--remove' => $remove,
                 '--debug' => $debug,
                 '--allow-skipped' => $allowSkipped,
-                '-v' => $verbose
+                '-v' => $verbose,
+              ''
             ];
             $command->run(new ArrayInput($args), $output);
 
