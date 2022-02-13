@@ -1464,7 +1464,7 @@ class TestGenerator
                     $argRef = "\t\t\$";
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
                     $input = (isset($actionObject->getCustomActionAttributes()['unique'])) ?
-                        $this->getUniqueIdForInput( $actionObject->getCustomActionAttributes()['unique'], $input) 
+                        $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
                         : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
@@ -1521,9 +1521,9 @@ class TestGenerator
      * @param string $input
      * @return string
      */
-    public function getUniqueIdForInput( $uniqueValue, $input) 
+    public function getUniqueIdForInput( $uniqueValue, $input)
     {
-        $input = ( $uniqueValue == 'prefix')
+        $input = ($uniqueValue == 'prefix')
             ? '"'.uniqid().str_replace('"', '', $input).'"'
             : '"'.str_replace('"', '', $input).uniqid().'"';
         return $input;
