@@ -1521,7 +1521,7 @@ class TestGenerator
      * @param string $input
      * @return string
      */
-    public function getUniqueIdForInput( $uniqueValue, $input)
+    public function getUniqueIdForInput($uniqueValue, $input)
     {
         $input = ($uniqueValue == 'prefix')
             ? '"'.uniqid().str_replace('"', '', $input).'"'
