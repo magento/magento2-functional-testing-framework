@@ -1463,11 +1463,9 @@ class TestGenerator
                     )[0];
                     $argRef = "\t\t\$";
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
-                    if (isset($actionObject->getCustomActionAttributes()['unique'])) {
-                        $input = ($actionObject->getCustomActionAttributes()['unique'] == 'prefix')
-                            ? '"'.uniqid().str_replace('"', '', $input).'"'
-                            : '"'.str_replace('"', '', $input).uniqid().'"';
-                    }
+                    $input = (isset($actionObject->getCustomActionAttributes()['unique'])) ?
+                        $this->getUniqueIdForInput( $actionObject->getCustomActionAttributes()['unique'], $input) 
+                        : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
                     $testSteps .= $argRef;
@@ -1514,6 +1512,21 @@ class TestGenerator
         }
 
         return $testSteps;
+    }
+
+    /**
+     * Get unique value appended to input string
+     *
+     * @param string $uniqueValue
+     * @param string $input
+     * @return string
+     */
+    public function getUniqueIdForInput( $uniqueValue, $input) 
+    {
+        $input = ( $uniqueValue == 'prefix')
+            ? '"'.uniqid().str_replace('"', '', $input).'"'
+            : '"'.str_replace('"', '', $input).uniqid().'"';
+        return $input;
     }
 
     /**
