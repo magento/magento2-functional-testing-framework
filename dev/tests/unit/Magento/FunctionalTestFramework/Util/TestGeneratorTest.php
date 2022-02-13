@@ -103,9 +103,9 @@ class TestGeneratorTest extends MagentoTestCase
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
 
-        $result = $testGeneratorObject->getUniqueIdForInput('prefix' , "foo");
+        $result = $testGeneratorObject->getUniqueIdForInput('prefix', "foo");
         
-         $this->assertMatchesRegularExpression('/[A-Za-z0-9]+foo/' ,$result );
+        $this->assertMatchesRegularExpression('/[A-Za-z0-9]+foo/', $result);
     }
 
     /**
@@ -123,17 +123,17 @@ class TestGeneratorTest extends MagentoTestCase
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
 
-        $result = $testGeneratorObject->getUniqueIdForInput('suffix' , "foo");
+        $result = $testGeneratorObject->getUniqueIdForInput('suffix', "foo");
         
-         $this->assertMatchesRegularExpression('/foo[A-Za-z0-9]+/' ,$result );
+        $this->assertMatchesRegularExpression('/foo[A-Za-z0-9]+/', $result);
     }
 
      /**
-     * Basic test for wrong output for input
-     *
-     * @return void
-     * @throws Exception
-     */
+      * Basic test for wrong output for input
+      *
+      * @return void
+      * @throws Exception
+      */
     public function testFailedRegexForUniqueAttribute()
     {
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -143,9 +143,9 @@ class TestGeneratorTest extends MagentoTestCase
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
 
-        $result = $testGeneratorObject->getUniqueIdForInput('suffix' , "foo");
+        $result = $testGeneratorObject->getUniqueIdForInput('suffix', "foo");
         
-         $this->assertDoesNotMatchRegularExpression('/bar[A-Za-z0-9]+/' ,$result );
+        $this->assertDoesNotMatchRegularExpression('/bar[A-Za-z0-9]+/', $result);
     }
 
     /**
