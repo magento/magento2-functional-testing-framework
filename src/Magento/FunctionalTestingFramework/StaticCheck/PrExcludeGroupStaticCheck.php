@@ -49,27 +49,6 @@ class PrExcludeGroupStaticCheck implements StaticCheckInterface
     private $testXmlFiles = [];
 
     /**
-     * Action group xml files to scan
-     *
-     * @var Finder|array
-     */
-    private $actionGroupXmlFiles = [];
-
-    /**
-     * Suite xml files to scan
-     *
-     * @var Finder|array
-     */
-    private $suiteXmlFiles = [];
-
-    /**
-     * Root suite xml files to scan
-     *
-     * @var Finder|array
-     */
-    private $rootSuiteXmlFiles = [];
-
-    /**
      * Checks usage of pause action in action groups, tests and suites and prints out error to file.
      *
      * @param InputInterface $input
