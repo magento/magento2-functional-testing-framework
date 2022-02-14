@@ -20,6 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class RunTestCommand extends BaseGenerateCommand
 {
     /**
@@ -91,8 +94,12 @@ class RunTestCommand extends BaseGenerateCommand
             $allowSkipped
         );
 
-        if ($json !== null && is_file($json)) {
-            $testConfiguration = file_get_contents($json);
+        if ($json !== null) {
+            if (is_file($json)) {
+                $testConfiguration = file_get_contents($json);
+            } else {
+                $testConfiguration = $json;
+            }
         }
 
         if (!empty($tests)) {
