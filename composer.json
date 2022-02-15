@@ -24,6 +24,7 @@
         "composer/composer": "^1.9||^2.0",
         "csharpru/vault-php": "^4.2.1",
         "guzzlehttp/guzzle": "^7.3.0",
+        "laminas/laminas-diactoros": "^2.8",
         "monolog/monolog": "^2.3",
         "mustache/mustache": "~2.5",
         "nikic/php-parser": "^4.4",
