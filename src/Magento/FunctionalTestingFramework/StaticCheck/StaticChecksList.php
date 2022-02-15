@@ -18,6 +18,7 @@ class StaticChecksList implements StaticCheckListInterface
 {
     const DEPRECATED_ENTITY_USAGE_CHECK_NAME = 'deprecatedEntityUsage';
     const PAUSE_ACTION_USAGE_CHECK_NAME = 'pauseActionUsage';
+    const CREATED_DATA_FROM_OUTSIDE_ACTIONGROUP = 'createdDataFromOutsideActionGroup';
     const STATIC_RESULTS = 'tests' . DIRECTORY_SEPARATOR .'_output' . DIRECTORY_SEPARATOR . 'static-results';
 
     /**
@@ -47,7 +48,8 @@ class StaticChecksList implements StaticCheckListInterface
             'actionGroupArguments' => new ActionGroupArgumentsCheck(),
             self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
             'annotations' => new AnnotationsCheck(),
-            self::PAUSE_ACTION_USAGE_CHECK_NAME => new PauseActionUsageCheck()
+            self::PAUSE_ACTION_USAGE_CHECK_NAME => new PauseActionUsageCheck(),
+            self::CREATED_DATA_FROM_OUTSIDE_ACTIONGROUP => new CreatedDataFromOutsideActionGroupCheck()
         ] + $checks;
 
         // Static checks error files directory
