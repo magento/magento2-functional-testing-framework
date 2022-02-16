@@ -130,7 +130,6 @@ In this example `AdminProductFormSection` refers to the `<section>` in the XML f
             <group value="alex" />
         </annotations>
         <before>
-        <before>
             <!-- Login to Admin panel -->
             <amOnPage url="admin" stepKey="openAdminPanelPage" />
             <fillField selector="#username" userInput="admin" stepKey="fillLoginField" />
