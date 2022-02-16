@@ -525,11 +525,7 @@ class TestGenerator
                 break;
 
             case null:
-                $annotationToAppend = sprintf(
-                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
-                    "AcceptanceTester",
-                    "I"
-                );
+                $annotationToAppend = "";
                 $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
                 $annotationToAppend .= "{$indent} * @return void\n";
                 $annotationToAppend .= "{$indent} * @throws \Exception\n";
@@ -1466,11 +1462,12 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    $input = (isset($actionObject->getCustomActionAttributes()['unique'])) ?
+                        $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
+                        : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
-
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
@@ -1515,6 +1512,21 @@ class TestGenerator
         }
 
         return $testSteps;
+    }
+
+    /**
+     * Get unique value appended to input string
+     *
+     * @param string $uniqueValue
+     * @param string $input
+     * @return string
+     */
+    public function getUniqueIdForInput($uniqueValue, $input)
+    {
+        $input = ($uniqueValue == 'prefix')
+            ? '"'.uniqid().str_replace('"', '', $input).'"'
+            : '"'.str_replace('"', '', $input).uniqid().'"';
+        return $input;
     }
 
     /**
@@ -1772,6 +1784,32 @@ class TestGenerator
                 );
             } catch (TestReferenceException $e) {
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
+            }
+
+            if ($type === 'before' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START BEFORE HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END BEFORE HOOK'
+                );
+            }
+
+            if ($type === 'after' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START AFTER HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END AFTER HOOK'
+                );
             }
 
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);

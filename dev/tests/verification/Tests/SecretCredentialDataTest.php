@@ -25,7 +25,6 @@ class SecretCredentialDataTestCest
 {
     /**
      * @Features({"AdminNotification"})
-     * @Parameter(name = "AcceptanceTester", value="$I")
      * @param AcceptanceTester $I
      * @return void
      * @throws \Exception

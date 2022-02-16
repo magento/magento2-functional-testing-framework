@@ -38,7 +38,9 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment('[START AFTER HOOK]');
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		$I->comment('[END AFTER HOOK]');
 		if ($this->isSuccess) {
 			unlink(__FILE__);
 		}
@@ -57,7 +59,6 @@ class ChildExtendedTestRemoveHookActionCest
 	 * @Severity(level = SeverityLevel::CRITICAL)
 	 * @Features({"TestModule"})
 	 * @Stories({"Child"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
