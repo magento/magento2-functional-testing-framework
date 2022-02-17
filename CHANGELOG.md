@@ -1,5 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
+2.7.3
+---------
+
+### Enhancements
+
+* Add filter for groups, now we can generate tests with specific group annotation
 
 2.7.2
 ---------
