@@ -29,7 +29,9 @@ class ExtendedChildTestNotInSuiteCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->amOnPage("/beforeUrl"); // stepKey: beforeAmOnPageKey
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
@@ -38,7 +40,9 @@ class ExtendedChildTestNotInSuiteCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment('[START AFTER HOOK]');
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		$I->comment('[END AFTER HOOK]');
 		if ($this->isSuccess) {
 			unlink(__FILE__);
 		}

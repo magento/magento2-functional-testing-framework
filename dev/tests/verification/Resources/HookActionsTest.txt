@@ -28,9 +28,11 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->createEntity("sampleCreateBefore", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateBefore
 		$I->deleteEntity("sampleCreateBefore", "hook"); // stepKey: sampleDeleteBefore
 		$I->createEntity("sampleCreateForAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateForAfter
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
@@ -39,8 +41,10 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment('[START AFTER HOOK]');
 		$I->createEntity("sampleCreateAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateAfter
 		$I->deleteEntity("sampleCreateForAfter", "hook"); // stepKey: sampleDeleteAfter
+		$I->comment('[END AFTER HOOK]');
 		if ($this->isSuccess) {
 			unlink(__FILE__);
 		}

@@ -28,10 +28,12 @@ class ActionGroupUsingCreateDataCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->comment("Entering Action Group [Key1] actionGroupWithCreateData");
 		$I->createEntity("createCategoryKey1", "hook", "ApiCategory", [], []); // stepKey: createCategoryKey1
 		$I->createEntity("createConfigProductKey1", "hook", "ApiConfigurableProduct", ["createCategoryKey1"], []); // stepKey: createConfigProductKey1
 		$I->comment("Exiting Action Group [Key1] actionGroupWithCreateData");
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**

@@ -38,7 +38,9 @@ class ChildExtendedTestRemoveHookActionCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
+		$I->comment('[START AFTER HOOK]');
 		$I->amOnPage("/afterUrl"); // stepKey: afterAmOnPageKey
+		$I->comment('[END AFTER HOOK]');
 		if ($this->isSuccess) {
 			unlink(__FILE__);
 		}
