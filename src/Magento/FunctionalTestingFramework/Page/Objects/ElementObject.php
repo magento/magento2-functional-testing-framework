@@ -85,7 +85,7 @@ class ElementObject
         $this->type = $type;
         $this->selector = $selector;
         $this->locatorFunction = $locatorFunction;
-        if (strpos($locatorFunction, "Locator::") === false) {
+        if ($locatorFunction !== null && strpos($locatorFunction, "Locator::") === false) {
             $this->locatorFunction = "Locator::" . $locatorFunction;
         }
         $this->timeout = $timeout;
