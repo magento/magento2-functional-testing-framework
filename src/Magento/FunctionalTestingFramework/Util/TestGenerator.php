@@ -905,7 +905,7 @@ class TestGenerator
                     break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-                    $this->entityExistsCheck($entity , $stepKey);
+                    $this->entityExistsCheck($entity, $stepKey);
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
@@ -2052,9 +2052,10 @@ class TestGenerator
      *
      * @param string $entity
      * @param string $stepKey
+     * @return void
      * @throws TestReferenceException
      */
-    public function entityExistsCheck($entity , $stepKey)
+    public function entityExistsCheck($entity, $stepKey)
     {
         $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
         if ($retrievedEntity === null) {
