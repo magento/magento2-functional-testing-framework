@@ -1511,8 +1511,6 @@ class TestGenerator
             }
             $testSteps .= PHP_EOL;
         }
-        
-       
         return $testSteps;
     }
 
@@ -1674,9 +1672,6 @@ class TestGenerator
         $testInvocationKey = ucfirst($actionGroupOrigin[ActionGroupObject::ACTION_GROUP_ORIGIN_TEST_REF]);
 
         foreach ($stepKeys as $stepKey) {
-
-           
-            
             // MQE-1011
             $stepKeyVarRef = "$" . $stepKey;
 
