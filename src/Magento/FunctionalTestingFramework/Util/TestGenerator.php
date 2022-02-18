@@ -977,7 +977,6 @@ class TestGenerator
                         true
                     );
                     $updateEntity = $customActionAttributes['entity'];
-                    $this->entityExistsCheck($updateEntity, $stepKey);
                     $actionGroup = $actionObject->getCustomActionAttributes()['actionGroup'] ?? null;
                     $key .= $actionGroup;
 
@@ -1011,7 +1010,6 @@ class TestGenerator
                     break;
                 case "getData":
                     $entity = $customActionAttributes['entity'];
-                    $this->entityExistsCheck($entity, $stepKey);
                     $index = null;
                     if (isset($customActionAttributes['index'])) {
                         $index = (int)$customActionAttributes['index'];
