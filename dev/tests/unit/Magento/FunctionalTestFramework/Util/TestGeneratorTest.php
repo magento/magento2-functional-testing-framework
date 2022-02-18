@@ -108,7 +108,7 @@ class TestGeneratorTest extends MagentoTestCase
         $this->assertMatchesRegularExpression('/[A-Za-z0-9]+foo/', $result);
     }
 
-     /**
+    /**
      * Basic test to check if exception is thrown when invalid entity is found in xml file
      *
      * @return void
@@ -123,9 +123,9 @@ class TestGeneratorTest extends MagentoTestCase
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
         $this->expectException(TestReferenceException::class);
-        $result = $testGeneratorObject->entityExistsCheck('testintity', "teststepkey");        
+        $result = $testGeneratorObject->entityExistsCheck('testintity', "teststepkey");
     }
-    
+
     /**
      * Basic test to check unique id is appended to input as suffix
      *
