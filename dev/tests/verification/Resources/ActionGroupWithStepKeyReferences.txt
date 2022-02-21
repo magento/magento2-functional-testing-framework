@@ -42,7 +42,7 @@ class ActionGroupWithStepKeyReferencesCest
 	public function ActionGroupWithStepKeyReferences(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
-		$I->createEntity("createSimpleDataActionGroup", "test", "simpleData", [], []); // stepKey: createSimpleDataActionGroup
+		$I->createEntity("createSimpleDataActionGroup", "test", "TestData", [], []); // stepKey: createSimpleDataActionGroup
 		$grabTextDataActionGroup = $I->grabTextFrom(".class"); // stepKey: grabTextDataActionGroup
 		$I->fillField(".{$grabTextDataActionGroup}", $I->retrieveEntityField('createSimpleDataActionGroup', 'field', 'test')); // stepKey: fill1ActionGroup
 		$I->comment("Invocation stepKey will not be appended in non stepKey instances");
@@ -61,7 +61,6 @@ class ActionGroupWithStepKeyReferencesCest
 		$I->deleteEntity("{$action7ActionGroupActionGroup}", "test"); // stepKey: action7ActionGroup
 		$I->getEntity("action8ActionGroup", "test", "{$action8}", [], null); // stepKey: action8ActionGroup
 		$I->updateEntity("1", "test", "{$action9}",[]); // stepKey: action9ActionGroup
-		$I->createEntity("action10ActionGroup", "test", "{$action10}", [], []); // stepKey: action10ActionGroup
 		$action11ActionGroup = $I->grabAttributeFrom($action11ActionGroup, "someInput"); // stepKey: action11ActionGroup
 		$action12ActionGroup = $I->grabCookie($action12ActionGroup, ['domain' => 'www.google.com']); // stepKey: action12ActionGroup
 		$action13ActionGroup = $I->grabFromCurrentUrl($action13ActionGroup); // stepKey: action13ActionGroup

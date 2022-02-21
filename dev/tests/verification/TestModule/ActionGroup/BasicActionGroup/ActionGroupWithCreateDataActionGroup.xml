@@ -8,8 +8,7 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="actionGroupWithCreateData">
-        <createData entity="ApiCategory" stepKey="createCategory"/>
-        <createData entity="ApiConfigurableProduct" stepKey="createConfigProduct">
+        <createData entity="TestData" stepKey="createConfigProduct">
             <requiredEntity createDataKey="createCategory"/>
         </createData>
     </actionGroup>
