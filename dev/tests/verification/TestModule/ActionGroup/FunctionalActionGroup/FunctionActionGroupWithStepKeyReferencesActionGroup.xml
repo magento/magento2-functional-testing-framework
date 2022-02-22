@@ -8,7 +8,7 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="FunctionActionGroupWithStepKeyReferences">
-        <createData entity="simpleData" stepKey="createSimpleData"/>
+        <createData entity="TestData" stepKey="createSimpleData"/>
         <grabTextFrom selector=".class" stepKey="grabTextData"/>
         <fillField stepKey="fill1" selector=".{$grabTextData}" userInput="$createSimpleData.field$"/>
         <comment userInput="Invocation stepKey will not be appended in non stepKey instances" stepKey="comment1"/>
@@ -22,7 +22,6 @@
         <deleteData createDataKey="{$action7}" stepKey="action7"/>
         <getData entity="{$action8}" stepKey="action8"/>
         <updateData entity="{$action9}" stepKey="action9" createDataKey="1"/>
-        <createData entity="{$action10}" stepKey="action10"/>
         <grabAttributeFrom selector="{$action11}" userInput="someInput" stepKey="action11"/>
         <grabCookie userInput="{$action12}" parameterArray="['domain' => 'www.google.com']" stepKey="action12"/>
         <grabFromCurrentUrl regex="{$action13}" stepKey="action13"/>

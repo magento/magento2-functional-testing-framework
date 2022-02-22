@@ -31,6 +31,7 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Mustache_Engine;
 use Mustache_Loader_FilesystemLoader;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 
 /**
  * Class TestGenerator
@@ -904,7 +905,7 @@ class TestGenerator
                     break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-
+                    $this->entityExistsCheck($entity, $stepKey);
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
@@ -922,7 +923,6 @@ class TestGenerator
                     if (!empty($requiredEntityKeys)) {
                         $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
-
                     $scope = $this->getObjectScope($generationScope);
 
                     $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
@@ -1511,7 +1511,6 @@ class TestGenerator
             }
             $testSteps .= PHP_EOL;
         }
-
         return $testSteps;
     }
 
@@ -1877,7 +1876,6 @@ class TestGenerator
             $testPhp .= "\t\t\$this->isSuccess = true;" . PHP_EOL;
             $testPhp .= "\t}\n";
         }
-
         return $testPhp;
     }
 
@@ -2047,6 +2045,24 @@ class TestGenerator
     private function addDollarSign($input)
     {
         return sprintf("$%s", ltrim($this->stripQuotes($input), '$'));
+    }
+
+    /**
+     * Check if the entity exists
+     *
+     * @param string $entity
+     * @param string $stepKey
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function entityExistsCheck($entity, $stepKey)
+    {
+        $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
+        if ($retrievedEntity === null) {
+            throw new TestReferenceException(
+                "Test generation failed as entity \"" . $entity . "\" does not exist. at stepkey ".$stepKey
+            );
+        }
     }
 
     /**

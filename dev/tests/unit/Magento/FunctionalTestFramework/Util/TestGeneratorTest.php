@@ -109,6 +109,24 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
+     * Basic test to check if exception is thrown when invalid entity is found in xml file
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInvalidEntity()
+    {
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+        $this->expectException(TestReferenceException::class);
+        $result = $testGeneratorObject->entityExistsCheck('testintity', "teststepkey");
+    }
+
+    /**
      * Basic test to check unique id is appended to input as suffix
      *
      * @return void
