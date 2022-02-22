@@ -258,6 +258,7 @@ class TestGenerator
      */
     public function assembleTestPhp($testObject)
     {
+        $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
         $className = $testObject->getCodeceptionName();
@@ -1462,11 +1463,12 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    $input = (isset($actionObject->getCustomActionAttributes()['unique'])) ?
+                        $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
+                        : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
-
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
@@ -1511,6 +1513,21 @@ class TestGenerator
         }
 
         return $testSteps;
+    }
+
+    /**
+     * Get unique value appended to input string
+     *
+     * @param string $uniqueValue
+     * @param string $input
+     * @return string
+     */
+    public function getUniqueIdForInput($uniqueValue, $input)
+    {
+        $input = ($uniqueValue == 'prefix')
+            ? '"'.uniqid().str_replace('"', '', $input).'"'
+            : '"'.str_replace('"', '', $input).uniqid().'"';
+        return $input;
     }
 
     /**
@@ -2123,18 +2140,18 @@ class TestGenerator
 
         foreach ($args as $key => $arg) {
             $newArgs[$key] = $arg;
-            preg_match_all($regex, $arg, $matches);
-            if (!empty($matches[0])) {
-                foreach ($matches[0] as $matchKey => $fullMatch) {
-                    $refVariable = $matches[1][$matchKey];
-
-                    $replacement = $this->getReplacement($func, $refVariable);
-
-                    $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
-                    $newArgs[$key] = $outputArg;
+            if ($arg !== null) {
+                preg_match_all($regex, $arg, $matches);
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $matchKey => $fullMatch) {
+                        $refVariable = $matches[1][$matchKey];
+                        $replacement = $this->getReplacement($func, $refVariable);
+                        $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
+                        $newArgs[$key] = $outputArg;
+                    }
+                    unset($matches);
+                    continue;
                 }
-                unset($matches);
-                continue;
             }
         }
 
