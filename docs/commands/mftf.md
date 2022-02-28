@@ -42,6 +42,23 @@ vendor/bin/mftf generate:tests
 vendor/bin/mftf generate:tests AdminLoginSuccessfulTest StorefrontPersistedCustomerLoginTest
 ```
 
+### Generate tests by testNames.txt file
+
+```bash
+vendor/bin/mftf generate:tests -p path/to/your/testNames.txt
+```
+
+This command generate all tests specified in a testNames.txt file.
+
+#### Example
+
+```bash
+testName1
+testName2
+testNameN
+suiteName:testInSuite
+```
+
 ### Generate test by test and suite name
 
 ```bash
@@ -183,7 +200,7 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 The configuration to generate a single test with no suites:
 
 ```json
-{  
+{
    "tests":[
       "general_test1"  //Generate the "general_test1" test.
       ],
@@ -194,9 +211,9 @@ The configuration to generate a single test with no suites:
 The configuration to generate a single test in the suite:
 
 ```json
-{  
+{
    "tests": null,       // No tests outside the suite configuration will be generated.
-   "suites":{  
+   "suites":{
       "sample":[        // The suite that contains the test.
          "suite_test1"  // The test to be generated.
       ]
@@ -207,8 +224,8 @@ The configuration to generate a single test in the suite:
 Complex configuration to generate a few non-suite tests, a single test in a suite, and an entire suite:
 
 ```json
-{  
-   "tests":[  
+{
+   "tests":[
       "general_test1",
       "general_test2",
       "general_test3"
@@ -368,7 +385,7 @@ vendor/bin/mftf run:test LoginCustomerTest StorefrontCreateCustomerTest
 
 Runs a testManifest.txt file.
 
-This command runs all tests specified in a testManifest.xml file. It does not generate tests for you. You must do that as first. 
+This command runs all tests specified in a testManifest.xml file. It does not generate tests for you. You must do that as first.
 
 #### Usage
 
@@ -449,7 +466,7 @@ The example parameters are taken from the `etc/config/.env.example` file.
 
 ### `static-checks`
 
-Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to. 
+Runs all or specific MFTF static-checks on the test codebase that MFTF is currently attached to.
 Behavior for determining what tests to run is as follows:
 
 *  If test names are specified, only those tests are run.
@@ -469,7 +486,7 @@ vendor/bin/mftf static-checks [<names>]...
 | Option                | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | `-p, --path` | Path to a MFTF test module to run "deprecatedEntityUsage" and "pauseActionUsage" static check scripts. Option is ignored by other static check scripts.
-                
+
 #### Examples
 
 To check what existing static check scripts are available
@@ -478,7 +495,7 @@ To check what existing static check scripts are available
 vendor/bin/mftf static-checks --help
 ```
 
-To run all existing static check scripts 
+To run all existing static check scripts
 
 ```bash
 vendor/bin/mftf static-checks
@@ -527,7 +544,7 @@ vendor/bin/mftf static-checks testDependencies actionGroupArguments
 |`deprecatedEntityUsage`| Checks that deprecated test entities are not being referenced.|
 |`annotations`| Checks various details of test annotations, such as missing annotations or duplicate annotations.|
 |`pauseUsage`| Checks that pause action is not used in action groups, tests or suites.|
-         
+
 #### Defining ruleset
 
 The `static-checks` command will look for a `staticRuleset.json` file under either:
@@ -623,7 +640,7 @@ vendor/bin/mftf codecept:run functional --verbose --steps -g default
 
 <div class="bs-callout-warning">
 <p>
-Note: You may want to limit the usage of this Codeception command with arguments and options for "acceptance" only, since it is what's supported by MFTF. 
+Note: You may want to limit the usage of this Codeception command with arguments and options for "acceptance" only, since it is what's supported by MFTF.
 When using this command, you should change "acceptance" to "functional" when referring to Codeception documentation.
 </p>
 </div>
