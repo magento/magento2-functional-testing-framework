@@ -173,7 +173,7 @@ vendor/bin/mftf generate:tests [option] [<test name>] [<test name>] [--remove]
 | `--force` | Forces test generation, regardless of the module merge order defined in the Magento instance. Example: `generate:tests --force`. |
 | `-i,--time` | Set time in minutes to determine the group size when `--config=parallel` is used. <br/>Example: `generate:tests --config=parallel --time=15` <br/>Option `--time` will be the default and the __default value__ is `10` when neither `--time` nor `--groups` is specified. <br/>Example: `generate:tests --config=parallel`|
 | `-g,--groups` | Set number of groups to be split into when `--config=parallel` is used. <br>Example: `generate:tests --config=parallel --groups=300` <br/>Options `--time` and `--groups` are mutually exclusive and only one should be used.|
-| `--tests` | Defines the test configuration as a JSON string.|
+| `--tests` | Defines the test configuration as a JSON string or JSON file path.|
 | `--allow-skipped` | Allows MFTF to generate and run tests marked with `<skip>.`|
 | `--debug` | Performs schema validations on XML files. <br/> DEFAULT: `generate:tests` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. <br/> DEVELOPER: `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred) when test generation fails because of an invalid XML schema. This option takes extra processing time. Use it after test generation has failed once.<br/>|
 | `-r,--remove`| Removes the existing generated suites and tests cleaning up the `_generated` directory before the actual run. For example, `generate:tests SampleTest --remove` cleans up the entire `_generated` directory and generates `SampleTest` only.|
@@ -224,11 +224,19 @@ Complex configuration to generate a few non-suite tests, a single test in a suit
 
 The command that encodes this complex configuration:
 
+Command to generate test by json string:
+
 ```bash
 vendor/bin/mftf generate:tests --tests '{"tests":["general_test1","general_test2","general_test3"],"suites":{"sample":["suite_test1"],"sample2":null}}'
 ```
 
 Note that the strings must be escaped and surrounded in quotes.
+
+Command to generate test by json file:
+
+```bash
+vendor/bin/mftf generate:tests --tests ./foldername/filename.json
+```
 
 ### `generate:suite`
 
