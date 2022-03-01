@@ -69,7 +69,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'tests',
                 't',
                 InputOption::VALUE_REQUIRED,
-                'A parameter accepting a JSON string used to determine the test configuration'
+                'A parameter accepting a JSON string or JSON file path used to determine the test configuration'
             )->addOption(
                 'filter',
                 null,
@@ -136,6 +136,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } catch (\Exception $exception) {
             $this->ioStyle->error("Test generation failed." . PHP_EOL . $exception->getMessage());
             return 1;
+        }
+
+        if ($json !== null && is_file($json)) {
+            $json = file_get_contents($json);
         }
 
         if (!empty($tests)) {
