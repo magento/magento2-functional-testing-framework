@@ -80,6 +80,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 . '<info>Existing severity values:</info> BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.' . PHP_EOL
                 . '<info>Example:</info> --filter=severity:CRITICAL'
                 . ' --filter=includeGroup:customer --filter=excludeGroup:customerAnalytics' . PHP_EOL
+            )->addOption(
+                'path',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'path to a test names file.',
             );
 
         parent::configure();
@@ -112,6 +117,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
         foreach ($filters as $filter) {
             list($filterType, $filterValue) = explode(':', $filter);
             $filterList[$filterType][] = $filterValue;
+        }
+        $path = $input->getOption('path');
+        // check filepath is given for generate test file
+        if (!empty($path)) {
+            $tests = $this->generateTestFileFromPath($path);
         }
         // Set application configuration so we can references the user options in our framework
         try {
@@ -314,5 +324,28 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } else {
             throw new FastFailException("'groups' option must be an integer and greater than 0");
         }
+    }
+
+    /**
+     * @param string $path
+     * @return array
+     * @throws TestFrameworkException
+     */
+    private function generateTestFileFromPath(string $path): array
+    {
+        if (!file_exists($path)) {
+            throw new TestFrameworkException("Could not find file $path. Check the path and try again.");
+        }
+
+        $test_names = file($path, FILE_IGNORE_NEW_LINES);
+        $tests = [];
+        foreach ($test_names as $test_name) {
+            if (empty(trim($test_name))) {
+                continue;
+            }
+            $test_name_array = explode(' ', trim($test_name));
+            $tests = array_merge($tests, $test_name_array);
+        }
+        return $tests;
     }
 }
