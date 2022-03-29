@@ -391,6 +391,21 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
+     * Simple rapid click as per given count number.
+     *
+     * @param string  $selector
+     * @param string   $count
+     * @return void
+     * @throws \Exception
+     */
+    public function rapidClick($selector, $count)
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $this->click($selector);
+        }
+    }
+
+    /**
      * Select multiple options from a drop down using a filter and text field to narrow results.
      *
      * @param string   $selectSearchTextField

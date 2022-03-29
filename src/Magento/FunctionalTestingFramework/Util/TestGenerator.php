@@ -1159,6 +1159,14 @@ class TestGenerator
                         $y
                     );
                     break;
+                case "rapidClick":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $countValue
+                    );
+                    break;
                 case "selectMultipleOptions":
                     $testSteps .= $this->wrapFunctionCall(
                         $actor,
