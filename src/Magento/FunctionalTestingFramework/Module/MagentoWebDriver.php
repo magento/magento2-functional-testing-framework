@@ -393,8 +393,8 @@ class MagentoWebDriver extends WebDriver
     /**
      * Simple rapid click as per given count number.
      *
-     * @param string  $selector
-     * @param string   $count
+     * @param string $selector
+     * @param string $count
      * @return void
      * @throws \Exception
      */
