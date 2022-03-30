@@ -94,7 +94,7 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
             $this->generateGroupFile($groupContents, $groupNumber, $suites);
         }
 
-      $this->generateGroupSummaryFile($this->testCountsToGroup);
+        $this->generateGroupSummaryFile($this->testCountsToGroup);
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
 
             $this->testCountsToGroup["group{$nodeNumber}"] = $this->testCountsToGroup["group{$nodeNumber}"] ?? 0;
 
-          if (!empty($suites[$entryName])) {
+            if (!empty($suites[$entryName])) {
                 $line = "-g {$entryName}";
                 $this->testCountsToGroup["group{$nodeNumber}"] += count($suites[$entryName]);
             } else {
