@@ -94,7 +94,7 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
             $this->generateGroupFile($groupContents, $groupNumber, $suites);
         }
 
-        $this->generateGroupSummaryFile($this->testCountsToGroup);
+      $this->generateGroupSummaryFile($this->testCountsToGroup);
     }
 
     /**
@@ -124,9 +124,9 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
 
             $this->testCountsToGroup["group{$nodeNumber}"] = $this->testCountsToGroup["group{$nodeNumber}"] ?? 0;
 
-            $line = null;
-            if (!empty($suites[$entryName])) {
+          if (!empty($suites[$entryName])) {
                 $line = "-g {$entryName}";
+                $this->testCountsToGroup["group{$nodeNumber}"] += count($suites[$entryName]);
             } else {
                 $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $entryName . '.php';
                 $this->testCountsToGroup["group{$nodeNumber}"]++;
@@ -145,7 +145,7 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
         $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "mftf_group_summary.txt", 'w');
         $contents = "Total Number of Groups: " . count($groups) . PHP_EOL;
         foreach ($groups as $key => $value) {
-            $contents .= $key . " - ". $value . "tests" .PHP_EOL;
+            $contents .= $key . " - ". $value . " tests" .PHP_EOL;
         }
         fwrite($fileResource, $contents);
         fclose($fileResource);
