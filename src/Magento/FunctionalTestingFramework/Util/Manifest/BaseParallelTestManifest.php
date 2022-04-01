@@ -42,6 +42,12 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
     protected $dirPath;
 
     /**
+     * An array of test name count in a single group
+     * @var array
+     */
+    protected $testCountsToGroup = [];
+
+    /**
      * BaseParallelTestManifest constructor.
      *
      * @param array  $suiteConfiguration
@@ -87,6 +93,8 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
         foreach ($this->testGroups as $groupNumber => $groupContents) {
             $this->generateGroupFile($groupContents, $groupNumber, $suites);
         }
+
+        $this->generateGroupSummaryFile($this->testCountsToGroup);
     }
 
     /**
@@ -114,15 +122,33 @@ abstract class BaseParallelTestManifest extends BaseTestManifest
         foreach ($testGroup as $entryName => $testValue) {
             $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "group{$nodeNumber}.txt", 'a');
 
-            $line = null;
+            $this->testCountsToGroup["group{$nodeNumber}"] = $this->testCountsToGroup["group{$nodeNumber}"] ?? 0;
+
             if (!empty($suites[$entryName])) {
                 $line = "-g {$entryName}";
+                $this->testCountsToGroup["group{$nodeNumber}"] += count($suites[$entryName]);
             } else {
                 $line = $this->relativeDirPath . DIRECTORY_SEPARATOR . $entryName . '.php';
+                $this->testCountsToGroup["group{$nodeNumber}"]++;
             }
             fwrite($fileResource, $line . PHP_EOL);
             fclose($fileResource);
         }
+    }
+
+    /**
+     * @param  array $groups
+     * @return void
+     */
+    protected function generateGroupSummaryFile(array $groups)
+    {
+        $fileResource = fopen($this->dirPath . DIRECTORY_SEPARATOR . "mftf_group_summary.txt", 'w');
+        $contents = "Total Number of Groups: " . count($groups) . PHP_EOL;
+        foreach ($groups as $key => $value) {
+            $contents .= $key . " - ". $value . " tests" .PHP_EOL;
+        }
+        fwrite($fileResource, $contents);
+        fclose($fileResource);
     }
 
     /**
