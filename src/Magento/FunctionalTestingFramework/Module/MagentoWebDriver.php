@@ -21,6 +21,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\Module\Util\ModuleUtils;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
@@ -584,7 +585,8 @@ class MagentoWebDriver extends WebDriver
         $response = $executor->read();
         $executor->close();
 
-        $response = trim($this->safeUtf8Conversion($response));
+        $util = new ModuleUtils();
+        $response = trim($util->utf8SafeControlCharacterTrim($response));
         return $response != "" ? $response : "CLI did not return output.";
     }
 
@@ -1059,30 +1061,5 @@ class MagentoWebDriver extends WebDriver
         }
 
         $this->codeceptPause();
-    }
-
-    /**
-     * Return UTF-8 encoding string with control/invisible characters removed, return original string on error.
-     *
-     * @param string $input
-     * @return string
-     */
-    private function safeUtf8Conversion(string $input): string
-    {
-        // Convert $input string to UTF-8 encoding
-        $convInput = iconv("ISO-8859-1", "UTF-8//IGNORE", $input);
-        if ($convInput !== false) {
-            // Remove invisible control characters, unused code points and replacement character
-            // so that they don't break xml test results for Allure
-            $cleanInput = preg_replace('/[^\PC\s]|\x{FFFD}/u', '', $convInput);
-            if ($cleanInput !== null) {
-                return $cleanInput;
-            } else {
-                $err = preg_last_error_msg();
-                print("MagentoCLI response preg_replace() with error $err.\n");
-            }
-        }
-
-        return $input;
     }
 }
