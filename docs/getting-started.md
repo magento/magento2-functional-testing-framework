@@ -113,10 +113,6 @@ bin/magento cache:clean config full_page
 
 If the Magento instance under test has the [Magento Two-Factor Authentication (2FA) extension][] installed and enabled, additional configurations is needed to run MFTF tests. Learn more in [Configure MFTF for Magento with Two-Factor Authentication (2FA)](./configure-2fa.md).
 
-### Webserver configuration {#web-server-configuration}
-
-MFTF does not support executing CLI commands if your web server points to `<MAGE_ROOT_DIR>/pub` directory as recommended in the [Installation Guide][Installation Guide docroot]. For MFTF to execute the CLI commands, the web server must point to the Magento root directory.
-
 ### Nginx settings {#nginx-settings}
 
 If the Nginx Web server is used on your development environment, then **Use Web Server Rewrites** setting in **Stores** > Settings > **Configuration** > **General** > **Web** > **Search Engine Optimization** must be set to **Yes**.
