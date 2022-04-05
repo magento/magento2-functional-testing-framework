@@ -21,6 +21,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\Module\Util\ModuleUtils;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
@@ -584,7 +585,9 @@ class MagentoWebDriver extends WebDriver
         $response = $executor->read();
         $executor->close();
 
-        return $response;
+        $util = new ModuleUtils();
+        $response = trim($util->utf8SafeControlCharacterTrim($response));
+        return $response != "" ? $response : "CLI did not return output.";
     }
 
     /**
