@@ -21,6 +21,7 @@ use Magento\FunctionalTestingFramework\DataTransport\Auth\WebApiAuth;
 use Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa\OTP;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use Magento\FunctionalTestingFramework\Module\Util\ModuleUtils;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
 use Yandex\Allure\Adapter\AllureException;
@@ -391,21 +392,6 @@ class MagentoWebDriver extends WebDriver
     }
 
     /**
-     * Simple rapid click as per given count number.
-     *
-     * @param string $selector
-     * @param string $count
-     * @return void
-     * @throws \Exception
-     */
-    public function rapidClick($selector, $count)
-    {
-        for ($i = 0; $i < $count; $i++) {
-            $this->click($selector);
-        }
-    }
-
-    /**
      * Select multiple options from a drop down using a filter and text field to narrow results.
      *
      * @param string   $selectSearchTextField
@@ -599,7 +585,9 @@ class MagentoWebDriver extends WebDriver
         $response = $executor->read();
         $executor->close();
 
-        return $response;
+        $util = new ModuleUtils();
+        $response = trim($util->utf8SafeControlCharacterTrim($response));
+        return $response != "" ? $response : "CLI did not return output.";
     }
 
     /**
@@ -802,6 +790,21 @@ class MagentoWebDriver extends WebDriver
             // Fix End
             $action->moveToElement($tnodes);
             $action->release($tnodes)->perform();
+        }
+    }
+    
+    /**
+     * Simple rapid click as per given count number.
+     *
+     * @param string $selector
+     * @param string $count
+     * @return void
+     * @throws \Exception
+     */
+    public function rapidClick($selector, $count)
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $this->click($selector);
         }
     }
 

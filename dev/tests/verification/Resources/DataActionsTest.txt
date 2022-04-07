@@ -58,6 +58,7 @@ class DataActionsTestCest
 		$I->deleteEntity("createdInTest", "test"); // stepKey: deleteInTest
 		$I->updateEntity("createdInBefore", "test", "entity",[]); // stepKey: updatedDataOutOfScope
 		$I->deleteEntity("createdInBefore", "test"); // stepKey: deleteDataOutOfScope
+		$I->rapidClick("#general_locale_timezone", "50"); // stepKey: rapidClickTest
 	}
 
 	public function _passed(AcceptanceTester $I)

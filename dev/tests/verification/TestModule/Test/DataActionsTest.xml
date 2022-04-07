@@ -18,5 +18,6 @@
         <deleteData createDataKey="createdInTest" stepKey="deleteInTest"/>
         <updateData entity="entity" createDataKey="createdInBefore" stepKey="updatedDataOutOfScope"/>
         <deleteData createDataKey="createdInBefore" stepKey="deleteDataOutOfScope"/>
+        <rapidClick selector="{{LocaleOptionsSection.timezone}}" count="50" stepKey="rapidClickTest"/>
     </test>
 </tests>

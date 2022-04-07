@@ -773,7 +773,7 @@ class TestGenerator
                 $selector = $this->addUniquenessFunctionCall($customActionAttributes['selector']);
                 $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
-            
+
             if (isset($customActionAttributes['count'])) {
                 $countClickValue = $customActionAttributes['count'];
                 $countValue = $this->addUniquenessFunctionCall($countClickValue);
