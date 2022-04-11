@@ -1,5 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.9.0
+---------
+
+### Fixes:
+* Fix for invalid UTF-8 chars returned from magentoCLI breaks Allure reporting
+
+### GitHub Pull Requests:
+* [#175](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/175) -- Fixed invalid UTF-8 chars returned from magentoCLI that breaks allure reporting
+
+
 3.8.0
 ---------
 
