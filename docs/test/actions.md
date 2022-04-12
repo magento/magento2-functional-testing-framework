@@ -973,6 +973,25 @@ Attribute|Type|Use|Description
 <dragAndDrop selector1="#block1" selector2="#block2" x="50" y="50" stepKey="dragAndDrop"/>
 ```
 
+### rapidClick
+
+See [rapidClick docs on codeception.com](http://codeception.com/docs/modules/WebDriver#rapidClick).
+
+| Attribute  | Type   | Use      | Description                                     |
+|------------|--------|----------|-------------------------------------------------|
+| `selector` | string | optional | A selector for the HTML element to rapid click. |
+| `count`    | string | required | Click count.                                    |
+| `stepKey`  | string | required | A unique identifier of the action.              |
+| `before`   | string | optional | `stepKey` of action that must be executed next. |
+| `after`    | string | optional | `stepKey` of preceding action.                  |
+
+#### Examples
+
+```xml
+<!-- Rapid click the selected element as per given count number -->
+<rapidClick selector="#selector" count="50" stepKey="rapidClick"/>
+```
+
 ### executeJS
 
 See [executeJS docs on codeception.com](http://codeception.com/docs/modules/WebDriver#executeJS).
@@ -1077,7 +1096,7 @@ This action can optionally contain one or more [requiredEntity](#requiredentity)
 ### getOTP
 
 Generate a one-time password (OTP) based on a saved `secret` at path `magento/tfa/OTP_SHARED_SECRET` in a MFTF credential storage.
-The one-time password (OTP) is returned and accessible through the stepkey. 
+The one-time password (OTP) is returned and accessible through the stepkey.
 
 MFTF use TOTP from [Spomky-Labs/otphp](https://github.com/Spomky-Labs/otphp), if you want to learn more about this action.
 
