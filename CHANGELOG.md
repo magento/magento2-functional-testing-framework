@@ -8,7 +8,20 @@ Magento Functional Testing Framework Changelog
 
 ### GitHub Pull Requests:
 * [#175](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/175) -- Fixed invalid UTF-8 chars returned from magentoCLI that breaks allure reporting
-
+* [#172](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/172) -- MQE-2342 : Provide MFTF group summary file
+* [#173](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/173) -- MQE-2328 : Detect unused entities
+* [#164](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/164) -- MQE-1693 | Ability To Run MFTF JSON Configuration From File 
+* [#171](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/171) --MQE-2088 : Test generation error on invalid entities 
+* [#161](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/161) --MQE-3228: Update MFTF to not pass NULL into non-nullable arguments 
+* [#162](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/162) --MQE-2668: Some MFTF tests fail without access to S3
+* [#159](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/159) --MQE-1677 : Static check for created data outside action group
+* [#168](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/168) -- Deleted docs/img/issue.png , docs/img/pull-request.png ,docs/img/switching-the-base.png and docs/img/trouble-chrome232.png files
+* [#157](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/157) -- MQE-2021 : Added new attribute unique
+* [#156](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/156) -- MQE-3205: Set proper weight for action <startMessageQueue> for config parallel generation 
+* [#152](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/152) -- MQE-1545: Test before/after comments in test/allure 
+* [#154](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/154) -- MQE-1190: Do not truncate parameters when using MFTF run:test 
+* [#142](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/142) -- MQE-3092 throw error message if key value pair is not mapped properly in .credentials file 
+* [#144](https://github.com/magento-commerce/magento2-functional-testing-framework/pull/144) -- MQE-1794 : Removed Parameters from allure report 
 
 3.8.0
 ---------
