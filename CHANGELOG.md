@@ -10,7 +10,6 @@ Magento Functional Testing Framework Changelog
 * Removed sub heading Parameters from allure report
 * Removed truncation of parameters on running MFTF run:test
 
-
 ### Enhancements
 * MFTF group summary file
 * Static check to detect unused entities
