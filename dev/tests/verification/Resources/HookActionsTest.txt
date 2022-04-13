@@ -28,9 +28,6 @@ class HookActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->createEntity("sampleCreateBefore", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateBefore
-		$I->deleteEntity("sampleCreateBefore", "hook"); // stepKey: sampleDeleteBefore
-		$I->createEntity("sampleCreateForAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateForAfter
 	}
 
 	/**
@@ -39,8 +36,9 @@ class HookActionsTestCest
 	  */
 	public function _after(AcceptanceTester $I)
 	{
-		$I->createEntity("sampleCreateAfter", "hook", "sampleCreatedEntity", [], []); // stepKey: sampleCreateAfter
+		$I->comment('[START AFTER HOOK]');
 		$I->deleteEntity("sampleCreateForAfter", "hook"); // stepKey: sampleDeleteAfter
+		$I->comment('[END AFTER HOOK]');
 		if ($this->isSuccess) {
 			unlink(__FILE__);
 		}
@@ -57,7 +55,6 @@ class HookActionsTestCest
 
 	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception

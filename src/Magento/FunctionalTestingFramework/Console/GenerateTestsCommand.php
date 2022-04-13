@@ -69,7 +69,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'tests',
                 't',
                 InputOption::VALUE_REQUIRED,
-                'A parameter accepting a JSON string used to determine the test configuration'
+                'A parameter accepting a JSON string or JSON file path used to determine the test configuration'
             )->addOption(
                 'filter',
                 null,
@@ -80,6 +80,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 . '<info>Existing severity values:</info> BLOCKER, CRITICAL, MAJOR, AVERAGE, MINOR.' . PHP_EOL
                 . '<info>Example:</info> --filter=severity:CRITICAL'
                 . ' --filter=includeGroup:customer --filter=excludeGroup:customerAnalytics' . PHP_EOL
+            )->addOption(
+                'path',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'path to a test names file.',
             );
 
         parent::configure();
@@ -113,6 +118,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
             list($filterType, $filterValue) = explode(':', $filter);
             $filterList[$filterType][] = $filterValue;
         }
+        $path = $input->getOption('path');
+        // check filepath is given for generate test file
+        if (!empty($path)) {
+            $tests = $this->generateTestFileFromPath($path);
+        }
         // Set application configuration so we can references the user options in our framework
         try {
             MftfApplicationConfig::create(
@@ -126,6 +136,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } catch (\Exception $exception) {
             $this->ioStyle->error("Test generation failed." . PHP_EOL . $exception->getMessage());
             return 1;
+        }
+
+        if ($json !== null && is_file($json)) {
+            $json = file_get_contents($json);
         }
 
         if (!empty($tests)) {
@@ -310,5 +324,28 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } else {
             throw new FastFailException("'groups' option must be an integer and greater than 0");
         }
+    }
+
+    /**
+     * @param string $path
+     * @return array
+     * @throws TestFrameworkException
+     */
+    private function generateTestFileFromPath(string $path): array
+    {
+        if (!file_exists($path)) {
+            throw new TestFrameworkException("Could not find file $path. Check the path and try again.");
+        }
+
+        $test_names = file($path, FILE_IGNORE_NEW_LINES);
+        $tests = [];
+        foreach ($test_names as $test_name) {
+            if (empty(trim($test_name))) {
+                continue;
+            }
+            $test_name_array = explode(' ', trim($test_name));
+            $tests = array_merge($tests, $test_name_array);
+        }
+        return $tests;
     }
 }

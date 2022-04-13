@@ -8,7 +8,7 @@
 <actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
     <actionGroup name="DataPersistenceAppendingActionGroup">
-        <createData entity="entity" stepKey="createData"/>
+        <createData entity="DefaultPerson" stepKey="createData"/>
         <updateData entity="newEntity" createDataKey="createData" stepKey="updateData"/>
         <deleteData createDataKey="createData" stepKey="deleteData"/>
         <getData entity="someEneity" stepKey="getData"/>

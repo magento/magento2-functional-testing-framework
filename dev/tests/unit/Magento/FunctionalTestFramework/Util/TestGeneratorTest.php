@@ -89,6 +89,84 @@ class TestGeneratorTest extends MagentoTestCase
     }
 
     /**
+     * Basic test to check unique id is appended to input as prefix
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testUniqueIdAppendedToInputStringAsPrefix()
+    {
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+
+        $result = $testGeneratorObject->getUniqueIdForInput('prefix', "foo");
+        
+        $this->assertMatchesRegularExpression('/[A-Za-z0-9]+foo/', $result);
+    }
+
+    /**
+     * Basic test to check if exception is thrown when invalid entity is found in xml file
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testInvalidEntity()
+    {
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+        $this->expectException(TestReferenceException::class);
+        $result = $testGeneratorObject->entityExistsCheck('testintity', "teststepkey");
+    }
+
+    /**
+     * Basic test to check unique id is appended to input as suffix
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testUniqueIdAppendedToInputStringAsSuffix()
+    {
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+
+        $result = $testGeneratorObject->getUniqueIdForInput('suffix', "foo");
+        
+        $this->assertMatchesRegularExpression('/foo[A-Za-z0-9]+/', $result);
+    }
+
+     /**
+      * Basic test for wrong output for input
+      *
+      * @return void
+      * @throws Exception
+      */
+    public function testFailedRegexForUniqueAttribute()
+    {
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+            'userInput' => '{{someEntity.entity}}'
+        ]);
+
+        $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
+
+        $result = $testGeneratorObject->getUniqueIdForInput('suffix', "foo");
+        
+        $this->assertDoesNotMatchRegularExpression('/bar[A-Za-z0-9]+/', $result);
+    }
+
+    /**
      * Tests that skipped tests do not have a fully generated body.
      *
      * @return void

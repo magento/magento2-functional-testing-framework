@@ -28,9 +28,10 @@ class DataActionsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
-		$I->createEntity("createdInBefore", "hook", "entity", [], []); // stepKey: createdInBefore
+		$I->comment('[START BEFORE HOOK]');
 		$I->updateEntity("createdInBefore", "hook", "entity",[]); // stepKey: updateInBefore
 		$I->deleteEntity("createdInBefore", "hook"); // stepKey: deleteInBefore
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
@@ -46,7 +47,6 @@ class DataActionsTestCest
 
 	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -54,7 +54,6 @@ class DataActionsTestCest
 	public function DataActionsTest(AcceptanceTester $I)
 	{
 		$I->waitForElementClickable(".functionalTestSelector"); // stepKey: waitForElementClickable
-		$I->createEntity("createdInTest", "test", "entity", [], []); // stepKey: createdInTest
 		$I->updateEntity("createdInTest", "test", "entity",[]); // stepKey: updateInTest
 		$I->deleteEntity("createdInTest", "test"); // stepKey: deleteInTest
 		$I->updateEntity("createdInBefore", "test", "entity",[]); // stepKey: updatedDataOutOfScope

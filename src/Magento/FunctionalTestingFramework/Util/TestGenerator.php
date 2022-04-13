@@ -31,6 +31,7 @@ use Magento\FunctionalTestingFramework\Test\Util\ActionMergeUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
 use Mustache_Engine;
 use Mustache_Loader_FilesystemLoader;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 
 /**
  * Class TestGenerator
@@ -258,6 +259,7 @@ class TestGenerator
      */
     public function assembleTestPhp($testObject)
     {
+        $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
         $className = $testObject->getCodeceptionName();
@@ -525,11 +527,7 @@ class TestGenerator
                 break;
 
             case null:
-                $annotationToAppend = sprintf(
-                    "{$indent} * @Parameter(name = \"%s\", value=\"$%s\")\n",
-                    "AcceptanceTester",
-                    "I"
-                );
+                $annotationToAppend = "";
                 $annotationToAppend .= sprintf("{$indent} * @param %s $%s\n", "AcceptanceTester", "I");
                 $annotationToAppend .= "{$indent} * @return void\n";
                 $annotationToAppend .= "{$indent} * @throws \Exception\n";
@@ -907,7 +905,7 @@ class TestGenerator
                     break;
                 case "createData":
                     $entity = $customActionAttributes['entity'];
-
+                    $this->entityExistsCheck($entity, $stepKey);
                     //TODO refactor entity field override to not be individual actionObjects
                     $customEntityFields =
                         $customActionAttributes[ActionObjectExtractor::ACTION_OBJECT_PERSISTENCE_FIELDS] ?? [];
@@ -925,7 +923,6 @@ class TestGenerator
                     if (!empty($requiredEntityKeys)) {
                         $requiredEntityKeysArray = '"' . implode('", "', $requiredEntityKeys) . '"';
                     }
-
                     $scope = $this->getObjectScope($generationScope);
 
                     $createEntityFunctionCall = "\t\t\${$actor}->createEntity(";
@@ -1466,11 +1463,12 @@ class TestGenerator
                         $actionObject->getActionOrigin()
                     )[0];
                     $argRef = "\t\t\$";
-
                     $input = $this->resolveAllRuntimeReferences([$input])[0];
+                    $input = (isset($actionObject->getCustomActionAttributes()['unique'])) ?
+                        $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
+                        : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
                         "Fields['{$fieldKey}'] = ${input};";
-
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":
@@ -1513,8 +1511,22 @@ class TestGenerator
             }
             $testSteps .= PHP_EOL;
         }
-
         return $testSteps;
+    }
+
+    /**
+     * Get unique value appended to input string
+     *
+     * @param string $uniqueValue
+     * @param string $input
+     * @return string
+     */
+    public function getUniqueIdForInput($uniqueValue, $input)
+    {
+        $input = ($uniqueValue == 'prefix')
+            ? '"'.uniqid().str_replace('"', '', $input).'"'
+            : '"'.str_replace('"', '', $input).uniqid().'"';
+        return $input;
     }
 
     /**
@@ -1774,6 +1786,32 @@ class TestGenerator
                 throw new TestReferenceException($e->getMessage() . " in Element \"" . $type . "\"");
             }
 
+            if ($type === 'before' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START BEFORE HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END BEFORE HOOK'
+                );
+            }
+
+            if ($type === 'after' && $steps) {
+                $steps = sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'START AFTER HOOK'
+                ) . $steps;
+                $steps = $steps . sprintf(
+                    "\t\t$%s->comment('[%s]');" . PHP_EOL,
+                    'I',
+                    'END AFTER HOOK'
+                );
+            }
+
             $hooks .= sprintf("\tpublic function _{$type}(%s)\n", $dependencies);
             $hooks .= "\t{\n";
             $hooks .= $steps;
@@ -1838,7 +1876,6 @@ class TestGenerator
             $testPhp .= "\t\t\$this->isSuccess = true;" . PHP_EOL;
             $testPhp .= "\t}\n";
         }
-
         return $testPhp;
     }
 
@@ -2011,6 +2048,24 @@ class TestGenerator
     }
 
     /**
+     * Check if the entity exists
+     *
+     * @param string $entity
+     * @param string $stepKey
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function entityExistsCheck($entity, $stepKey)
+    {
+        $retrievedEntity = DataObjectHandler::getInstance()->getObject($entity);
+        if ($retrievedEntity === null) {
+            throw new TestReferenceException(
+                "Test generation failed as entity \"" . $entity . "\" does not exist. at stepkey ".$stepKey
+            );
+        }
+    }
+
+    /**
      * Wrap parameters into a function call.
      *
      * @param string       $actor
@@ -2101,18 +2156,18 @@ class TestGenerator
 
         foreach ($args as $key => $arg) {
             $newArgs[$key] = $arg;
-            preg_match_all($regex, $arg, $matches);
-            if (!empty($matches[0])) {
-                foreach ($matches[0] as $matchKey => $fullMatch) {
-                    $refVariable = $matches[1][$matchKey];
-
-                    $replacement = $this->getReplacement($func, $refVariable);
-
-                    $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
-                    $newArgs[$key] = $outputArg;
+            if ($arg !== null) {
+                preg_match_all($regex, $arg, $matches);
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $matchKey => $fullMatch) {
+                        $refVariable = $matches[1][$matchKey];
+                        $replacement = $this->getReplacement($func, $refVariable);
+                        $outputArg = $this->processQuoteBreaks($fullMatch, $newArgs[$key], $replacement);
+                        $newArgs[$key] = $outputArg;
+                    }
+                    unset($matches);
+                    continue;
                 }
-                unset($matches);
-                continue;
             }
         }
 

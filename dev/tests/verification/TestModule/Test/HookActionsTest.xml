@@ -10,12 +10,8 @@
        xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
     <test name="HookActionsTest">
         <before>
-            <createData entity="sampleCreatedEntity" stepKey="sampleCreateBefore"/>
-            <deleteData createDataKey="sampleCreateBefore" stepKey="sampleDeleteBefore"/>
-            <createData entity="sampleCreatedEntity" stepKey="sampleCreateForAfter"/>
         </before>
         <after>
-            <createData entity="sampleCreatedEntity" stepKey="sampleCreateAfter"/>
             <deleteData createDataKey="sampleCreateForAfter" stepKey="sampleDeleteAfter"/>
         </after>
     </test>

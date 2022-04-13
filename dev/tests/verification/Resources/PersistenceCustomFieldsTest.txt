@@ -28,11 +28,11 @@ class PersistenceCustomFieldsTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$createData1Fields['firstname'] = "Mac";
-		$createData1Fields['lastname'] = "Doe";
+		$createData1Fields['lastname'] = "Bar";
 		$I->createEntity("createData1", "hook", "DefaultPerson", [], $createData1Fields); // stepKey: createData1
-		$createData2Fields['firstname'] = $I->retrieveEntityField('createData1', 'firstname', 'hook');
-		$I->createEntity("createData2", "hook", "uniqueData", ["createData1"], $createData2Fields); // stepKey: createData2
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
@@ -48,34 +48,15 @@ class PersistenceCustomFieldsTestCest
 
 	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
 	 */
 	public function PersistenceCustomFieldsTest(AcceptanceTester $I)
 	{
-		$createdDataFields['favoriteIndex'] = "1";
-		$createdDataFields['middlename'] = "Kovacs";
-		$I->createEntity("createdData", "test", "simpleData", [], $createdDataFields); // stepKey: createdData
 		$createdData3Fields['firstname'] = "Takeshi";
 		$createdData3Fields['lastname'] = "Kovacs";
 		$I->createEntity("createdData3", "test", "UniquePerson", ["createdData"], $createdData3Fields); // stepKey: createdData3
-		$I->comment("Entering Action Group [createdAG] PersistenceActionGroup");
-		$createDataAG1CreatedAGFields['firstname'] = "string1";
-		$I->createEntity("createDataAG1CreatedAG", "test", "simpleData", [], $createDataAG1CreatedAGFields); // stepKey: createDataAG1CreatedAG
-		$createDataAG2CreatedAGFields['firstname'] = "Jane";
-		$I->createEntity("createDataAG2CreatedAG", "test", "simpleData", [], $createDataAG2CreatedAGFields); // stepKey: createDataAG2CreatedAG
-		$createDataAG3CreatedAGFields['firstname'] = $I->retrieveEntityField('createdData3', 'firstname', 'test');
-		$I->createEntity("createDataAG3CreatedAG", "test", "simpleData", [], $createDataAG3CreatedAGFields); // stepKey: createDataAG3CreatedAG
-		$I->comment("Exiting Action Group [createdAG] PersistenceActionGroup");
-		$I->comment("Entering Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
-		$I->createEntity("createData1AGKEY", "test", "entity1", [], []); // stepKey: createData1AGKEY
-		$I->createEntity("createData2AGKEY", "test", "entity2", [], []); // stepKey: createData2AGKEY
-		$createData3AGKEYFields['key1'] = $I->retrieveEntityField('createData1AGKEY', 'field', 'test');
-		$createData3AGKEYFields['key2'] = $I->retrieveEntityField('createData2AGKEY', 'field', 'test');
-		$I->createEntity("createData3AGKEY", "test", "entity3", [], $createData3AGKEYFields); // stepKey: createData3AGKEY
-		$I->comment("Exiting Action Group [AGKEY] DataPersistenceSelfReferenceActionGroup");
 	}
 
 	public function _passed(AcceptanceTester $I)

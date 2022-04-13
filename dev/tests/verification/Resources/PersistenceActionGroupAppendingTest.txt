@@ -28,13 +28,15 @@ class PersistenceActionGroupAppendingTestCest
 	  */
 	public function _before(AcceptanceTester $I)
 	{
+		$I->comment('[START BEFORE HOOK]');
 		$I->comment("Entering Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
-		$I->createEntity("createDataACTIONGROUPBEFORE", "hook", "entity", [], []); // stepKey: createDataACTIONGROUPBEFORE
+		$I->createEntity("createDataACTIONGROUPBEFORE", "hook", "DefaultPerson", [], []); // stepKey: createDataACTIONGROUPBEFORE
 		$I->updateEntity("createDataACTIONGROUPBEFORE", "hook", "newEntity",[]); // stepKey: updateDataACTIONGROUPBEFORE
 		$I->deleteEntity("createDataACTIONGROUPBEFORE", "hook"); // stepKey: deleteDataACTIONGROUPBEFORE
 		$I->getEntity("getDataACTIONGROUPBEFORE", "hook", "someEneity", [], null); // stepKey: getDataACTIONGROUPBEFORE
 		$I->comment($I->retrieveEntityField('createData', 'field', 'hook'));
 		$I->comment("Exiting Action Group [ACTIONGROUPBEFORE] DataPersistenceAppendingActionGroup");
+		$I->comment('[END BEFORE HOOK]');
 	}
 
 	/**
@@ -50,7 +52,6 @@ class PersistenceActionGroupAppendingTestCest
 
 	/**
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
@@ -58,7 +59,7 @@ class PersistenceActionGroupAppendingTestCest
 	public function PersistenceActionGroupAppendingTest(AcceptanceTester $I)
 	{
 		$I->comment("Entering Action Group [ACTIONGROUP] DataPersistenceAppendingActionGroup");
-		$I->createEntity("createDataACTIONGROUP", "test", "entity", [], []); // stepKey: createDataACTIONGROUP
+		$I->createEntity("createDataACTIONGROUP", "test", "DefaultPerson", [], []); // stepKey: createDataACTIONGROUP
 		$I->updateEntity("createDataACTIONGROUP", "test", "newEntity",[]); // stepKey: updateDataACTIONGROUP
 		$I->deleteEntity("createDataACTIONGROUP", "test"); // stepKey: deleteDataACTIONGROUP
 		$I->getEntity("getDataACTIONGROUP", "test", "someEneity", [], null); // stepKey: getDataACTIONGROUP

@@ -39,7 +39,6 @@ class GroupSkipGenerationTestCest
 	 * @Stories({"GroupSkipGenerationTestStory"})
 	 * @Severity(level = SeverityLevel::MINOR)
 	 * @Features({"TestModule"})
-	 * @Parameter(name = "AcceptanceTester", value="$I")
 	 * @param AcceptanceTester $I
 	 * @return void
 	 * @throws \Exception
