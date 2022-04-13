@@ -7,6 +7,8 @@ Magento Functional Testing Framework Changelog
 
 * Fixed invalid UTF-8 chars returned from magentoCLI that breaks allure reporting
 * Fixed MFTF tests failure without access to S3
+* Removed sub heading Parameters from allure report
+* Removed truncation of parameters on running MFTF run:test
 
 
 ### Enhancements
@@ -20,9 +22,7 @@ Magento Functional Testing Framework Changelog
 * CreateData's <field> to allow uniqueness attribute
 * Set proper weight for action <startMessageQueue> for config parallel generation
 * Test before/after comments in test/allure
-* Removed truncation of parameters on running MFTF run:test
 * Throw error message if key value pair is not mapped properly in .credentials file
-* Removed sub heading Parameters from allure report
 
 3.8.0
 ---------
