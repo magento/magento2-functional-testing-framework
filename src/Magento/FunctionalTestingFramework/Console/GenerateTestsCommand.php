@@ -11,18 +11,23 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
+use Magento\FunctionalTestingFramework\Exceptions\XmlException;
 use Magento\FunctionalTestingFramework\Suite\SuiteGenerator;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Manifest\ParallelByTimeTestManifest;
 use Magento\FunctionalTestingFramework\Util\Manifest\TestManifestFactory;
+use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
+use Magento\FunctionalTestingFramework\Util\Script\TestDependencyUtil;
 use Magento\FunctionalTestingFramework\Util\TestGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @SuppressWarnings(PHPMD)
@@ -30,6 +35,34 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class GenerateTestsCommand extends BaseGenerateCommand
 {
     const PARALLEL_DEFAULT_TIME = 10;
+    const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
+    const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
+    const TEST_DEPENDENCY_FILE_LOCATION = 'dev/tests/_output/test-dependencies.json';
+
+    /**
+     * @var ScriptUtil
+     */
+    private $scriptUtil;
+
+    /**
+     * @var TestDependencyUtil
+     */
+    private $testDependencyUtil;
+
+    /**
+     * @var array
+     */
+    private $moduleNameToPath;
+
+    /**
+     * @var array
+     */
+    private $moduleNameToComposerName;
+
+    /**
+     * @var array
+     */
+    private $flattenedDependencies;
 
     /**
      * Configures the current command.
@@ -85,6 +118,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 'p',
                 InputOption::VALUE_REQUIRED,
                 'path to a test names file.',
+            )->addOption(
+                'log',
+                'l',
+                InputOption::VALUE_REQUIRED,
+                'Generate metadata files during test generation.',
             );
 
         parent::configure();
@@ -98,6 +136,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @return void|integer
      * @throws TestFrameworkException
      * @throws FastFailException
+     * @throws XmlException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -113,16 +152,19 @@ class GenerateTestsCommand extends BaseGenerateCommand
         $remove = $input->getOption('remove');
         $verbose = $output->isVerbose();
         $allowSkipped = $input->getOption('allow-skipped');
+        $log = $input->getOption('log');
         $filters = $input->getOption('filter');
         foreach ($filters as $filter) {
             list($filterType, $filterValue) = explode(':', $filter);
             $filterList[$filterType][] = $filterValue;
         }
+
         $path = $input->getOption('path');
         // check filepath is given for generate test file
         if (!empty($path)) {
             $tests = $this->generateTestFileFromPath($path);
         }
+
         // Set application configuration so we can references the user options in our framework
         try {
             MftfApplicationConfig::create(
@@ -202,6 +244,20 @@ class GenerateTestsCommand extends BaseGenerateCommand
             $this->ioStyle->note($message);
 
             return 1;
+        }
+
+        // check test dependencies log command
+        if (!empty($log)) {
+            if ($log === "testEntityJson") {
+                $this->getTestEntityJson($tests);
+                $output->writeln(
+                    "Test dependencies file created, Located in: " . self::TEST_DEPENDENCY_FILE_LOCATION
+                );
+            } else {
+                $output->writeln(
+                    "Wrong parameter for log (-l) option, accepted parameter are: testEntityJson" . PHP_EOL
+                );
+            }
         }
 
         if (empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
@@ -324,6 +380,200 @@ class GenerateTestsCommand extends BaseGenerateCommand
         } else {
             throw new FastFailException("'groups' option must be an integer and greater than 0");
         }
+    }
+
+    /**
+     * console command options --log and create test dependencies in json file
+     * @return void
+     * @throws TestFrameworkException
+     * @throws XmlException|FastFailException
+     */
+    private function getTestEntityJson(array $tests = [])
+    {
+        $testDependencies = $this->getTestDependencies($tests);
+        $this->array2Json($testDependencies);
+    }
+
+    /**
+     * Function responsible for getting test dependencies in array
+     * @param array $tests
+     * @return array
+     * @throws FastFailException
+     * @throws TestFrameworkException
+     * @throws XmlException
+     */
+    public function getTestDependencies(array $tests = []): array
+    {
+        $this->scriptUtil = new ScriptUtil();
+        $this->testDependencyUtil = new TestDependencyUtil();
+        $allModules = $this->scriptUtil->getAllModulePaths();
+
+        if (!class_exists('\Magento\Framework\Component\ComponentRegistrar')) {
+            throw new TestFrameworkException(
+                "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase."
+            );
+        }
+        $registrar = new \Magento\Framework\Component\ComponentRegistrar();
+        $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
+        $this->moduleNameToComposerName = $this->testDependencyUtil->buildModuleNameToComposerName(
+            $this->moduleNameToPath
+        );
+        $this->flattenedDependencies = $this->testDependencyUtil->buildComposerDependencyList(
+            $this->moduleNameToPath,
+            $this->moduleNameToComposerName
+        );
+
+        if (!empty($tests)) {
+            # specific test dependencies will be generate.
+            $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByTestNames($tests);
+        } else {
+            $filePaths = [
+                DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR
+            ];
+            // These files can contain references to other modules.
+            $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($allModules, $filePaths[0]);
+        }
+
+        list($testDependencies, $extendedTestMapping) = $this->findTestDependentModule($testXmlFiles);
+        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $extendedTestMapping);
+    }
+
+    /**
+     * Finds all test dependencies in given set of files
+     * @param Finder $files
+     * @return array
+     * @throws FastFailException
+     * @throws XmlException
+     */
+    private function findTestDependentModule(Finder $files): array
+    {
+        $testDependencies = [];
+        $extendedTests = [];
+        $extendedTestMapping = [];
+        foreach ($files as $filePath) {
+            $allEntities = [];
+            $filePath = $filePath->getPathname();
+            $moduleName = $this->testDependencyUtil->getModuleName($filePath, $this->moduleNameToPath);
+            // Not a module, is either dev/tests/acceptance or loose folder with test materials
+            if ($moduleName == null) {
+                continue;
+            }
+
+            $contents = file_get_contents($filePath);
+            preg_match_all(ActionObject::ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN, $contents, $braceReferences);
+            preg_match_all(self::ACTIONGROUP_REGEX_PATTERN, $contents, $actionGroupReferences);
+            preg_match_all(self::EXTENDS_REGEX_PATTERN, $contents, $extendReferences);
+
+            // Remove Duplicates
+            $braceReferences[0] = array_unique($braceReferences[0]);
+            $actionGroupReferences[1] = array_unique($actionGroupReferences[1]);
+            $braceReferences[1] = array_unique($braceReferences[1]);
+            $braceReferences[2] = array_filter(array_unique($braceReferences[2]));
+
+            // resolve entity references
+            $allEntities = array_merge(
+                $allEntities,
+                $this->scriptUtil->resolveEntityReferences($braceReferences[0], $contents)
+            );
+
+            // resolve parameterized references
+            $allEntities = array_merge(
+                $allEntities,
+                $this->scriptUtil->resolveParametrizedReferences($braceReferences[2], $contents)
+            );
+
+            // resolve entity by names
+            $allEntities = array_merge(
+                $allEntities,
+                $this->scriptUtil->resolveEntityByNames($actionGroupReferences[1])
+            );
+
+            // resolve entity by names
+            $allEntities = array_merge(
+                $allEntities,
+                $this->scriptUtil->resolveEntityByNames($extendReferences[1])
+            );
+            $modulesReferencedInTest = $this->testDependencyUtil->getModuleDependenciesFromReferences(
+                $allEntities,
+                $this->moduleNameToComposerName,
+                $this->moduleNameToPath
+            );
+            if (! empty($modulesReferencedInTest)) {
+                $document = new \DOMDocument();
+                $document->loadXML($contents);
+                $test_file = $document->getElementsByTagName('test')->item(0);
+                $test_name = $test_file->getAttribute('name');
+
+                # check any test extends on with this test.
+                $extended_test = $test_file->getAttribute('extends') ?? "";
+                if (!empty($extended_test)) {
+                    $extendedTests[] = $extended_test;
+                    $extendedTestMapping[] = ["child_test_name" =>$test_name, "parent_test_name" =>$extended_test];
+                }
+
+                $flattenedDependencyMap = array_values(
+                    array_unique(call_user_func_array('array_merge', array_values($modulesReferencedInTest)))
+                );
+                $suite_name = $this->getSuiteName($test_name);
+                $full_name = "Magento\AcceptanceTest\_". $suite_name. "\Backend\\".$test_name."Cest.".$test_name;
+                $dependencyMap = [
+                    "file_path" => $filePath,
+                    "full_name" => $full_name,
+                    "test_name" => $test_name,
+                    "test_modules" => $flattenedDependencyMap,
+                ];
+                $testDependencies[] = $dependencyMap;
+            }
+        }
+
+        if (!empty($extendedTests)) {
+            list($extendedDependencies, $tempExtendedTestMapping) = $this->getExtendedTestDependencies($extendedTests);
+            $testDependencies = array_merge($testDependencies, $extendedDependencies);
+            $extendedTestMapping = array_merge($extendedTestMapping, $tempExtendedTestMapping);
+        }
+
+        return [$testDependencies, $extendedTestMapping];
+    }
+
+    /**
+     * Finds all extended test dependencies in given set of files
+     * @param array $extendedTests
+     * @return array
+     * @throws FastFailException
+     * @throws XmlException
+     */
+    private function getExtendedTestDependencies(array $extendedTests): array
+    {
+        $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByTestNames($extendedTests);
+        return $this->findTestDependentModule($testXmlFiles);
+    }
+
+    /**
+     * Create json file of test dependencies
+     * @param array $array
+     * @return void
+     */
+    private function array2Json(array $array)
+    {
+        $file = fopen(self::TEST_DEPENDENCY_FILE_LOCATION, 'w');
+        $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        fwrite($file, $json);
+        fclose($file);
+    }
+
+    /**
+     * Get suite name.
+     * @param string $test_name
+     * @return integer|mixed|string
+     * @throws FastFailException
+     */
+    private function getSuiteName(string $test_name)
+    {
+        $suite_name = json_decode($this->getTestAndSuiteConfiguration([$test_name]), true)["suites"] ?? "default";
+        if (is_array($suite_name)) {
+            $suite_name = array_keys($suite_name)[0];
+        }
+        return $suite_name;
     }
 
     /**
