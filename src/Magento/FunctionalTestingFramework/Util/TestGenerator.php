@@ -774,6 +774,12 @@ class TestGenerator
                 $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
 
+            if (isset($customActionAttributes['count'])) {
+                $countClickValue = $customActionAttributes['count'];
+                $countValue = $this->addUniquenessFunctionCall($countClickValue);
+                $countValue = $this->resolveLocatorFunctionInAttribute($countValue);
+            }
+
             if (isset($customActionAttributes['selector1']) || isset($customActionAttributes['filterSelector'])) {
                 $selectorOneValue = $customActionAttributes['selector1'] ?? $customActionAttributes['filterSelector'];
                 $selector1 = $this->addUniquenessFunctionCall($selectorOneValue);
@@ -1157,6 +1163,14 @@ class TestGenerator
                         $selector2,
                         $x,
                         $y
+                    );
+                    break;
+                case "rapidClick":
+                    $testSteps .= $this->wrapFunctionCall(
+                        $actor,
+                        $actionObject,
+                        $selector,
+                        $countValue
                     );
                     break;
                 case "selectMultipleOptions":

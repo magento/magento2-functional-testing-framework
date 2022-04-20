@@ -792,6 +792,21 @@ class MagentoWebDriver extends WebDriver
             $action->release($tnodes)->perform();
         }
     }
+    
+    /**
+     * Simple rapid click as per given count number.
+     *
+     * @param string $selector
+     * @param string $count
+     * @return void
+     * @throws \Exception
+     */
+    public function rapidClick($selector, $count)
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $this->click($selector);
+        }
+    }
 
     /**
      * Function used to fill sensitive credentials with user data, data is decrypted immediately prior to fill to avoid
