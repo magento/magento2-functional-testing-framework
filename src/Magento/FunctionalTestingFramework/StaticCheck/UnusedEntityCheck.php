@@ -46,24 +46,7 @@ class UnusedEntityCheck implements StaticCheckInterface
      */
     public function execute(InputInterface $input)
     {
-        $this->scriptUtil = new ScriptUtil();
-        $domDocument = new \DOMDocument();
-        $modulePaths = $this->scriptUtil->getAllModulePaths();
-        $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Test");
-        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "ActionGroup");
-        $dataXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Data");
-        $pageXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Page");
-        $sectionXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Section");
-        $suiteXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Suite');
-        $this->errors  = $this->unusedEntities(
-            $domDocument,
-            $dataXmlFiles,
-            $actionGroupXmlFiles,
-            $sectionXmlFiles,
-            $pageXmlFiles,
-            $testXmlFiles,
-            $suiteXmlFiles
-        );
+        $this->errors  = $this->unusedEntities();
         $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
             StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
@@ -73,26 +56,19 @@ class UnusedEntityCheck implements StaticCheckInterface
 
     /**
      * Centralized method to get unused Entities
-     *
-     * @param  DOMDocument $domDocument
-     * @param  ScriptUtil  $dataXmlFiles
-     * @param  ScriptUtil  $actionGroupXmlFiles
-     * @param  ScriptUtil  $sectionXmlFiles
-     * @param  ScriptUtil  $pageXmlFiles
-     * @param  ScriptUtil  $testXmlFiles
-     * @param  ScriptUtil  $suiteXmlFiles
      * @return array
-     * @throws Exception
      */
-    private function unusedEntities(
-        $domDocument,
-        $dataXmlFiles,
-        $actionGroupXmlFiles,
-        $sectionXmlFiles,
-        $pageXmlFiles,
-        $testXmlFiles,
-        $suiteXmlFiles
-    ) {
+    public function unusedEntities()
+    {
+        $this->scriptUtil = new ScriptUtil();
+        $domDocument = new \DOMDocument();
+        $modulePaths = $this->scriptUtil->getAllModulePaths();
+        $testXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Test");
+        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "ActionGroup");
+        $dataXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Data");
+        $pageXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Page");
+        $sectionXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Section");
+        $suiteXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, 'Suite');
         foreach ($dataXmlFiles as $filePath) {
             $domDocument->load($filePath);
             $entityResult = $this->getAttributesFromDOMNodeList(
@@ -101,7 +77,7 @@ class UnusedEntityCheck implements StaticCheckInterface
             );
             foreach ($entityResult as $entitiesResultData) {
                 $dataNames[$entitiesResultData[key($entitiesResultData)]] = [
-                    "dataFilePath"=>StaticChecksList::getFilePath($filePath->getRealPath())
+                    "dataFilePath"=>$filePath->getRealPath()
                 ];
             }
         }
@@ -112,21 +88,18 @@ class UnusedEntityCheck implements StaticCheckInterface
                 continue;
             }
             $allActionGroupFileNames[$actionGroupName ] =
-            StaticChecksList::getFilePath($filePath->getRealPath());
+            $filePath->getRealPath();
         }
 
         foreach ($sectionXmlFiles as $filePath) {
             $domDocument->load($filePath);
             $sectionName = $domDocument->getElementsByTagName("section")->item(0)->getAttribute("name");
-            $sectionFileNames[$sectionName] = StaticChecksList::getFilePath($filePath->getRealPath());
+            $sectionFileNames[$sectionName] = $filePath->getRealPath();
         }
-
         foreach ($pageXmlFiles as $filePath) {
             $domDocument->load($filePath);
             $pageName = $domDocument->getElementsByTagName("page")->item(0)->getAttribute("name");
-            $pageFiles[$pageName] = StaticChecksList::getFilePath(
-                $filePath->getRealPath()
-            );
+            $pageFiles[$pageName] = $filePath->getRealPath();
         }
         $actionGroupReferences  = $this->unusedActionEntity(
             $domDocument,
@@ -166,6 +139,7 @@ class UnusedEntityCheck implements StaticCheckInterface
             )
         );
     }
+
     /**
      * Setting error message
      *
@@ -176,9 +150,11 @@ class UnusedEntityCheck implements StaticCheckInterface
     {
         $testErrors = [];
         foreach ($unusedFilePath as $files) {
-            $errorOutput  = " Unused Entity File Path ";
-            $errorOutput .= "\n\t".$files."\t\n";
-            $testErrors[$files][] = $errorOutput;
+            $contents = file_get_contents($files);
+            $file = fopen($files, 'a');
+            if (!str_contains($contents, '<!--@Ignore(Unused_Entity_Check)-->')) {
+                fwrite($file, '<!--@Ignore(Unused_Entity_Check)-->');
+            }
         }
         return $testErrors;
     }
@@ -194,7 +170,7 @@ class UnusedEntityCheck implements StaticCheckInterface
      * @return array
      * @throws Exception
      */
-    private function unusedActionEntity(
+    public function unusedActionEntity(
         $domDocument,
         $actionGroupXmlFiles,
         $testXmlFiles,
@@ -244,7 +220,7 @@ class UnusedEntityCheck implements StaticCheckInterface
      * @return array
      * @throws Exception
      */
-    private function unusedPageEntity($domDocument, $actionGroupXmlFiles, $testXmlFiles, $pageNames, $suiteXmlFiles)
+    public function unusedPageEntity($domDocument, $actionGroupXmlFiles, $testXmlFiles, $pageNames, $suiteXmlFiles)
     {
         
         foreach ($suiteXmlFiles as $filePath) {
@@ -366,7 +342,7 @@ class UnusedEntityCheck implements StaticCheckInterface
      * @return array
      * @throws Exception
      */
-    private function unusedSectionEntity(
+    public function unusedSectionEntity(
         $domDocument,
         $actionGroupXmlFiles,
         $testXmlFiles,
@@ -504,7 +480,7 @@ class UnusedEntityCheck implements StaticCheckInterface
      * @param  DOMDocument $domDocument
      * @return array
      */
-    private function unusedData(
+    public function unusedData(
         $domDocument,
         $actionGroupXmlFiles,
         $testXmlFiles,
