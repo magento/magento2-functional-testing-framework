@@ -55,6 +55,16 @@ magento/carriers_usps_password=Lmgxvrq89uPwECeV
 #magento/carriers_dhl_password_us=Mlgxv3dsagVeG
 ....
 ```
+### Add key and value pair for admin password . 
+magento/MAGENTO_ADMIN_PASSWORD  must contain the user password required for authorization in the Admin area. Example: magento/MAGENTO_ADMIN_PASSWORD=mycustompassword
+
+```conf
+...
+# Admin password
+magento/MAGENTO_ADMIN_PASSWORD =123123q
+
+....
+```
 
 Or add new key/value pairs for your own credentials. The keys use the following format:
 
