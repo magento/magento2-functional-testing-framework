@@ -86,7 +86,7 @@ class RunTestFailedCommandTest extends BaseGenerateCommandTest
     public function testSingleSuiteNoTest(): void
     {
         $testFailedFile = [
-            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/FirstTestSuiteTest.php:SingleTestSuiteTest",
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/",
         ];
 
         $expectedResult = [
