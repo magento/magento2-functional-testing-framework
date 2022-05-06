@@ -103,9 +103,12 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
                 if (!empty($test)) {
                     $this->writeFailedTestToFile($test, $testsReRunFile);
                     $testInfo = explode(DIRECTORY_SEPARATOR, $test);
-                    $testName = explode(":", $testInfo[count($testInfo) - 1])[1];
-                    $suiteName = $testInfo[count($testInfo) - 2];
-
+                    $testName = isset($testInfo[count($testInfo) - 1][1])
+                        ? explode(":", $testInfo[count($testInfo) - 1])[1]
+                        : [];
+                    $suiteName = isset($testInfo[count($testInfo) - 2])
+                        ?  $testInfo[count($testInfo) - 2]
+                        : [];
                     if ($suiteName === self::DEFAULT_TEST_GROUP) {
                         array_push($failedTestDetails['tests'], $testName);
                     } else {
