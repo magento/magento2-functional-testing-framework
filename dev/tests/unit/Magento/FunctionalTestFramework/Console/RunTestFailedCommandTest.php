@@ -50,4 +50,83 @@ class RunTestFailedCommandTest extends BaseGenerateCommandTest
         $method->setAccessible(true);
         return $method->invokeArgs($object, $parameters);
     }
+
+    public function testSingleTestNoSuite(): void
+    {
+        $testFailedFile = [
+            "tests/functional/tests/MFTF/_generated/default/SingleTestNoSuiteTest.php:SingleTestNoSuiteTest"
+        ];
+
+        $expectedResult = [
+            'tests/functional/tests/MFTF/_generated/default/SingleTestNoSuiteTest.php'
+        ];
+
+        $runFailed = new RunTestFailedCommand('run:failed');
+        $filter = $this->invokePrivateMethod($runFailed, 'filterTestsForExecution', [$testFailedFile]);
+        $this->assertEquals($expectedResult, $filter);
+    }
+
+    public function testMultipleTestNoSuite(): void
+    {
+        $testFailedFile = [
+            "tests/functional/tests/MFTF/_generated/default/SingleTestNoSuiteTest.php:SingleTestNoSuiteTest",
+            "tests/functional/tests/MFTF/_generated/default/FirstTestSuiteTest.php:SingleTestSuiteTest"
+        ];
+
+        $expectedResult = [
+            "tests/functional/tests/MFTF/_generated/default/SingleTestNoSuiteTest.php",
+            "tests/functional/tests/MFTF/_generated/default/FirstTestSuiteTest.php"
+        ];
+
+        $runFailed = new RunTestFailedCommand('run:failed');
+        $filter = $this->invokePrivateMethod($runFailed, 'filterTestsForExecution', [$testFailedFile]);
+        $this->assertEquals($expectedResult, $filter);
+    }
+
+    public function testSingleSuiteNoTest(): void
+    {
+        $testFailedFile = [
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/FirstTestSuiteTest.php:SingleTestSuiteTest",
+        ];
+
+        $expectedResult = [
+            "-g SomeSpecificSuite"
+        ];
+
+        $runFailed = new RunTestFailedCommand('run:failed');
+        $filter = $this->invokePrivateMethod($runFailed, 'filterTestsForExecution', [$testFailedFile]);
+        $this->assertEquals($expectedResult, $filter);
+    }
+
+    public function testSingleSuiteAndTest(): void
+    {
+        $testFailedFile = [
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/FirstTestSuiteTest.php:SingleTestSuiteTest",
+        ];
+        $expectedResult = [
+            "-g SomeSpecificSuite",
+        ];
+
+        $runFailed = new RunTestFailedCommand('run:failed');
+        $filter = $this->invokePrivateMethod($runFailed, 'filterTestsForExecution', [$testFailedFile]);
+        $this->assertEquals($expectedResult, $filter);
+    }
+
+    public function testMultipleSuitesWithNoTest(): void
+    {
+        $testFailedFile = [
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/",
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite1/",
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite2/"
+        ];
+        $expectedResult = [
+            "-g SomeSpecificSuite",
+            "-g SomeSpecificSuite1",
+            "-g SomeSpecificSuite2",
+        ];
+
+        $runFailed = new RunTestFailedCommand('run:failed');
+        $filter = $this->invokePrivateMethod($runFailed, 'filterTestsForExecution', [$testFailedFile]);
+        $this->assertEquals($expectedResult, $filter);
+    }
 }
