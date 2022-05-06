@@ -43,8 +43,10 @@ class GenerateTestFailedCommandTest extends BaseGenerateCommandTest
     {
         $testFileReturn = [
             "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/FirstTestSuiteTest.php:SingleTestSuiteTest",
-            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/SecondTestNoSuiteTest.php:SingleTestNoSuiteTest",        ];
-        $expectedConfiguration = '{"tests":null,"suites":{"SomeSpecificSuite":["SingleTestSuiteTest","SingleTestNoSuiteTest"]}}';
+            "tests/functional/tests/MFTF/_generated/SomeSpecificSuite/SecondTestNoSuiteTest.php:SingleTestNoSuiteTest"
+        ];
+        $expectedConfiguration =
+        '{"tests":null,"suites":{"SomeSpecificSuite":["SingleTestSuiteTest","SingleTestNoSuiteTest"]}}';
 
         // Create a stub for the SomeClass class.
         $stub = $this->getMockBuilder(GenerateTestFailedCommand::class)
