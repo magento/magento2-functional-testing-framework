@@ -91,6 +91,7 @@ class GenerateTestFailedCommand extends BaseGenerateCommand
      * Returns a json string of tests that failed on the last run
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getFailedTestList($testsFailedFile, $testsReRunFile)
     {
