@@ -353,7 +353,7 @@ Generates and executes the listed groups of tests using Codeception.
 #### Usage
 
 ```bash
-vendor/bin/mftf run:group [--skip-generate|--remove] [--] <group1> [<group2>]
+vendor/bin/mftf run:group [--skip-generate|--remove|--xml] [--] <group1> [<group2>]
 ```
 
 #### Options
@@ -363,6 +363,7 @@ vendor/bin/mftf run:group [--skip-generate|--remove] [--] <group1> [<group2>]
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Removes previously generated suites and tests before the actual generation and run.                       |
 | `--debug`             | Performs schema validations on XML files. `run:group` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred).|
+| `--xml`               |  Generate JUnit XML Log (default: "report.xml")                                                             |
 
 #### Examples
 
@@ -385,7 +386,7 @@ Generates and executes tests by name using Codeception.
 #### Usage
 
 ```bash
-vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>]
+vendor/bin/mftf run:test [--skip-generate|--remove|--xml] [--] <name1> [<name2>]
 ```
 
 #### Options
@@ -395,6 +396,7 @@ vendor/bin/mftf run:test [--skip-generate|--remove] [--] <name1> [<name2>]
 | `-k, --skip-generate` | Skips generating from the source XML. Instead, the command executes previously-generated groups of tests. |
 | `-r, --remove`        | Remove previously generated suites and tests.                                                             |
 | `--debug`             | Performs schema validations on XML files. `run:test` implicitly performs schema validation on merged files. It does not indicate the file name where the error is encountered. `--debug` performs per-file validation and returns additional debug information (such as the filename where an error occurred).|
+| `--xml`               |  Generate JUnit XML Log (default: "report.xml")                                                             |
 
 #### Examples
 
