@@ -273,7 +273,7 @@ class TestGenerator
         } catch (TestReferenceException $e) {
             throw new TestReferenceException($e->getMessage() . "\n" . $testObject->getFilename());
         }
-        $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject->getAnnotations());
+        $classAnnotationsPhp = $this->generateAnnotationsPhp($testObject);
 
         $cestPhp = "<?php\n";
         $cestPhp .= "namespace Magento\AcceptanceTest\\_" . $this->exportDirName . "\Backend;\n\n";
@@ -449,12 +449,13 @@ class TestGenerator
     /**
      * Generates Annotations PHP for given object, using given scope to determine indentation and additional output.
      *
-     * @param array   $annotationsObject
+     * @param array   $testObject
      * @param boolean $isMethod
      * @return string
      */
-    private function generateAnnotationsPhp($annotationsObject, $isMethod = false)
+    private function generateAnnotationsPhp($testObject, $isMethod = false)
     {
+        $annotationsObject = $testObject->getAnnotations();
         //TODO: Refactor to deal with PHPMD.CyclomaticComplexity
         if ($isMethod) {
             $indent = "\t";
@@ -470,7 +471,7 @@ class TestGenerator
                 continue;
             }
             if (!$isMethod) {
-                $annotationsPhp .= $this->generateClassAnnotations($annotationType, $annotationName);
+                $annotationsPhp .= $this->generateClassAnnotations($annotationType, $annotationName, $testObject);
             } else {
                 $annotationsPhp .= $this->generateMethodAnnotations($annotationType, $annotationName);
             }
@@ -536,19 +537,39 @@ class TestGenerator
 
         return $annotationToAppend;
     }
+    /**
+     * Returs required credentials to configure
+     *
+     * @param TestObject $testObject
+     * @return string
+     */
+    public function requiredCredentials($testObject)
+    {
+        $requiredCredentials = (!empty($testObject->getCredentials()))
+            ?  implode(",", $testObject->getCredentials())
+            : "";
+
+        return $requiredCredentials;
+    }
 
     /**
      * Method which return formatted class level annotations based on type and name(s).
      *
      * @param string $annotationType
      * @param array  $annotationName
+     * @param array  $testObject
      * @return null|string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function generateClassAnnotations($annotationType, $annotationName)
+    private function generateClassAnnotations($annotationType, $annotationName, $testObject)
     {
         $annotationToAppend = null;
-
+        $requiredCredentialsMessage = $this->requiredCredentials($testObject);
+        $credMsg = "\n\n"."This test uses the following credentials:"."\n";
+        if (!empty($requiredCredentialsMessage) && !empty($annotationName['main'])) {
+            $annotationName = ['main'=>$annotationName['main'].', '.$credMsg.''.$requiredCredentialsMessage,
+                'test_files'=> "\n".$annotationName['test_files'], 'deprecated'=>$annotationName['deprecated']];
+        }
         switch ($annotationType) {
             case "title":
                 $annotationToAppend = sprintf(" * @Title(\"%s\")\n", $annotationName[0]);
@@ -773,7 +794,6 @@ class TestGenerator
                 $selector = $this->addUniquenessFunctionCall($customActionAttributes['selector']);
                 $selector = $this->resolveLocatorFunctionInAttribute($selector);
             }
-
             if (isset($customActionAttributes['count'])) {
                 $countClickValue = $customActionAttributes['count'];
                 $countValue = $this->addUniquenessFunctionCall($countClickValue);
@@ -1855,7 +1875,7 @@ class TestGenerator
 
         $testName = $test->getName();
         $testName = str_replace(' ', '', $testName);
-        $testAnnotations = $this->generateAnnotationsPhp($test->getAnnotations(), true);
+        $testAnnotations = $this->generateAnnotationsPhp($test, true);
         $dependencies = 'AcceptanceTester $I';
         if (!$test->isSkipped() || MftfApplicationConfig::getConfig()->allowSkipped()) {
             try {
