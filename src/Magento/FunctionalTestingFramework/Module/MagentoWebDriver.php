@@ -808,6 +808,39 @@ class MagentoWebDriver extends WebDriver
         }
     }
 
+  /**
+   * Grabs a cookie attributes value.
+   * You can set additional cookie params like `domain`, `path` in array passed as last argument.
+   * If the cookie is set by an ajax request (XMLHttpRequest),
+   * there might be some delay caused by the browser, so try `$I->wait(0.1)`.
+   * @param  string $cookie
+   * @param array  $params
+   * @return mixed
+   */
+    public function grabCookieAttributes(string $cookie, array $params = []): array
+    {
+        $params['name'] = $cookie;
+        $cookieArrays = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
+        if (is_array($cookieArrays)) { // Microsoft Edge returns null if there are no cookies...
+            $cookieAttributes = [];
+            foreach ($cookieArrays as $cookieArray) {
+                if ($cookieArray->getName() === $cookie) {
+                    $cookieAttributes['name'] = $cookieArray->getValue();
+                    $cookieAttributes['path'] = $cookieArray->getPath();
+                    $cookieAttributes['domain'] = $cookieArray->getDomain();
+                    $cookieAttributes['secure'] = $cookieArray->isSecure();
+                    $cookieAttributes['httpOnly'] = $cookieArray->isHttpOnly();
+                    $cookieAttributes['sameSite'] = $cookieArray->getSameSite();
+                    $cookieAttributes['expiry']  = date('d/m/Y', $cookieArray->getExpiry());
+
+                    return $cookieAttributes;
+                }
+            }
+        }
+
+        return [];
+    }
+
     /**
      * Function used to fill sensitive credentials with user data, data is decrypted immediately prior to fill to avoid
      * exposure in console or log.

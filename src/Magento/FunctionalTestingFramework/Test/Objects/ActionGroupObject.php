@@ -31,6 +31,7 @@ class ActionGroupObject
         "createData",
         "grabAttributeFrom",
         "grabCookie",
+        "grabCookieAttributes",
         "grabFromCurrentUrl",
         "grabMultiple",
         "grabPageSource",

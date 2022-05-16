@@ -1100,6 +1100,7 @@ class TestGenerator
                         $parameterArray
                     );
                     break;
+                case "grabCookieAttributes":
                 case "grabCookie":
                     $testSteps .= $this->wrapFunctionCallWithReturnValue(
                         $stepKey,
@@ -2371,6 +2372,7 @@ class TestGenerator
                 'excludes' => [
                     'dontSeeCookie',
                     'grabCookie',
+                    'grabCookieAttributes',
                     'resetCookie',
                     'seeCookie',
                     'setCookie',
