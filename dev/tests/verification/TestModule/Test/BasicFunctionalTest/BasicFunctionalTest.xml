@@ -72,6 +72,7 @@
         <getOTP stepKey="getOtpWithInput" userInput="someInput"/>
         <grabAttributeFrom selector=".functionalTestSelector" userInput="someInput" stepKey="grabAttributeFromKey1" />
         <grabCookie userInput="grabCookieInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieKey1" />
+        <grabCookieAttributes userInput="grabCookieAttributesInput" parameterArray="['domain' => 'www.google.com']" stepKey="grabCookieAttributesKey1" />
         <grabFromCurrentUrl regex="/grabCurrentUrl" stepKey="grabFromCurrentUrlKey1" />
         <grabMultiple selector=".functionalTestSelector" stepKey="grabMultipleKey1" />
         <grabTextFrom selector=".functionalTestSelector" stepKey="grabTextFromKey1" />

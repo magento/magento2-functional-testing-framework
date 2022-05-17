@@ -127,6 +127,7 @@ class BasicFunctionalTestCest
 		$getOtpWithInput = $I->getOTP("someInput"); // stepKey: getOtpWithInput
 		$grabAttributeFromKey1 = $I->grabAttributeFrom(".functionalTestSelector", "someInput"); // stepKey: grabAttributeFromKey1
 		$grabCookieKey1 = $I->grabCookie("grabCookieInput", ['domain' => 'www.google.com']); // stepKey: grabCookieKey1
+		$grabCookieAttributesKey1 = $I->grabCookieAttributes("grabCookieAttributesInput", ['domain' => 'www.google.com']); // stepKey: grabCookieAttributesKey1
 		$grabFromCurrentUrlKey1 = $I->grabFromCurrentUrl("/grabCurrentUrl"); // stepKey: grabFromCurrentUrlKey1
 		$grabMultipleKey1 = $I->grabMultiple(".functionalTestSelector"); // stepKey: grabMultipleKey1
 		$grabTextFromKey1 = $I->grabTextFrom(".functionalTestSelector"); // stepKey: grabTextFromKey1
