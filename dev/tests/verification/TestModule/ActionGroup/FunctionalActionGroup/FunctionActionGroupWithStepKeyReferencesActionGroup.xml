@@ -28,6 +28,6 @@
         <grabMultiple selector="{$action14}" stepKey="action14"/>
         <grabTextFrom selector="{$action15}" stepKey="action15"/>
         <grabValueFrom selector="{$action16}" stepKey="action16"/>
-        <grabCookieAttributes userInput="{$action17}" parameterArray="['domain' => 'www.google.com']" stepKey="$action17"/>
+        <grabCookieAttributes userInput="{$action17}" parameterArray="['domain' => 'www.google.com']" stepKey="action17"/>
     </actionGroup>
 </actionGroups>
