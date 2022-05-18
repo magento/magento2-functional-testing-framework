@@ -289,6 +289,7 @@ class ActionObject
             $this->resolveSelectorReferenceAndTimeout();
             $this->resolveUrlReference();
             $this->resolveDataInputReferences();
+            $this->detectCredentials();
             $this->validateTimezoneAttribute();
             if ($this->getType() === 'deleteData') {
                 $this->validateMutuallyExclusiveAttributes(self::DELETE_DATA_MUTUAL_EXCLUSIVE_ATTRIBUTES);
@@ -416,6 +417,22 @@ class ActionObject
                 $this->resolvedCustomAttributes[$selectorAttribute] = $replacement;
             }
         }
+    }
+    /**
+     * Sets requiredCredentials property
+     *
+     * @return void
+     * @throws TestReferenceException
+     */
+    public function detectCredentials()
+    {
+        $requiredCredentials = "";
+        $attributes = $this->getCustomActionAttributes();
+        if (isset($attributes['userInput']) && stristr($attributes['userInput'], '_CREDS') == true) {
+            $credentials =  explode(".", trim($attributes['userInput'], '{}'));
+            $requiredCredentials = $credentials[1];
+        }
+        $this->resolvedCustomAttributes['requiredCredentials'] =  $requiredCredentials;
     }
 
     /**
