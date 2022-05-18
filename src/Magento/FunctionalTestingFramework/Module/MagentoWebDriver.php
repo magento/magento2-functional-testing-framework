@@ -821,8 +821,8 @@ class MagentoWebDriver extends WebDriver
     {
         $params['name'] = $cookie;
         $cookieArrays = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
+        $cookieAttributes = [];
         if (is_array($cookieArrays)) { // Microsoft Edge returns null if there are no cookies...
-            $cookieAttributes = [];
             foreach ($cookieArrays as $cookieArray) {
                 if ($cookieArray->getName() === $cookie) {
                     $cookieAttributes['name'] = $cookieArray->getValue();
@@ -838,7 +838,7 @@ class MagentoWebDriver extends WebDriver
             }
         }
 
-        return [];
+        return $cookieAttributes;
     }
 
     /**
