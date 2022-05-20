@@ -144,6 +144,7 @@ The following test actions return a variable:
 
 *  [grabAttributeFrom](#grabattributefrom)
 *  [grabCookie](#grabcookie)
+*  [grabCookieAttributes](#grabCookieAttributes)
 *  [grabFromCurrentUrl](#grabfromcurrenturl)
 *  [grabMultiple](#grabmultiple)
 *  [grabPageSource](#grabpagesource)
@@ -1156,6 +1157,34 @@ To access this value, use `{$grabCookie1}` in later actions. -->
 <!-- Grab the cookie with the given name `cookie1` from the domain `www.example.com`.
 To access this value, use `{$grabCookieExampleDomain}` in later actions. -->
 <grabCookie userInput="cookie1" parameterArray="['domainName' => '.example.com']" stepKey="grabCookieExampleDomain"/>
+```
+
+### grabCookieAttributes
+
+See [grabCookieAttributes docs on codeception.com](http://codeception.com/docs/modules/WebDriver#grabCookieAttributes).
+
+Attribute|Type|Use|Description
+---|---|---|---
+`userInput`|string|optional| Name of the cookie to grab.
+`parameterArray`|string|optional| Array of cookie parameters to grab.
+`stepKey`|string|required| A unique identifier of the action.
+`before`|string|optional| `stepKey` of action that must be executed next.
+`after`|string|optional| `stepKey` of preceding action.
+
+#### Examples
+
+```xml
+<!-- Grab the cookie attributes with the given name `cookie1`.
+To access these values, use `{$grabCookie1}` in later actions. -->
+<grabCookieAttributes userInput="cookie1" stepKey="grabCookie1"/>
+```
+
+```xml
+<!-- Grab the cookie attributes with the given name `cookie1` from the domain `www.example.com`.
+To access these values, use `{$grabCookieExampleDomain}` in later actions.
+To access expiry date, use  `{$grabCookieExampleDomain.expiry}` in later actions.
+-->
+<grabCookieAttributes userInput="cookie1" parameterArray="['domainName' => '.example.com']" stepKey="grabCookieExampleDomain"/>
 ```
 
 ### grabFromCurrentUrl
