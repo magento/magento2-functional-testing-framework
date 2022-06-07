@@ -19,13 +19,14 @@ use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 
 class GenerateDevUrnCommand extends Command
 {
+    private const SUCCESS_EXIT_CODE = 0;
     /**
      * Argument for the path to IDE config file
      */
-    const IDE_FILE_PATH_ARGUMENT = 'path';
+    public const IDE_FILE_PATH_ARGUMENT = 'path';
 
-    const PROJECT_PATH_IDENTIFIER = '$PROJECT_DIR$';
-    const MFTF_SRC_PATH = 'src/Magento/FunctionalTestingFramework/';
+    public const PROJECT_PATH_IDENTIFIER = '$PROJECT_DIR$';
+    public const MFTF_SRC_PATH = 'src/Magento/FunctionalTestingFramework/';
 
     /**
      * Configures the current command.
@@ -54,10 +55,10 @@ class GenerateDevUrnCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      * @throws \Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $miscXmlFilePath = $input->getArgument(self::IDE_FILE_PATH_ARGUMENT);
         $miscXmlFile = realpath($miscXmlFilePath);
@@ -117,6 +118,8 @@ class GenerateDevUrnCommand extends Command
         //Save output
         $dom->save($miscXmlFile);
         $output->writeln("MFTF URN mapping successfully added to {$miscXmlFile}.");
+
+        return self::SUCCESS_EXIT_CODE;
     }
 
     /**

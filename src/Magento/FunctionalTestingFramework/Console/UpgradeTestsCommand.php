@@ -17,6 +17,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UpgradeTestsCommand extends Command
 {
+    private const SUCCESS_EXIT_CODE = 0;
+
     /**
      * Pool of upgrade scripts to run
      *
@@ -46,10 +48,10 @@ class UpgradeTestsCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var \Magento\FunctionalTestingFramework\Upgrade\UpgradeInterface[] $upgradeScriptObjects */
         $upgradeScriptObjects = $this->upgradeScriptsList->getUpgradeScripts();
@@ -59,5 +61,7 @@ class UpgradeTestsCommand extends Command
             LoggingUtil::getInstance()->getLogger(get_class($upgradeScriptObject))->info($upgradeOutput);
             $output->writeln($upgradeOutput . PHP_EOL);
         }
+
+        return self::SUCCESS_EXIT_CODE;
     }
 }

@@ -7,9 +7,8 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class RunTestGroupCommand extends BaseGenerateCommand
 {
@@ -133,7 +131,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 }
                 $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
             } else {
-                $process = new Process($codeceptionCommandString);
+                $process = Process::fromShellCommandline($codeceptionCommandString);
                 $process->setWorkingDirectory(TESTS_BP);
                 $process->setIdleTimeout(600);
                 $process->setTimeout(0);

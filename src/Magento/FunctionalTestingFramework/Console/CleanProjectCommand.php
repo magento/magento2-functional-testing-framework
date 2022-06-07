@@ -18,6 +18,8 @@ use Symfony\Component\Finder\Finder;
 
 class CleanProjectCommand extends Command
 {
+    private const SUCCESS_EXIT_CODE = 0;
+
     /**
      * Configures the current command.
      *
@@ -37,11 +39,11 @@ class CleanProjectCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
+     * @return integer
      * @throws \Symfony\Component\Console\Exception\LogicException
      * @throws TestFrameworkException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $configFiles = [
             // codeception.yml file for top level config
@@ -97,5 +99,7 @@ class CleanProjectCommand extends Command
         }
 
         $output->writeln('mftf files removed from filesystem.');
+
+        return self::SUCCESS_EXIT_CODE;
     }
 }

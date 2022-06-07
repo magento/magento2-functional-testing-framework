@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40786b066af41372e12e5af07aeeaf0b",
+    "content-hash": "69a3d90dcac080bbeb28b46e4533dadb",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -7886,10 +7886,10 @@
         "php": ">7.3",
         "ext-curl": "*",
         "ext-dom": "*",
+        "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
-        "ext-openssl": "*",
-        "ext-iconv": "*"
+        "ext-openssl": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

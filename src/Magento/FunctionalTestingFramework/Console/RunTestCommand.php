@@ -261,7 +261,7 @@ class RunTestCommand extends BaseGenerateCommand
      */
     private function executeTestCommand(string $command, OutputInterface $output)
     {
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
