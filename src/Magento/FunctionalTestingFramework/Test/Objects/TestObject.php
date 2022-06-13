@@ -260,6 +260,29 @@ class TestObject
     }
 
     /**
+     * Function to return credentials
+     * @return array
+     */
+    public function getCredentials()
+    {
+        $requiredCredentials = [];
+        foreach ($this->hooks as $hookObject) {
+            foreach ($hookObject->getActions() as $action) {
+                if (isset($action->getCustomActionAttributes()['requiredCredentials'])
+                    && !empty($action->getCustomActionAttributes()['requiredCredentials'])) {
+                    $requiredCredentials[] = $action->getCustomActionAttributes()['requiredCredentials'];
+                }
+            }
+        }
+        foreach ($this->getOrderedActions() as $action) {
+            if (isset($action->getCustomActionAttributes()['requiredCredentials'])
+                && !empty($action->getCustomActionAttributes()['requiredCredentials'])) {
+                $requiredCredentials[] = $action->getCustomActionAttributes()['requiredCredentials'];
+            }
+        }
+        return array_unique($requiredCredentials);
+    }
+    /**
      * Function which takes a set of actions and estimates time for completion based on action type.
      *
      * @param ActionObject[] $actions

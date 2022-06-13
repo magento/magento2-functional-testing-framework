@@ -49,7 +49,7 @@ class ActionGroupObjectTest extends MagentoTestCase
         $this->setEntityObjectHandlerReturn($entity);
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())->build();
         $steps = $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'literal']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'literal', 'requiredCredentials' => '']);
     }
 
     /**
@@ -67,30 +67,48 @@ class ActionGroupObjectTest extends MagentoTestCase
         });
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
-            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
-            ->build();
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                [
+                    'userInput' => '{{arg1.field2}}','requiredCredentials' => ''
+                ]
+            )])
+        ->withArguments([new ArgumentObject('arg1', null, 'entity')])
+        ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2','requiredCredentials' => '']);
 
         // entity.field as argument
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{arg1}}',
+                'requiredCredentials' => ''
+                ]
+            )])
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2', 'requiredCredentials' => '']);
 
         // String Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{simple}}',
+                'requiredCredentials' => ''
+                ]
+            )])
             ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'override'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'override']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'override', 'requiredCredentials' => '']);
     }
 
     /**
@@ -102,21 +120,32 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithPersistedArgs(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1.field2}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{arg1.field2}}',
+                'requiredCredentials' => '']
+            )])
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data3$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$','requiredCredentials' => '']);
 
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{simple}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{simple}}',
+                'requiredCredentials' => ''
+                ]
+            )])
             ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$data3.field2$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$data3.field2$','requiredCredentials' => '']);
     }
 
     /**
@@ -134,12 +163,18 @@ class ActionGroupObjectTest extends MagentoTestCase
         });
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{arg1}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{arg1}}',
+                'requiredCredentials' => ''
+                ]
+            )])
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2','requiredCredentials' => '']);
     }
 
     /**
@@ -157,11 +192,17 @@ class ActionGroupObjectTest extends MagentoTestCase
         });
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject('action1', 'testAction', ['userInput' => '{{data1.field1}}'])])
+            ->withActionObjects([new ActionObject(
+                'action1',
+                'testAction',
+                ['userInput' => '{{data1.field1}}',
+                 'requiredCredentials' => ''
+                ]
+            )])
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue']);
+        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue','requiredCredentials' => '']);
     }
 
     /**
@@ -199,11 +240,22 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // XML Data
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector testValue2']);
+        $this->assertOnMergeKeyAndActionValue($steps, [
+            'selector' => '.selector testValue2',
+            'requiredCredentials' => ''
+        ]);
 
         // Persisted Data
-        $steps = $actionGroupUnderTest->getSteps(['arg1' => '$data2$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $data2.field2$']);
+        $steps = $actionGroupUnderTest->getSteps(
+            ['arg1' => '$data2$'],
+            self::ACTION_GROUP_MERGE_KEY
+        );
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            ['selector' => '.selector $data2.field2$',
+            'requiredCredentials' => ''
+            ]
+        );
     }
 
     /**
@@ -242,15 +294,28 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // String Literal
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'stringLiteral'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector stringLiteral']);
+        $this->assertOnMergeKeyAndActionValue($steps, [
+            'selector' => '.selector stringLiteral',
+            'requiredCredentials' => ''
+        ]);
 
         // String Literal w/ data-like structure
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector data2.field2']);
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            ['selector' => '.selector data2.field2',
+            'requiredCredentials' => ''
+            ]
+        );
 
         // Persisted Data
         $steps = $actionGroupUnderTest->getSteps(['simple' => '$someData.field1$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['selector' => '.selector $someData.field1$']);
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            ['selector' => '.selector $someData.field1$',
+            'requiredCredentials' => ''
+            ]
+        );
     }
 
     /**
@@ -267,7 +332,12 @@ class ActionGroupObjectTest extends MagentoTestCase
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => '$$someData$$'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => '$$someData.field1$$']);
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            ['userInput' => '$$someData.field1$$',
+            'requiredCredentials' => ''
+            ]
+        );
     }
 
     /**

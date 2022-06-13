@@ -34,6 +34,7 @@
             <xs:element type="closeTabType" name="closeTab" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="commentType" name="comment" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="dragAndDropType" name="dragAndDrop" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="rapidClickType" name="rapidClick" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="executeJSType" name="executeJS" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="fillFieldType" name="fillField" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="loadSessionSnapshotType" name="loadSessionSnapshot" minOccurs="0" maxOccurs="unbounded"/>
@@ -248,6 +249,33 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute ref="userInput" use="required"/>
+                <xs:attributeGroup ref="commonActionAttributes"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="rapidClickType">
+        <xs:annotation>
+            <xs:documentation>
+                Performs simple mouse rapid click as per given count.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="selector" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Selector for rapid click.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="count" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Click count.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>

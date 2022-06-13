@@ -36,7 +36,7 @@ class VaultTokenAuthStrategy extends AbstractAuthenticationStrategy
      * @return Auth
      * @throws TestFrameworkException
      */
-    public function authenticate()
+    public function authenticate(): ?Auth
     {
         try {
             return new Auth(['clientToken' => $this->token]);

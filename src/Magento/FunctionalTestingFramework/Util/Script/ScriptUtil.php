@@ -5,6 +5,7 @@
  */
 namespace Magento\FunctionalTestingFramework\Util\Script;
 
+use Exception;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Exceptions\XmlException;
@@ -40,7 +41,7 @@ class ScriptUtil
      * @return array
      * @throws TestFrameworkException
      */
-    public function getAllModulePaths()
+    public function getAllModulePaths(): array
     {
         MftfApplicationConfig::create(
             true,
@@ -60,7 +61,7 @@ class ScriptUtil
      * @param string $message
      * @return string
      */
-    public function printErrorsToFile($errors, $filePath, $message)
+    public function printErrorsToFile(array $errors, string $filePath, string $message): string
     {
         if (empty($errors)) {
             return $message . ": No errors found.";
@@ -91,7 +92,7 @@ class ScriptUtil
      * @param string $scope
      * @return Finder|array
      */
-    public function getModuleXmlFilesByScope($modulePaths, $scope)
+    public function getModuleXmlFilesByScope(array $modulePaths, string $scope)
     {
         $found = false;
         $scopePath = DIRECTORY_SEPARATOR . ucfirst($scope) . DIRECTORY_SEPARATOR;
@@ -178,7 +179,6 @@ class ScriptUtil
                         // trim `{{data.field}}` to `field`
                         preg_match('/.([^.]+)}}/', $reference, $elementName);
                         /** @var ElementObject $element */
-                        /** @var SectionObject $entity */
                         $element = $entity->getElement($elementName[1]);
                         if ($element) {
                             $entities[$entity->getName() . '.' . $elementName[1]] = $element;
@@ -200,7 +200,7 @@ class ScriptUtil
      * @throws XmlException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function resolveParametrizedReferences($braceReferences, $contents, $resolveSectionElement = false)
+    public function resolveParametrizedReferences($braceReferences, $contents, $resolveSectionElement = false): array
     {
         $entities = [];
         foreach ($braceReferences as $parameterizedReference) {
@@ -232,7 +232,6 @@ class ScriptUtil
                             // trim `data.field` to `field`
                             preg_match('/.([^.]+)/', $argument, $elementName);
                             /** @var ElementObject $element */
-                            /** @var SectionObject $entity */
                             $element = $entity->getElement($elementName[1]);
                             if ($element) {
                                 $entities[$entity->getName() . '.' . $elementName[1]] = $element;
@@ -252,7 +251,7 @@ class ScriptUtil
      * @return array
      * @throws XmlException
      */
-    public function resolveEntityByNames($references)
+    public function resolveEntityByNames(array $references): array
     {
         $entities = [];
         foreach ($references as $reference) {
@@ -270,8 +269,9 @@ class ScriptUtil
      * @param string $name
      * @return mixed
      * @throws XmlException
+     * @throws Exception
      */
-    public function findEntity($name)
+    public function findEntity(string $name)
     {
         if ($name === '_ENV' || $name === '_CREDS') {
             return null;
@@ -292,5 +292,21 @@ class ScriptUtil
         } catch (TestReferenceException $e) {
         }
         return null;
+    }
+
+    /**
+     * Return all XML files in given test name, empty array if no path is valid
+     * @param array $testNames
+     * @return array|Finder
+     */
+    public function getModuleXmlFilesByTestNames(array $testNames)
+    {
+        $finder = new Finder();
+        array_walk($testNames, function (&$value) {
+            $value = $value . ".xml";
+        });
+        $finder->files()->followLinks()->in(MAGENTO_BP)->name($testNames)->sortByName();
+
+        return $finder->files() ?? [];
     }
 }

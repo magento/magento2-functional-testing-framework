@@ -205,8 +205,7 @@ Specify the following parameters, which are required to launch tests:
 -  `MAGENTO_ADMIN_USERNAME` must contain the username required for authorization in the Admin area.
   Example: `MAGENTO_ADMIN_USERNAME=admin`
 
--  `MAGENTO_ADMIN_PASSWORD` must contain the user password required for authorization in the Admin area.
-  Example: `MAGENTO_ADMIN_PASSWORD=123123q`
+-  `MAGENTO_ADMIN_PASSWORD` must now be set up in the credentials file. See [Credentials Page][] for details.
 
 <div class="bs-callout bs-callout-info" markdown="1">
 If the `MAGENTO_BASE_URL` contains a subdirectory like `http://magento.test/magento2ce`, specify `MAGENTO_CLI_COMMAND_PATH`.
@@ -366,3 +365,4 @@ allure serve dev/tests/_output/allure-results/
 [Find your version]: introduction.html#find-your-mftf-version
 [Installation Guide docroot]: https://devdocs.magento.com/guides/v2.4/install-gde/tutorials/change-docroot-to-pub.html
 [Magento Two-Factor Authentication (2FA) extension]: https://devdocs.magento.com/guides/v2.4/security/two-factor-authentication.html
+[Credentials Page]: https://devdocs.magento.com/mftf/docs/credentials.html

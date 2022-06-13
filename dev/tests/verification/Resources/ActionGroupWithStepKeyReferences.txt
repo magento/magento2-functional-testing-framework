@@ -67,6 +67,7 @@ class ActionGroupWithStepKeyReferencesCest
 		$action14ActionGroup = $I->grabMultiple($action14ActionGroup); // stepKey: action14ActionGroup
 		$action15ActionGroup = $I->grabTextFrom($action15ActionGroup); // stepKey: action15ActionGroup
 		$action16ActionGroup = $I->grabValueFrom($action16ActionGroup); // stepKey: action16ActionGroup
+		$action17ActionGroup = $I->grabCookieAttributes($action17ActionGroup, ['domain' => 'www.google.com']); // stepKey: action17ActionGroup
 		$I->comment("Exiting Action Group [actionGroup] FunctionActionGroupWithStepKeyReferences");
 	}
 

@@ -17,6 +17,7 @@ class GenerateTestsCommandTest extends TestCase
      * @param mixed $expected
      * @return void
      * @dataProvider configParallelOptions
+     * @throws \ReflectionException
      */
     public function testParseConfigParallelOptions($time, $groups, $expected): void
     {

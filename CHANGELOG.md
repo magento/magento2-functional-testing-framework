@@ -1,5 +1,28 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.9.0
+---------
+
+### Fixes
+
+* Fixed invalid UTF-8 chars returned from magentoCLI that breaks allure reporting
+* Fixed MFTF tests failure without access to S3
+* Removed sub heading Parameters from allure report
+* Removed truncation of parameters on running MFTF run:test
+
+### Enhancements
+* MFTF group summary file
+* Static check to detect unused entities
+* Ability To Run MFTF JSON Configuration From File
+* Test generation error on invalid entities
+* Update MFTF to not pass NULL into non-nullable arguments
+* Static check for created data outside action group
+* Deleted the unused images
+* CreateData's <field> to allow uniqueness attribute
+* Set proper weight for action <startMessageQueue> for config parallel generation
+* Test before/after comments in test/allure
+* Throw error message if key value pair is not mapped properly in .credentials file
+
 3.8.0
 ---------
 
@@ -70,7 +93,7 @@ Magento Functional Testing Framework Changelog
 * [#870](https://github.com/magento/magento2-functional-testing-framework/pull/870) -- Removing the csharpru/vault-php-guzzle6-transport not needed dependency
 * [#871](https://github.com/magento/magento2-functional-testing-framework/pull/871) -- Changed loose comparisons into strict
 * [#872](https://github.com/magento/magento2-functional-testing-framework/pull/872) -- Fix broken MFTF tests
-  
+
   3.6.1
 ---------
 
@@ -86,7 +109,7 @@ Magento Functional Testing Framework Changelog
 
 * Maintainability
   * Updated composer dependencies to be PHP 8 compatible with the except of codeception/aspect-mock.
-    
+
 ### GitHub Pull Requests:
 
 * [#830](https://github.com/magento/magento2-functional-testing-framework/pull/830) -- Add ability to configure multiple OTPs
@@ -110,7 +133,7 @@ Magento Functional Testing Framework Changelog
 ### Enhancements
 
 * Customizability
-    * Added new `config:parallel --groups` option in `generate:tests` command to generate and split tests/suites into required number of execution time balanced groups. 
+    * Added new `config:parallel --groups` option in `generate:tests` command to generate and split tests/suites into required number of execution time balanced groups.
 
 ### Fixes
 
@@ -129,7 +152,7 @@ Magento Functional Testing Framework Changelog
 
 * Maintainability
   * Added support for composer 2.
-    
+
 3.3.0
 ---------
 
@@ -137,11 +160,11 @@ Magento Functional Testing Framework Changelog
 
 * Usability
   * [#817](https://github.com/magento/magento2-functional-testing-framework/pull/817) -- Add support for admin WebAPI token refresh.
-    
+
 * Maintainability
   * [#814](https://github.com/magento/magento2-functional-testing-framework/pull/814) -- Update dependencies in order to make mftf php8 compatible, fix running phpcpd
-  * [#815](https://github.com/magento/magento2-functional-testing-framework/pull/815) -- Upgrade csharpru/vault-php to 4.1  
-    
+  * [#815](https://github.com/magento/magento2-functional-testing-framework/pull/815) -- Upgrade csharpru/vault-php to 4.1
+
 ### Fixes
 
 * Fixed test generation error in a split suite group (--config=parallel) to allow generation of subsequent groups.
@@ -167,8 +190,8 @@ Magento Functional Testing Framework Changelog
 * Usability
   * Introduced error tolerance during test and suite generation. See the [command page](./docs/commands/mftf.md#error-tolerance-during-generation) for details.
     Addressed github issue [#276](https://github.com/magento/magento2-functional-testing-framework/issues/276).
-    
-* Maintainability    
+
+* Maintainability
   * Updated annotation static-check to check all required annotations.
 
 ### Fixes
@@ -183,7 +206,7 @@ Magento Functional Testing Framework Changelog
   * Removed `travis.yml` and replaced with `.github/workflows/main.yml`
 
 ### Fixes
-Fixed issue with XPath locators for waits in MagentoPwaWebDriver.  
+Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 
 3.1.0
 ---------
@@ -197,13 +220,13 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 * Usability
   * Introduced new action `pause`, to invoke codeception interactive pause for debugging during test execution. See the [Interactive Pause](./docs/interactive-pause.md) page for details.
   * Introduced a new `.env` configuration option `ENABLE_PAUSE`, to enable the new pause feature.
-    
-* Maintainability    
+
+* Maintainability
   * Added a new static check that checks for the usage of the `pause` action. See the [command page](./docs/commands/mftf.md#static-checks) for details.
-   
-* Modularity   
+
+* Modularity
   * MFTF now supports the use of actions from multiple modules within suites.
-    
+
 * Traceability
   * A deprecation notice is now added at test execution time for deprecated metadata usage.
 
@@ -219,7 +242,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
   * [#683](https://github.com/magento/magento2-functional-testing-framework/pull/683) -- Docs: Renamed sample test name with the correct one
   * [#691](https://github.com/magento/magento2-functional-testing-framework/pull/691) -- Docs: Branch name updates
   * [#678](https://github.com/magento/magento2-functional-testing-framework/pull/678) -- Docs: Command added to modify the web server rewrites configuration
-  * [#745](https://github.com/magento/magento2-functional-testing-framework/pull/745) -- Docs: Remove invalid sample test name 
+  * [#745](https://github.com/magento/magento2-functional-testing-framework/pull/745) -- Docs: Remove invalid sample test name
 
 3.0.0
 ---------
@@ -230,22 +253,22 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
     * Introduced MFTF helpers `<helper>` to create custom actions outside of MFTF.[See custom-helpers page for details](./docs/custom-helpers.md)
     * Removed deprecated actions `<executeSelenium>` and `<performOn>`.
     * `<group value="skip"/>` no longer skips a test. Instead, the test is added to the `skip` group.
-    
+
 * Maintainability
     * Added support for PHP 7.4.
     * Added support for PHPUnit 9.
     * Dropped support for PHP 7.0, 7.1, 7.2.
     * Schema updates for test entities to only allow single entity per file except Data and Metadata.
     * Support for sub-folders in test modules.
-    * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`. 
+    * Removed support to read test entities from `<magento>dev/tests/acceptance/tests/functional/Magento/FunctionalTest`.
     * Removed file attribute for `<module>` in suiteSchema.
     * Removed action `pauseExecution` and added `pause`. [See actions page for details](./docs/test/actions.md#pause)
-    * Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency) 
-    * Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)   
+    * Removed action `formatMoney` and added `formatCurrency`. [See actions page for details](./docs/test/actions.md#formatcurrency)
+    * Improved assertion actions to support PHPUnit 9 changes. [See assertions page for details](./docs/test/assertions.md)
         *  Added new actions: `assertEqualsWithDelta`, `assertNotEqualsWithDelta`, `assertEqualsCanonicalizing`, `assertNotEqualsCanonicalizing`, `assertEqualsIgnoringCase`, `assertNotEqualsIgnoringCase`.
         *  Added new actions: `assertStringContainsString`, `assertStringNotContainsString`, `assertStringContainsStringIgnoringCase`, `assertStringNotContainsStringIgnoringCase` for string haystacks.
         *  Removed actions: `assertInternalType`, `assertNotInternalType`, `assertArraySubset`.
-        *  Removed delta option from `assertEquals` and `assertNotEquals`.   
+        *  Removed delta option from `assertEquals` and `assertNotEquals`.
     * Added static check `deprecatedEntityUsage` that checks and reports references to deprecated test entities.
     * Added static check `annotations` that checks and reports missing annotations in tests.
     * Updated `bin/mftf static-checks` command to allow executing static-checks defined in `staticRuleSet.json` by default. [See command page for details](./docs/commands/mftf.md#static-checks)
@@ -254,19 +277,19 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
     * `mftf.log` no longer includes notices and warnings at test execution time.
     * Added unhandledPromptBehavior driver capability for Chrome 75+ support.
     * Added the Chrome option `--ignore-certificate-errors` to `functional.suite.dist.yml`.
-    
+
 * Traceability
     * Removed `--debug` option `NONE` to disallow ability to turn off schema validation.
     * Notices added for test entity naming convention violations.
     * Metadata file names changed to `*Meta.xml`.
-    * Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)  
+    * Introduced new `.env` configuration `VERBOSE_ARTIFACTS` to toggle saving attachments in Allure. [See configuration page for details](./docs/configuration.md)
     * Changed the `bin/mftf static-checks` error file directory from the current working directory to `TESTS_BP/tests/_output/static-results/`.
-    
+
 * Readability
-    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md).      
+    * Support only nested assertion syntax [See assertions page for details](./docs/test/assertions.md).
     * Documented [3.0.0 Backward Incompatible Changes](./docs/backward-incompatible-changes.md).
-    * Removed blacklist/whitelist terminology in MFTF. 
-    
+    * Removed blacklist/whitelist terminology in MFTF.
+
 * Upgrade scripts added to upgrade tests to MFTF major version requirements. See upgrade instructions below.
 * Bumped dependencies to support PHP/PHPUnit upgrade.
 
@@ -354,7 +377,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
         * Page
         * Section
         * Section Element
-            * See DevDocs for details 
+            * See DevDocs for details
     * Improved `mftf static-checks` command to allow executing all or specific static checks.
     * Added a new static check that checks and reports unused arguments in action groups.
 * Customizability
@@ -406,12 +429,12 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 -----
 
 * Traceability
-    * Allure report enhanced to display file path of tests.        
+    * Allure report enhanced to display file path of tests.
 * Maintainability
     * Added support to read MFTF test entities from `<magento>dev/tests/acceptance/tests/functional/<vendor_name>/<module_name>/*`
     * Removed path deprecation warning from `ModuleResolver`.
     * Refactored problem methods to reduce cyclomatic complexity.
-    
+
 ### Fixes
 * Fixed issue with builds due to absence of AcceptanceTester class.
 
@@ -478,7 +501,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 * Customizability
     * Use of `_CREDS` has been extended to `<magentoCLI>` and `<createData>` actions
 * Traceability
-    * A Test step is now generated and injected in the allure report when a test is reported as `BROKEN`. 
+    * A Test step is now generated and injected in the allure report when a test is reported as `BROKEN`.
 
 ### Fixes
 * `static-checks` command now properly returns `1` if any static check failed.
@@ -580,7 +603,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 ### Enhancements
 * Maintainability
     * Added new `mftf run:failed` commands, which reruns all failed tests from last run configuration.
-    
+
 ### Fixes
 * Fixed an issue where mftf would fail to parse test materials for extensions installed under `vendor`.
 * Fixed a Windows compatibility issue around the use of Magento's `ComponentRegistrar` to aggregate paths.
@@ -669,15 +692,15 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 
 2.3.1
 -----
-### Enhancements  
+### Enhancements
 * Maintainability
     * `mftf build:project` now copies over the `command.php` file into the parent Magento installation, if detected.
 
 2.3.0
 -----
-### Enhancements  
+### Enhancements
 * Traceability
-    * MFTF now outputs generation run-time information, warnings, and errors to an `mftf.log` file. 
+    * MFTF now outputs generation run-time information, warnings, and errors to an `mftf.log` file.
     * Overall error messages for various generation errors have been improved. Usage of the `--debug` flag provides file-specific errors for all XML-related errors.
     * Allure Reports now require a unique `story` and `title` combination, to prevent collisions in Allure Report generation.
     * The `features` annotation now ignores user input and defaults to the module the test lives under (for clear Allure organization).
@@ -728,7 +751,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 
 2.2.0
 -----
-### Enhancements  
+### Enhancements
 * Traceability
     * Javascript errors are now logged and reported in test output.
     * Test failures are no longer overwritten by failures in an `<after>` hook.
@@ -805,7 +828,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
 -----
 ### Enhancements
 * Traceability
-    * Severity in `<annotation>` tags now properly reflect Magento severity values. 
+    * Severity in `<annotation>` tags now properly reflect Magento severity values.
 * Modularity
     * Added ability to pass in simple values to actionGroups via addition of `type` attribute in actionGroup `<argument>` declaration.
         * For examples, see devdocs article on actionGroups.
@@ -841,7 +864,7 @@ Fixed issue with XPath locators for waits in MagentoPwaWebDriver.
     * Added the ability to refer to `custom_attribute` data in persisted entities via `key` instead of index.
         * ex. `url_key` in category entity: `$category.custom_attributes[3][value]$` and `$category.custom_attributes[url_key]$` are both valid.
 * Maintainability
-    * Added check for duplicate `stepKey` attributes at test generation. This check is scoped to `<testAction>` tags within a single `<test>` tag in a single file. 
+    * Added check for duplicate `stepKey` attributes at test generation. This check is scoped to `<testAction>` tags within a single `<test>` tag in a single file.
 
 ### Fixes
 * Fixed inability to use `<actionGroup>` with `<arguments>` in test hooks.

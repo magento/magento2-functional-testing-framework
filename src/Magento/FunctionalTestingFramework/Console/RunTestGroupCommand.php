@@ -29,7 +29,15 @@ class RunTestGroupCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:group')
-            ->setDescription('Execute a set of tests referenced via group annotations')
+            ->setDescription(
+                'Execute a set of tests referenced via group annotations'
+            )
+            ->addOption(
+                'xml',
+                'xml',
+                InputOption::VALUE_NONE,
+                "creates xml report for executed group"
+            )
             ->addOption(
                 'skip-generate',
                 'k',
@@ -58,6 +66,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $xml = ($input->getOption('xml'))
+            ? '--xml'
+            : "";
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
@@ -104,9 +115,11 @@ class RunTestGroupCommand extends BaseGenerateCommand
         }
 
         if ($this->pauseEnabled()) {
-            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
+            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug '.$xml;
         } else {
-            $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+            $commandString = realpath(
+                PROJECT_ROOT . '/vendor/bin/codecept'
+            ) . ' run functional --verbose --steps '.$xml;
         }
 
         $exitCode = -1;
@@ -130,7 +143,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
                     }
                 );
             }
-
+            if (!empty($xml)) {
+                $this->movingXMLFileFromSourceToDestination($xml, $groups[$i].'_'.'group', $output);
+            }
             // Save failed tests
             $this->appendRunFailed();
         }
