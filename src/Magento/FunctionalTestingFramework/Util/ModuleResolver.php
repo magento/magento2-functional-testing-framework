@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver\ModuleResolverService;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
@@ -168,6 +169,7 @@ class ModuleResolver
      *
      * @return array
      * @throws TestFrameworkException
+     * @throws FastFailException
      */
     public function getEnabledModules()
     {
@@ -201,7 +203,7 @@ class ModuleResolver
                 "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
                 "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
             ];
-            throw new TestFrameworkException($message, $context);
+            throw new FastFailException($message, $context);
         }
 
         $this->enabledModules = json_decode($response);
@@ -215,6 +217,7 @@ class ModuleResolver
      * @param boolean $verbosePath
      * @return array
      * @throws TestFrameworkException
+     * @throws FastFailException
      */
     public function getModulesPath($verbosePath = false)
     {
