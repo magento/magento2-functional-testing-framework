@@ -24,7 +24,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
         $valid = validateCommand($magentoBinary, $command);
         if ($valid) {
             $fullCommand = escapeshellcmd($magentoBinary . " $command" . " $arguments");
-            $process = new Symfony\Component\Process\Process($fullCommand);
+            $process = Symfony\Component\Process\Process::fromShellCommandline($fullCommand);
             $process->setIdleTimeout($timeout);
             $process->setTimeout(0);
             $idleTimeout = false;
