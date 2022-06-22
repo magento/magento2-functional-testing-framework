@@ -1,5 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+3.10
+---------
+
+### Enhancements
+* Updated symfony/console and symfony/process constraints to support latest Symfony   LTS (5.4v)
+* Updated Symfony related code to support latest Symfony LTS (5.4v).
+* Removed PHP 8.0 & PHP 7.3 compatibility.
+
+
 3.9.0
 ---------
 
