@@ -5,7 +5,7 @@ Magento Functional Testing Framework Changelog
 ---------
 
 ### Enhancements
-* Updated symfony/console and symfony/process constraints to support latest Symfony   LTS (5.4v)
+* Updated symfony/console and symfony/process constraints to support latest Symfony LTS (5.4v)
 * Updated Symfony related code to support latest Symfony LTS (5.4v).
 * Implement rapid times X clicks on UI element in MFTF
 * Log MFTF test dependencies
