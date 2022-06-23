@@ -4,19 +4,18 @@ Magento Functional Testing Framework Changelog
 3.10
 ---------
 
-### Fixes
-* Hashicorp Vault PHP lib being instantiated with wrong params
-
 ### Enhancements
 * Updated symfony/console and symfony/process constraints to support latest Symfony   LTS (5.4v)
 * Updated Symfony related code to support latest Symfony LTS (5.4v).
-* Removed PHP 8.0 & PHP 7.3 compatibility.
 * Implement rapid times X clicks on UI element in MFTF
 * Log MFTF test dependencies
 * Unused entity static check
 * Updated docs for new location of password
 * Remove any remaining usages of Travis CI from MFTF Repo
 * Unit tests for GenerateTestFailedCommandTest and RunTestFailedCommandTest
+
+### Fixes
+* Hashicorp Vault PHP lib being instantiated with wrong params
 
 3.9.0
 ---------
