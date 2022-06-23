@@ -364,4 +364,29 @@ class BaseGenerateCommand extends Command
         } catch (TestFrameworkException $e) {
         }
     }
+    /**
+     * Codeception creates default xml file with name report.xml .
+     * This function renames default file name with name of the test.
+     *
+     * @param string $xml
+     * @param string $fileName
+     * @param OutputInterface $output
+     * @return void
+     * @throws \Exception
+     */
+    public function movingXMLFileFromSourceToDestination($xml, $fileName, $output)
+    {
+        if(!empty($xml) && file_exists($this->getTestsOutputDir().'report.xml')) {
+            if (!file_exists($this->getTestsOutputDir().'xml')) {
+                mkdir($this->getTestsOutputDir().'xml' , 0777, true);
+            }
+            $fileName = str_replace("Cest.php", "",$fileName);
+            $existingFileName = $this->getTestsOutputDir().'report.xml';
+            $newFileName = $this->getTestsOutputDir().'xml/'.$fileName.'_report.xml';
+            $output->writeln( "<info>".sprintf(" report.xml file is moved to  ".
+                    $this->getTestsOutputDir().'xml/'. ' location with the new name '.$fileName.'_report.xml')."</info>") ;
+            rename($existingFileName , $newFileName);
+        }
+    }
+
 }

@@ -28,7 +28,8 @@ use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
  */
 class BuildProjectCommand extends Command
 {
-    const DEFAULT_YAML_INLINE_DEPTH = 10;
+    private const SUCCESS_EXIT_CODE = 0;
+    public const DEFAULT_YAML_INLINE_DEPTH = 10;
 
     /**
      * Env processor manages .env files.
@@ -65,11 +66,11 @@ class BuildProjectCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
+     * @return integer
      * @throws \Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $resetCommand = new CleanProjectCommand();
         $resetOptions = new ArrayInput([]);
@@ -91,7 +92,7 @@ class BuildProjectCommand extends Command
 
         // TODO can we just import the codecept symfony command?
         $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
-        $process = new Process($codeceptBuildCommand);
+        $process = Process::fromShellCommandline($codeceptBuildCommand);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
@@ -112,6 +113,8 @@ class BuildProjectCommand extends Command
             $upgradeOptions = new ArrayInput([]);
             $upgradeCommand->run($upgradeOptions, $output);
         }
+
+        return self::SUCCESS_EXIT_CODE;
     }
 
     /**

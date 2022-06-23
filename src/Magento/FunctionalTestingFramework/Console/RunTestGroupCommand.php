@@ -7,9 +7,8 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class RunTestGroupCommand extends BaseGenerateCommand
 {
@@ -29,7 +27,15 @@ class RunTestGroupCommand extends BaseGenerateCommand
     protected function configure()
     {
         $this->setName('run:group')
-            ->setDescription('Execute a set of tests referenced via group annotations')
+            ->setDescription(
+                'Execute a set of tests referenced via group annotations'
+            )
+            ->addOption(
+                'xml',
+                'xml',
+                InputOption::VALUE_NONE,
+                "creates xml report for executed group"
+            )
             ->addOption(
                 'skip-generate',
                 'k',
@@ -58,6 +64,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $xml = ($input->getOption('xml'))
+            ? '--xml'
+            : "";
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
@@ -104,9 +113,11 @@ class RunTestGroupCommand extends BaseGenerateCommand
         }
 
         if ($this->pauseEnabled()) {
-            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
+            $commandString = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug '.$xml;
         } else {
-            $commandString = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional --verbose --steps';
+            $commandString = realpath(
+                PROJECT_ROOT . '/vendor/bin/codecept'
+            ) . ' run functional --verbose --steps '.$xml;
         }
 
         $exitCode = -1;
@@ -120,7 +131,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 }
                 $returnCodes[] = $this->codeceptRunTest($codeceptionCommandString, $output);
             } else {
-                $process = new Process($codeceptionCommandString);
+                $process = Process::fromShellCommandline($codeceptionCommandString);
                 $process->setWorkingDirectory(TESTS_BP);
                 $process->setIdleTimeout(600);
                 $process->setTimeout(0);
@@ -130,7 +141,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
                     }
                 );
             }
-
+            if (!empty($xml)) {
+                $this->movingXMLFileFromSourceToDestination($xml, $groups[$i].'_'.'group', $output);
+            }
             // Save failed tests
             $this->appendRunFailed();
         }

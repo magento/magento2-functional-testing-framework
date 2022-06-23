@@ -41,6 +41,12 @@ class RunTestCommand extends BaseGenerateCommand
     {
         $this->setName("run:test")
             ->setDescription("generation and execution of test(s) defined in xml")
+            ->addOption(
+                'xml',
+                'xml',
+                InputOption::VALUE_NONE,
+                "creates xml report for executed test"
+            )
             ->addArgument(
                 'name',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
@@ -134,11 +140,11 @@ class RunTestCommand extends BaseGenerateCommand
         $testConfigArray = json_decode($testConfiguration, true);
 
         if (isset($testConfigArray['tests'])) {
-            $this->runTests($testConfigArray['tests'], $output);
+            $this->runTests($testConfigArray['tests'], $output, $input);
         }
 
         if (isset($testConfigArray['suites'])) {
-            $this->runTestsInSuite($testConfigArray['suites'], $output);
+            $this->runTestsInSuite($testConfigArray['suites'], $output, $input);
         }
 
         // Add all failed tests in 'failed' file
@@ -152,12 +158,16 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param array           $tests
      * @param OutputInterface $output
+     * @param InputInterface  $input
      * @return void
      * @throws TestFrameworkException
      * @throws \Exception
      */
-    private function runTests(array $tests, OutputInterface $output)
+    private function runTests(array $tests, OutputInterface $output, InputInterface $input)
     {
+        $xml = ($input->getOption('xml'))
+            ? '--xml'
+            : "";
         if ($this->pauseEnabled()) {
             $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL;
         } else {
@@ -179,16 +189,18 @@ class RunTestCommand extends BaseGenerateCommand
             }
 
             if ($this->pauseEnabled()) {
-                $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps --debug';
+                $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps --debug '.$xml;
                 if ($i !== count($tests) - 1) {
                     $fullCommand .= self::CODECEPT_RUN_OPTION_NO_EXIT;
                 }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
             } else {
-                $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps';
+                $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps '.$xml;
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
-
+            if (!empty($xml)) {
+                $this->movingXMLFileFromSourceToDestination($xml, $testName, $output);
+            }
             // Save failed tests
             $this->appendRunFailed();
         }
@@ -199,16 +211,20 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @param array           $suitesConfig
      * @param OutputInterface $output
+     * @param InputInterface  $input
      * @return void
      * @throws \Exception
      */
-    private function runTestsInSuite(array $suitesConfig, OutputInterface $output)
+    private function runTestsInSuite(array $suitesConfig, OutputInterface $output, InputInterface $input)
     {
+        $xml = ($input->getOption('xml'))
+            ? '--xml'
+            : "";
         if ($this->pauseEnabled()) {
-            $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug';
+            $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug '.$xml;
         } else {
             $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept')
-                . ' run functional --verbose --steps ';
+                . ' run functional --verbose --steps '.$xml;
         }
 
         $count = count($suitesConfig);
@@ -226,7 +242,9 @@ class RunTestCommand extends BaseGenerateCommand
             } else {
                 $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
             }
-
+            if (!empty($xml)) {
+                $this->movingXMLFileFromSourceToDestination($xml, $suite, $output);
+            }
             // Save failed tests
             $this->appendRunFailed();
         }
@@ -243,7 +261,7 @@ class RunTestCommand extends BaseGenerateCommand
      */
     private function executeTestCommand(string $command, OutputInterface $output)
     {
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);

@@ -6,6 +6,9 @@
 
 namespace Magento\FunctionalTestingFramework\DataGenerator\Handlers\SecretStorage;
 
+use Laminas\Diactoros\RequestFactory;
+use Laminas\Diactoros\StreamFactory;
+use Laminas\Diactoros\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
@@ -79,13 +82,16 @@ class VaultStorage extends BaseStorage
         parent::__construct();
         if (null === $this->client) {
             // client configuration and override http errors settings
-            $config = [
-                'timeout' => 15,
-                'base_uri' => $baseUrl,
-                'http_errors' => false
-            ];
-
-            $this->client = new Client(new GuzzleClient($config));
+            $this->client = new Client(
+                new Uri($baseUrl),
+                new GuzzleClient([
+                    'timeout' => 15,
+                    'base_uri' => $baseUrl,
+                    'http_errors' => false
+                ]),
+                new RequestFactory(),
+                new StreamFactory()
+            );
             $this->secretBasePath = $secretBasePath;
         }
         $this->readVaultTokenFromFileSystem();

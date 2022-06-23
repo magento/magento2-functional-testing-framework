@@ -126,7 +126,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $property->setValue($mockDOHInstance, $mockDOHInstance);
 
         // Create test object and action object
-        $actionAttributes = [$userInputKey => $userInputValue];
+        $actionAttributes = [$userInputKey => $userInputValue,'requiredCredentials'=>''];
         $actions[$actionName] = new ActionObject($actionName, $actionType, $actionAttributes);
         $this->assertEquals($userInputValue, $actions[$actionName]->getCustomActionAttributes()[$userInputKey]);
 
@@ -198,7 +198,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObjectOne = new ActionObject(
             'actionKey1',
             'fillField',
-            ['userInput' => '{{_CREDS.username}}']
+            ['userInput' => '{{_CREDS.username}}', 'requiredCredentials' => 'username']
         );
         $actionObject = [$actionObjectOne];
 
@@ -208,7 +208,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $expectedValue = new ActionObject(
             'actionKey1',
             'fillSecretField',
-            ['userInput' => '{{_CREDS.username}}']
+            ['userInput' => '{{_CREDS.username}}','requiredCredentials' => 'username']
         );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
@@ -225,7 +225,10 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObjectOne = new ActionObject(
             'actionKey1',
             'magentoCLI',
-            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+            ['command' =>
+                'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}',
+                'requiredCredentials' => ''
+            ]
         );
         $actionObject = [$actionObjectOne];
 
@@ -235,7 +238,10 @@ class ActionMergeUtilTest extends MagentoTestCase
         $expectedValue = new ActionObject(
             'actionKey1',
             'magentoCLISecret',
-            ['command' => 'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}']
+            ['command' =>
+                'config:set cms/wysiwyg/enabled {{_CREDS.payment_authorizenet_login}}',
+                'requiredCredentials' => ''
+            ]
         );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
@@ -252,7 +258,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObjectOne = new ActionObject(
             'actionKey1',
             'field',
-            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+            ['value' => '{{_CREDS.payment_authorizenet_login}}','requiredCredentials' => '']
         );
         $actionObject = [$actionObjectOne];
 
@@ -262,7 +268,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $expectedValue = new ActionObject(
             'actionKey1',
             'field',
-            ['value' => '{{_CREDS.payment_authorizenet_login}}']
+            ['value' => '{{_CREDS.payment_authorizenet_login}}','requiredCredentials' => '']
         );
         $this->assertEquals($expectedValue, $result['actionKey1']);
     }
@@ -284,7 +290,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $actionObjectOne = new ActionObject(
             'actionKey1',
             'click',
-            ['userInput' => '{{_CREDS.username}}']
+            ['userInput' => '{{_CREDS.username}}','requiredCredentials' => 'username']
         );
         $actionObject = [$actionObjectOne];
 

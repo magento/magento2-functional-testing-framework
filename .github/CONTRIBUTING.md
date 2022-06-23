@@ -52,7 +52,7 @@ This gives Adobe permission to redistribute your contributions as part of the pr
 7. For large features or changes, [open an issue][issue] to discuss first.
    This may prevent duplicate or unnecessary effort, and it may gain you some additional contributors.
 8. To report a bug, [open an issue][issue], and follow [guidelines about bugfix issues][issue reporting].
-9. All automated tests must pass successfully (all builds on [Travis CI] must be green).
+9. All automated tests must pass successfully (all builds must be green).
 
 ## Fork a repository
 
@@ -179,4 +179,3 @@ Label| Description
 [Magento Contributor Agreement]: http://www.magento.com/legaldocuments/mca
 [MFTF repository]: https://github.com/magento/magento2-functional-testing-framework
 [open new issue]: https://github.com/magento/magento2-functional-testing-framework/issues/new
-[Travis CI]: https://travis-ci.com/magento/magento2-functional-testing-framework/pull_requests

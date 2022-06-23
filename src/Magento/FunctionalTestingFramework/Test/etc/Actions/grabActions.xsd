@@ -13,6 +13,7 @@
         <xs:choice>
             <xs:element type="grabAttributeFromType" name="grabAttributeFrom" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabCookieType" name="grabCookie" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="grabCookieAttributesType" name="grabCookieAttributes" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabFromCurrentUrlType" name="grabFromCurrentUrl" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabMultipleType" name="grabMultiple" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="grabPageSourceType" name="grabPageSource" minOccurs="0" maxOccurs="unbounded"/>
@@ -51,6 +52,21 @@
                 <xs:attributeGroup ref="commonActionAttributes"/>
             </xs:extension>
         </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="grabCookieAttributesType">
+      <xs:annotation>
+        <xs:documentation>
+          Grabs a cookie attributes value.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute ref="userInput"/>
+          <xs:attribute ref="parameterArray"/>
+          <xs:attributeGroup ref="commonActionAttributes"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="grabFromCurrentUrlType">
