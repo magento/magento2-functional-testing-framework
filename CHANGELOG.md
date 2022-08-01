@@ -6,8 +6,8 @@ Magento Functional Testing Framework Changelog
 
 ### Fixes
 
-* Fixed Allure reports are not generated for composer builds when running from repo
-* Fixed All MFTF scheduled build isn't h
+* Fixed Allure reports not generated for composer builds.
+* Fixed All MFTF scheduled build isn't generating allure report.
 
 3.10.0
 ---------
