@@ -340,6 +340,6 @@ Attributes|Type|Use|Description
 [`<required-entities>`]: #requiredentity-tag
 [`<var>`]: #var-tag
 [Actions]: ./test/actions.md
-[category creation]: http://docs.magento.com/m2/ce/user_guide/catalog/category-create.html
+[category creation]: https://docs.magento.com/user-guide/catalog/category-create.html
 [Credentials]: ./credentials.md
 [test actions]: ./test/actions.md#actions-returning-a-variable
