@@ -41,4 +41,15 @@ class SkippedGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('SkippedTestTwoIssues');
     }
+
+     /**
+     * Tests skipped test with multiple issues generation.
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testSkippedTestMustNotFailToGenerateWithErrorWhenThereIsIssueWithAnyOfTheStepsAsTheTestIsSkipped()
+    {
+        $this->generateAndCompareTest('SkippedTestWithIssueMustGetSkippedWithoutErrorExitCode');
+    }
 }
