@@ -564,11 +564,13 @@ class TestGenerator
     private function generateClassAnnotations($annotationType, $annotationName, $testObject)
     {
         $annotationToAppend = null;
-        if (!empty($annotationName['main'])) {
+        if (!$testObject->isSkipped() && !empty($annotationName['main'])) {
             $requiredCredentialsMessage = $this->requiredCredentials($testObject);
             $credMsg = "\n\n"."This test uses the following credentials:"."\n";
-            $annotationName = ['main'=>$annotationName['main'].', '.$credMsg.''.$requiredCredentialsMessage,
-                'test_files'=> "\n".$annotationName['test_files'], 'deprecated'=>$annotationName['deprecated']];
+            $annotationName = (!empty($requiredCredentialsMessage)) ?
+                ['main'=>$annotationName['main'].', '.$credMsg.''.$requiredCredentialsMessage,
+                'test_files'=> "\n".$annotationName['test_files'], 'deprecated'=>$annotationName['deprecated']]
+                : $annotationName;
         }
         switch ($annotationType) {
             case "title":
