@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd34c83cd0fc786e9d8d892d1e25b18d",
+    "content-hash": "b504d7cfd0bf4111f83579996edb79ef",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -2466,6 +2466,9 @@
             },
             "require": {
                 "php": "^7.1 || ^8.0"
+            },
+            "replace": {
+                "myclabs/deep-copy": "self.version"
             },
             "require-dev": {
                 "doctrine/collections": "^1.0",
