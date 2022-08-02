@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SkippedTestWithIssueMustGetSkippedWithoutErrorExitCode">
+        <annotations>
+            <stories value="skipped"/>
+            <title value="skippedTest"/>
+            <description value=""/>
+            <severity value="AVERAGE"/>
+            <skip>
+                <issueId value="SkippedValue"/>
+            </skip>
+        </annotations>
+        <before>
+            <createData entity="ReplacementPerson" stepKey="createPersonParam"/>
+            <actionGroup ref="FunctionalActionGroup" stepKey="beforeGroup"/>
+        </before>
+        <createData entity="DefaultPerson" stepKey="createPerson"/>
+        <actionGroup ref="FunctionalActionGroupWithData" stepKey="actionGroupWithPersistedData1">
+            <argument name="person" value="$createPerson$"/>
+        </actionGroup>
+        <after>
+            <actionGroup ref="FunctionalActionGroup" stepKey="afterGroup" after ="notFound"/>
+        </after>
+    </test>
+</tests>
