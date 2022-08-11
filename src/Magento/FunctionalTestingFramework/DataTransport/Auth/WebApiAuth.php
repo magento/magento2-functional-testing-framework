@@ -113,7 +113,7 @@ class WebApiAuth
             $errMessage = $e->getMessage();
         }
 
-        $message = 'Cannot retrieve API token with credentials. Please check the following configurations';
+        $message = 'Cannot retrieve API token with credentials.';
         try {
             // No exception will ever throw from here
             $message .= Tfa::isEnabled() ? ' and 2FA settings:' : ':' . PHP_EOL;
