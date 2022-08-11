@@ -119,8 +119,6 @@ class WebApiAuth
             $message .= Tfa::isEnabled() ? ' and 2FA settings:' : ':' . PHP_EOL;
         } catch (TestFrameworkException $e) {
         }
-        $message .= "username: {$login}" . PHP_EOL;
-        $message .= "password: {$password}" . PHP_EOL;
         $message .= $errMessage;
         $context = ['url' => $authUrl];
         throw new FastFailException($message, $context);
