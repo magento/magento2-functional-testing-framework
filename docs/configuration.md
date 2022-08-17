@@ -340,4 +340,4 @@ WAIT_TIMEOUT=30
 [`MAGENTO_CLI_COMMAND_PATH`]: #magento_cli_command_path
 [generateDate]: test/actions.md#generatedate
 [mftf]: commands/mftf.md
-[timezones]: http://php.net/manual/en/timezones.php
+[timezones]: https://php.net/manual/en/timezones.php

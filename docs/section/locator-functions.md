@@ -40,6 +40,6 @@ Given the above element definitions, you call the elements in a test just like a
 <!-- {% endraw %} -->
 
 <!-- Link Definitions -->
-[Locator functions]: http://codeception.com/docs/reference/Locator
+[Locator functions]: https://codeception.com/docs/reference/Locator
 [section]: ../section.md
 [parameterized selectors]: ./parameterized-selectors.md
