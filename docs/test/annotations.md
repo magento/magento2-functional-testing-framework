@@ -225,8 +225,8 @@ Attribute|Type|Use
 
 [`@Description`]: https://github.com/allure-framework/allure-phpunit#extended-test-class-or-test-method-description
 [`@Features`]: https://github.com/allure-framework/allure-phpunit#map-test-classes-and-test-methods-to-features-and-stories
-[`@group`]: http://codeception.com/docs/07-AdvancedUsage#Groups
-[`@return`]: http://codeception.com/docs/07-AdvancedUsage#Examples
+[`@group`]: https://codeception.com/docs/07-AdvancedUsage#Groups
+[`@return`]: https://codeception.com/docs/07-AdvancedUsage#Examples
 [`@Severity`]: https://github.com/allure-framework/allure-phpunit#set-test-severity
 [`@Stories`]: https://github.com/allure-framework/allure-phpunit#map-test-classes-and-test-methods-to-features-and-stories
 [`@TestCaseId`]: https://github.com/allure-framework/allure1/wiki/Test-Case-ID

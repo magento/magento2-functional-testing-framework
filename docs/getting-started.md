@@ -347,7 +347,7 @@ allure serve dev/tests/_output/allure-results/
 [`MAGENTO_BP`]: configuration.html#magento_bp
 [`mftf`]: commands/mftf.html
 [allure docs]: https://docs.qameta.io/allure/
-[Allure Framework]: http://allure.qatools.ru/
+[Allure Framework]: https://github.com/allure-framework
 [basic configuration]: configuration.html#basic-configuration
 [chrome driver]: https://sites.google.com/a/chromium.org/chromedriver/downloads
 [Codeception Test execution]: https://blog.jetbrains.com/phpstorm/2017/03/codeception-support-comes-to-phpstorm-2017-1/
@@ -355,7 +355,7 @@ allure serve dev/tests/_output/allure-results/
 [Configuration]: configuration.html
 [contributing]: https://github.com/magento/magento2-functional-testing-framework/blob/develop/.github/CONTRIBUTING.md
 [install Allure]: https://github.com/allure-framework/allure2#download
-[java]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+[java]: https://www.oracle.com/java/technologies/downloads/
 [mftf tests]: introduction.html#mftf-tests
 [php]: https://devdocs.magento.com/guides/v2.4/install-gde/system-requirements.html
 [PhpStorm]: https://www.jetbrains.com/phpstorm/
