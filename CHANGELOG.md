@@ -8,7 +8,6 @@ Magento Functional Testing Framework Changelog
 
 * Fixed admin credentials being output to console in WebAPIAuth
 
-
 3.10.1
 ---------
 
