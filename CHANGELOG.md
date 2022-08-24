@@ -1,6 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.10.2
+---------
+
+### Fixes
+
+* Fixed admin credentials being output to console in WebAPIAuth
+* Fixed links in docs
+
+
 3.10.1
 ---------
 
