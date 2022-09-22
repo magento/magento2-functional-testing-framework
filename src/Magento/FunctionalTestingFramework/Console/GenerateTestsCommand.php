@@ -564,6 +564,10 @@ class GenerateTestsCommand extends BaseGenerateCommand
         if (isset($_ENV['MAGENTO_BP'])) {
             $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
         }
+        $testDependencyFileLocationDir = dirname($testDependencyFileLocation);
+        if (!is_dir($testDependencyFileLocationDir)) {
+            mkdir($testDependencyFileLocationDir, 0777, true);
+        }
         $file = fopen($testDependencyFileLocation, 'w');
         $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         fwrite($file, $json);
