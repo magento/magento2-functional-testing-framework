@@ -100,6 +100,7 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         $actionGroupErrors = [];
         /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
+            $actionGroupReferencesDataArray = [];
             $actionGroupToArguments = [];
             $contents = $filePath->getContents();
             preg_match_all(self::STEP_KEY_REGEX_PATTERN, $contents, $actionGroupReferences);
