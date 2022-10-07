@@ -15,9 +15,9 @@ extensions:
     enabled:
         - Magento\FunctionalTestingFramework\Codeception\Subscriber\Console
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
-        - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
+        - Qameta\Allure\Codeception\AllureCodeception
     config:
-        Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter:
+        Qameta\Allure\Codeception\AllureCodeception:
             deletePreviousResults: false
             outputDirectory: allure-results
             ignoredAnnotations:

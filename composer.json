@@ -9,14 +9,14 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">7.3",
+        "php": "~7.4.0||~8.1.0",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "allure-framework/allure-codeception": "^1.4",
+        "allure-framework/allure-codeception": "^2",
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.1",
