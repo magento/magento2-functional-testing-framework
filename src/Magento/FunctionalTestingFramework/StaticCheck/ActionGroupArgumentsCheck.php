@@ -16,7 +16,6 @@ use Symfony\Component\Finder\SplFileInfo;
 use DOMElement;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-
 /**
  * Class ActionGroupArgumentsCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
@@ -105,12 +104,21 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
             $contents = $filePath->getContents();
             preg_match_all(self::STEP_KEY_REGEX_PATTERN, $contents, $actionGroupReferences);
             foreach ($actionGroupReferences[0] as $actionGroupReferencesData) {
-              $actionGroupReferencesDataArray[] = trim(str_replace(['stepKey','='],[""],$actionGroupReferencesData)).'"';
+                $actionGroupReferencesDataArray[] = trim(
+                    str_replace(['stepKey', '='], [""], $actionGroupReferencesData)
+                ).'"';
             }
-            $duplicateStepKeys = array_unique( array_diff_assoc( $actionGroupReferencesDataArray, array_unique( $actionGroupReferencesDataArray ) ) );
-            unset( $actionGroupReferencesDataArray);
+            $duplicateStepKeys = array_unique(
+                array_diff_assoc(
+                    $actionGroupReferencesDataArray,
+                    array_unique(
+                        $actionGroupReferencesDataArray
+                    )
+                )
+            );
+            unset($actionGroupReferencesDataArray);
             if (isset($duplicateStepKeys) && count($duplicateStepKeys) > 0) {
-              throw new TestFrameworkException('Action group has duplicate step keys');
+                throw new TestFrameworkException('Action group has duplicate step keys');
             }
             /** @var DOMElement $actionGroup */
             $actionGroup = $this->getActionGroupDomElement($contents);
