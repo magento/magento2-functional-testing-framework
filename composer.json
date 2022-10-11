@@ -6,11 +6,7 @@
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
-        "sort-packages": true,
-        "config": { "platform-check": false
-        }
-
-
+        "sort-packages": true
     },
     "require": {
         "php": ">7.3",
