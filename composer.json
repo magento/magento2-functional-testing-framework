@@ -7,7 +7,6 @@
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
         "sort-packages": true,
-      "config": { "platform-check": false }
     },
     "require": {
         "php": ">7.3",
