@@ -4,43 +4,38 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6a0d4f12fc82c99080c3fd01eab38a7",
+    "content-hash": "075f7ef8a19879334ba1e0443f4e9679",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
-            "version": "v2.0.2",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/allure-framework/allure-codeception.git",
-                "reference": "8ba63e1134f90d431dfaf6c4d7e4c7fdb12eabfb"
+                "reference": "a6156aef942a4e4de0add34a73d066a9458cefc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/8ba63e1134f90d431dfaf6c4d7e4c7fdb12eabfb",
-                "reference": "8ba63e1134f90d431dfaf6c4d7e4c7fdb12eabfb",
+                "url": "https://api.github.com/repos/allure-framework/allure-codeception/zipball/a6156aef942a4e4de0add34a73d066a9458cefc6",
+                "reference": "a6156aef942a4e4de0add34a73d066a9458cefc6",
                 "shasum": ""
             },
             "require": {
-                "allure-framework/allure-php-commons": "^2",
-                "codeception/codeception": "^4.1",
+                "allure-framework/allure-php-api": "^1.3",
+                "codeception/codeception": "^2.5 | ^3 | ^4",
                 "ext-json": "*",
-                "php": "^8"
-            },
-            "conflict": {
-                "codeception/phpunit-wrapper": "<9.0.1"
+                "php": ">=7.1.3",
+                "symfony/filesystem": "^2.7 | ^3 | ^4 | ^5",
+                "symfony/finder": "^2.7 | ^3 | ^4 | ^5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9",
-                "psalm/plugin-phpunit": "^0.16.1",
-                "remorhaz/php-json-data": "^0.5.3",
-                "remorhaz/php-json-path": "^0.7.7",
-                "squizlabs/php_codesniffer": "^3.6.2",
-                "vimeo/psalm": "^4.20"
+                "ext-dom": "*",
+                "phpunit/phpunit": "^7.2 | ^8 | ^9"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Qameta\\Allure\\Codeception\\": "src/"
+                "psr-0": {
+                    "Yandex": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -51,11 +46,6 @@
                 {
                     "name": "Ivan Krutov",
                     "email": "vania-pooh@aerokube.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Edward Surov",
-                    "email": "zoohie@gmail.com",
                     "role": "Developer"
                 }
             ],
@@ -75,44 +65,38 @@
                 "issues": "https://github.com/allure-framework/allure-codeception/issues",
                 "source": "https://github.com/allure-framework/allure-codeception"
             },
-            "time": "2022-05-11T13:17:21+00:00"
+            "time": "2021-06-04T13:24:36+00:00"
         },
         {
-            "name": "allure-framework/allure-php-commons",
-            "version": "v2.0.0",
+            "name": "allure-framework/allure-php-api",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/allure-framework/allure-php-commons2.git",
-                "reference": "946e375e90cce9e43d1622890fb5a312ec8086bb"
+                "url": "https://github.com/allure-framework/allure-php-api.git",
+                "reference": "f64b69afeff472c564a4e2379efb2b69c430ec5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allure-framework/allure-php-commons2/zipball/946e375e90cce9e43d1622890fb5a312ec8086bb",
-                "reference": "946e375e90cce9e43d1622890fb5a312ec8086bb",
+                "url": "https://api.github.com/repos/allure-framework/allure-php-api/zipball/f64b69afeff472c564a4e2379efb2b69c430ec5a",
+                "reference": "f64b69afeff472c564a4e2379efb2b69c430ec5a",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.12",
-                "ext-json": "*",
-                "php": "^8",
-                "psr/log": "^1 || ^2 || ^3",
-                "ramsey/uuid": "^3 || ^4"
-            },
-            "conflict": {
-                "amphp/byte-stream": "<1.5.1"
+                "jms/serializer": "^1 | ^2 | ^3",
+                "php": ">=7.1.3",
+                "ramsey/uuid": "^3 | ^4",
+                "symfony/mime": "^4.3 | ^5"
             },
             "require-dev": {
-                "jetbrains/phpstorm-attributes": "^1",
-                "phpunit/phpunit": "^9.5.10",
-                "psalm/plugin-phpunit": "^0.16.1",
-                "squizlabs/php_codesniffer": "^3.6.2",
-                "vimeo/psalm": "^4.15"
+                "phpunit/phpunit": "^7 | ^8 | ^9"
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "Qameta\\Allure\\": "src",
-                    "Yandex\\Allure\\Adapter\\": "src/Legacy"
+                "psr-0": {
+                    "Yandex": [
+                        "src/",
+                        "test/"
+                    ]
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -121,31 +105,25 @@
             ],
             "authors": [
                 {
-                    "name": "Dmitry Baev",
-                    "email": "baev.dm@gmail.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Edward Surov",
-                    "email": "zoohie@gmail.com",
+                    "name": "Ivan Krutov",
+                    "email": "vania-pooh@yandex-team.ru",
                     "role": "Developer"
                 }
             ],
-            "description": "Allure PHP commons",
+            "description": "PHP API for Allure adapter",
             "homepage": "http://allure.qatools.ru/",
             "keywords": [
                 "allure",
-                "commons",
+                "api",
                 "php",
-                "report",
-                "testing"
+                "report"
             ],
             "support": {
-                "email": "allure@qameta.io",
-                "issues": "https://github.com/allure-framework/allure-php-commons2/issues",
-                "source": "https://github.com/allure-framework/allure-php-commons"
+                "email": "allure@yandex-team.ru",
+                "issues": "https://github.com/allure-framework/allure-php-api/issues",
+                "source": "https://github.com/allure-framework/allure-php-api"
             },
-            "time": "2021-12-28T12:03:10+00:00"
+            "time": "2021-03-26T14:32:27+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -1937,6 +1915,163 @@
             "time": "2021-10-05T13:56:00+00:00"
         },
         {
+            "name": "jms/metadata",
+            "version": "2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/metadata.git",
+                "reference": "a995e6cef6d6f56a6226e1616a519630e2ef0aeb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/metadata/zipball/a995e6cef6d6f56a6226e1616a519630e2ef0aeb",
+                "reference": "a995e6cef6d6f56a6226e1616a519630e2ef0aeb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "doctrine/cache": "^1.0",
+                "doctrine/coding-standard": "^8.0",
+                "mikey179/vfsstream": "^1.6.7",
+                "phpunit/phpunit": "^8.5|^9.0",
+                "psr/container": "^1.0",
+                "symfony/cache": "^3.1|^4.0|^5.0",
+                "symfony/dependency-injection": "^3.1|^4.0|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Metadata\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "Class/method/property metadata management in PHP",
+            "keywords": [
+                "annotations",
+                "metadata",
+                "xml",
+                "yaml"
+            ],
+            "support": {
+                "issues": "https://github.com/schmittjoh/metadata/issues",
+                "source": "https://github.com/schmittjoh/metadata/tree/2.5.1"
+            },
+            "time": "2021-08-04T19:32:08+00:00"
+        },
+        {
+            "name": "jms/serializer",
+            "version": "3.15.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/serializer.git",
+                "reference": "9d6d9b81889904603383722ca0cd7f7999baeebc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/serializer/zipball/9d6d9b81889904603383722ca0cd7f7999baeebc",
+                "reference": "9d6d9b81889904603383722ca0cd7f7999baeebc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.10.4",
+                "doctrine/instantiator": "^1.0.3",
+                "doctrine/lexer": "^1.1",
+                "jms/metadata": "^2.0",
+                "php": "^7.2||^8.0",
+                "phpstan/phpdoc-parser": "^0.4 || ^0.5 || ^1.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^8.1",
+                "doctrine/orm": "~2.1",
+                "doctrine/persistence": "^1.3.3|^2.0|^3.0",
+                "doctrine/phpcr-odm": "^1.3|^2.0",
+                "ext-pdo_sqlite": "*",
+                "jackalope/jackalope-doctrine-dbal": "^1.1.5",
+                "ocramius/proxy-manager": "^1.0|^2.0",
+                "phpstan/phpstan": "^0.12.65",
+                "phpunit/phpunit": "^8.0||^9.0",
+                "psr/container": "^1.0",
+                "symfony/dependency-injection": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/expression-language": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/filesystem": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/form": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/translation": "^3.0|^4.0|^5.0|^6.0",
+                "symfony/validator": "^3.1.9|^4.0|^5.0|^6.0",
+                "symfony/yaml": "^3.3|^4.0|^5.0|^6.0",
+                "twig/twig": "~1.34|~2.4|^3.0"
+            },
+            "suggest": {
+                "doctrine/collections": "Required if you like to use doctrine collection types as ArrayCollection.",
+                "symfony/cache": "Required if you like to use cache functionality.",
+                "symfony/yaml": "Required if you'd like to use the YAML metadata format."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JMS\\Serializer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes M. Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "Library for (de-)serializing data of any complexity; supports XML, JSON, and YAML.",
+            "homepage": "http://jmsyst.com/libs/serializer",
+            "keywords": [
+                "deserialization",
+                "jaxb",
+                "json",
+                "serialization",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/schmittjoh/serializer/issues",
+                "source": "https://github.com/schmittjoh/serializer/tree/3.15.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/goetas",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-10-14T20:02:48+00:00"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "5.2.11",
             "source": {
@@ -2897,6 +3032,55 @@
                 "source": "https://github.com/phpspec/prophecy/tree/1.14.0"
             },
             "time": "2021-09-10T09:02:12+00:00"
+        },
+        {
+            "name": "phpstan/phpdoc-parser",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpdoc-parser.git",
+                "reference": "dbc093d7af60eff5cd575d2ed761b15ed40bd08e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/dbc093d7af60eff5cd575d2ed761b15ed40bd08e",
+                "reference": "dbc093d7af60eff5cd575d2ed761b15ed40bd08e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.2",
+                "phpstan/extension-installer": "^1.0",
+                "phpstan/phpstan": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "symfony/process": "^5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStan\\PhpDocParser\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "support": {
+                "issues": "https://github.com/phpstan/phpdoc-parser/issues",
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.2.0"
+            },
+            "time": "2021-09-16T20:46:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7707,7 +7891,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.4.0||~8.1.0",
+        "php": ">7.3",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
