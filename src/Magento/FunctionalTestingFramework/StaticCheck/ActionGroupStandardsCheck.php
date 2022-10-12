@@ -20,10 +20,10 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
  * Class ActionGroupArgumentsCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
  */
-class ActionGroupArgumentsCheck implements StaticCheckInterface
+class ActionGroupStandardsCheck implements StaticCheckInterface
 {
     const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
-    const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
+    const ERROR_LOG_FILENAME = 'mftf-standards-checks';
     const ERROR_LOG_MESSAGE = 'MFTF Action Group Unused Arguments Check';
     const STEP_KEY_REGEX_PATTERN = '/stepKey=["\']([^\'"]*)/';
 
