@@ -46,7 +46,7 @@ class StaticChecksList implements StaticCheckListInterface
     {
         $this->checks = [
             'testDependencies' => new TestDependencyCheck(),
-            'actionGroupStandards' => new ActionGroupStandardsCheck(),
+            'actionGroupArguments' => new ActionGroupStandardsCheck(),
             self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
             'annotations' => new AnnotationsCheck(),
             self::PAUSE_ACTION_USAGE_CHECK_NAME => new PauseActionUsageCheck(),
