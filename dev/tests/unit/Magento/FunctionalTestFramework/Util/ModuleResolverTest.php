@@ -18,7 +18,6 @@ use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
-
 /**
  * Class ModuleResolverTest
  */
