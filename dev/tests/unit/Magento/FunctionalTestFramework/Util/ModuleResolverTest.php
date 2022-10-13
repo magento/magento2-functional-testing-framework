@@ -16,6 +16,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+
 
 /**
  * Class ModuleResolverTest
@@ -807,7 +809,7 @@ class ModuleResolverTest extends MagentoTestCase
         $this->setMockResolverProperties($resolver);
 
         // Cannot Generate if no --force was passed in and no Admin Token is returned successfully
-        $this->expectException(FastFailException::class);
+        $this->expectException(TestFrameworkException::class);
         $resolver->getModulesPath();
     }
 
@@ -859,7 +861,7 @@ class ModuleResolverTest extends MagentoTestCase
         $this->setMockResolverProperties($resolver);
 
         // Expect exception
-        $this->expectException(FastFailException::class);
+        $this->expectException(TestFrameworkException::class);
         $resolver->getModulesPath();
     }
 
@@ -879,7 +881,7 @@ class ModuleResolverTest extends MagentoTestCase
         $this->setMockResolverProperties($resolver);
 
         // Expect exception
-        $this->expectException(FastFailException::class);
+        $this->expectException(TestFrameworkException::class);
         $resolver->getModulesPath();
     }
 
