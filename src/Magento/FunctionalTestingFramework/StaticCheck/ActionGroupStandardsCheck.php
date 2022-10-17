@@ -14,16 +14,18 @@ use Exception;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Finder\SplFileInfo;
 use DOMElement;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 /**
  * Class ActionGroupArgumentsCheck
  * @package Magento\FunctionalTestingFramework\StaticCheck
  */
-class ActionGroupArgumentsCheck implements StaticCheckInterface
+class ActionGroupStandardsCheck implements StaticCheckInterface
 {
     const ACTIONGROUP_NAME_REGEX_PATTERN = '/<actionGroup name=["\']([^\'"]*)/';
-    const ERROR_LOG_FILENAME = 'mftf-arguments-checks';
+    const ERROR_LOG_FILENAME = 'mftf-standards-checks';
     const ERROR_LOG_MESSAGE = 'MFTF Action Group Unused Arguments Check';
+    const STEP_KEY_REGEX_PATTERN = '/stepKey=["\']([^\'"]*)/';
 
     /**
      * Array containing all errors found after running the execute() function.
@@ -98,8 +100,27 @@ class ActionGroupArgumentsCheck implements StaticCheckInterface
         $actionGroupErrors = [];
         /** @var SplFileInfo $filePath */
         foreach ($files as $filePath) {
+            $actionGroupReferencesDataArray = [];
             $actionGroupToArguments = [];
             $contents = $filePath->getContents();
+            preg_match_all(self::STEP_KEY_REGEX_PATTERN, $contents, $actionGroupReferences);
+            foreach ($actionGroupReferences[0] as $actionGroupReferencesData) {
+                $actionGroupReferencesDataArray[] = trim(
+                    str_replace(['stepKey', '='], [""], $actionGroupReferencesData)
+                ).'"';
+            }
+            $duplicateStepKeys = array_unique(
+                array_diff_assoc(
+                    $actionGroupReferencesDataArray,
+                    array_unique(
+                        $actionGroupReferencesDataArray
+                    )
+                )
+            );
+            unset($actionGroupReferencesDataArray);
+            if (isset($duplicateStepKeys) && count($duplicateStepKeys) > 0) {
+                throw new TestFrameworkException('Action group has duplicate step keys');
+            }
             /** @var DOMElement $actionGroup */
             $actionGroup = $this->getActionGroupDomElement($contents);
             $arguments = $this->extractActionGroupArguments($actionGroup);
