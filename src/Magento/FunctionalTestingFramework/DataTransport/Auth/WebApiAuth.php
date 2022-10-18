@@ -58,9 +58,14 @@ class WebApiAuth
     public static function getAdminToken($username = null, $password = null)
     {
         $login = $username ?? getenv('MAGENTO_ADMIN_USERNAME');
-        $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
-        $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
-        $password = $password ?? $secret;
+        try {
+            $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
+            $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
+            $password = $password ?? $secret;
+        } catch (TestFrameworkException $e) {
+            $message = "Password not found in credentials file";
+            throw new FastFailException($message . $e->getMessage(), $e->getContext());
+        }
         if (!$login || !$password) {
             $message = 'Cannot retrieve API token without credentials. Please fill out .env.';
             $context = [
