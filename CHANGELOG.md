@@ -1,6 +1,25 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.11.0
+---------
+### Enhancements
+* Composer updated to 2.4.2 version
+* Static check for duplicate step keys in action group
+
+
+### Fixes
+
+* Fixed incorrect MFTF test dependencies path
+
+3.10.2
+---------
+
+### Fixes
+
+* Fixed admin credentials being output to console in WebAPIAuth
+* Fixed links in docs
+
 3.10.3
 ---------
 
