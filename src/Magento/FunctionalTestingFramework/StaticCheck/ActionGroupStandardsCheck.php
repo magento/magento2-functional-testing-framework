@@ -119,7 +119,7 @@ class ActionGroupStandardsCheck implements StaticCheckInterface
             );
             unset($actionGroupReferencesDataArray);
             if (isset($duplicateStepKeys) && count($duplicateStepKeys) > 0) {
-                throw new TestFrameworkException('Action group has duplicate step keys');
+                throw new TestFrameworkException('Action group has duplicate step keys '.implode(",",array_unique($duplicateStepKeys))." File Path ".$filePath );
             }
             /** @var DOMElement $actionGroup */
             $actionGroup = $this->getActionGroupDomElement($contents);
