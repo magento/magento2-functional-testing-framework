@@ -37,7 +37,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
     const PARALLEL_DEFAULT_TIME = 10;
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
-    const TEST_DEPENDENCY_FILE_LOCATION = 'dev/tests/_output/test-dependencies.json';
+    const TEST_DEPENDENCY_FILE_LOCATION_STANDALONE = 'dev/tests/_output/test-dependencies.json';
+    const TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED = 'dev/tests/acceptance/tests/_output/test-dependencies.json';
 
     /**
      * @var ScriptUtil
@@ -250,8 +251,12 @@ class GenerateTestsCommand extends BaseGenerateCommand
         if (!empty($log)) {
             if ($log === "testEntityJson") {
                 $this->getTestEntityJson($tests);
+                $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
+                if (isset($_ENV['MAGENTO_BP'])) {
+                    $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
+                }
                 $output->writeln(
-                    "Test dependencies file created, Located in: " . self::TEST_DEPENDENCY_FILE_LOCATION
+                    "Test dependencies file created, Located in: " . $testDependencyFileLocation
                 );
             } else {
                 $output->writeln(
@@ -555,7 +560,15 @@ class GenerateTestsCommand extends BaseGenerateCommand
      */
     private function array2Json(array $array)
     {
-        $file = fopen(self::TEST_DEPENDENCY_FILE_LOCATION, 'w');
+        $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
+        if (isset($_ENV['MAGENTO_BP'])) {
+            $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
+        }
+        $testDependencyFileLocationDir = dirname($testDependencyFileLocation);
+        if (!is_dir($testDependencyFileLocationDir)) {
+            mkdir($testDependencyFileLocationDir, 0777, true);
+        }
+        $file = fopen($testDependencyFileLocation, 'w');
         $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         fwrite($file, $json);
         fclose($file);
