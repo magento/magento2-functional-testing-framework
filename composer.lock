@@ -993,7 +993,6 @@
                 }
             ],
             "time": "2022-06-19T11:31:27+00:00"
-            "time": "2022-06-19T11:31:27+00:00"
         },
         {
             "name": "composer/composer",
@@ -8191,7 +8190,7 @@
                 "symfony/polyfill-php80": "^1.16",
                 "symfony/service-contracts": "^1.1.6|^2"
             },
-
+            
             "conflict": {
                 "ext-psr": "<1.1|>=2",
                 "symfony/config": "<5.3",
