@@ -103,7 +103,7 @@ class ActionGroupStandardsCheck implements StaticCheckInterface
             $actionGroupReferencesDataArray = [];
             $actionGroupToArguments = [];
             $contents = $filePath->getContents();
-            preg_match_all(self::STEP_KEY_REGEX_PATTERN, $contents, $actionGroupReferences);
+            preg_match_all(self::STEP_KEY_REGEX_PATTERN,  preg_replace('/<!--(.|\s)*?-->/', '', $contents), $actionGroupReferences);
             foreach ($actionGroupReferences[0] as $actionGroupReferencesData) {
                 $actionGroupReferencesDataArray[] = trim(
                     str_replace(['stepKey', '='], [""], $actionGroupReferencesData)
