@@ -13,13 +13,6 @@ Magento Functional Testing Framework Changelog
 * Fixed incorrect MFTF test dependencies path
 * Removed PHP 7.3 build check from MFTF PR build as PHP 7.3 is no longer supported
 
-3.10.2
----------
-
-### Fixes
-
-* Fixed admin credentials being output to console in WebAPIAuth
-* Fixed links in docs
 
 3.10.3
 ---------
