@@ -84,7 +84,7 @@ class Flat implements ConverterInterface
                 $isNumericArrayNode = $this->arrayNodeConfig->isNumericArray($nodePath);
                 $isArrayNode = $isNumericArrayNode || $arrayKeyAttribute;
 
-                if (isset($value[$nodeName]) && $nodeName === 'waitForElementClickable' ) {
+                if (isset($value[$nodeName]) && $nodeName === 'waitForElementClickable') {
                     unset($value[$nodeName]);
                 }
 
