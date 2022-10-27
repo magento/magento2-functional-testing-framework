@@ -1,6 +1,19 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.11.0
+---------
+### Enhancements
+* Composer updated to 2.4.2 version
+* Static check for duplicate step keys in action group
+
+
+### Fixes
+
+* Fixed incorrect MFTF test dependencies path
+* Removed PHP 7.3 build check from MFTF PR build as PHP 7.3 is no longer supported
+
+
 3.10.3
 ---------
 
