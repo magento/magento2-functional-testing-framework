@@ -84,6 +84,10 @@ class Flat implements ConverterInterface
                 $isNumericArrayNode = $this->arrayNodeConfig->isNumericArray($nodePath);
                 $isArrayNode = $isNumericArrayNode || $arrayKeyAttribute;
 
+                if(isset($value[$nodeName]) && $nodeName === 'waitForElementClickable' ) {
+                    unset($value[$nodeName]);
+                }
+
                 if (isset($value[$nodeName]) && !$isArrayNode) {
                     throw new \UnexpectedValueException(
                         "Node path '{$nodePath}' is not unique, but it has not been marked as array."
