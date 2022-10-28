@@ -128,6 +128,10 @@ class ParallelGroupSorter
      */
     private function getSuiteGroupCounts($suiteNameToTestSize, $testNameToSize, $groupTotal)
     {
+        if (empty($suiteNameToTestSize)) {
+            return [];
+        }
+
         // Calculate the minimum possible group time
         $suiteNameToSize = $this->getSuiteToSize($suiteNameToTestSize);
         $minGroupTime = ceil((array_sum($testNameToSize) + array_sum($suiteNameToSize)) / $groupTotal);
