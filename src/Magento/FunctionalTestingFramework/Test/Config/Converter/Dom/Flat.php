@@ -70,7 +70,6 @@ class Flat implements ConverterInterface
      * @return string|array
      * @throws \UnexpectedValueException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * Revisited to reduce cyclomatic complexity, left unrefactored for readability
      */
     public function convertXml(\DOMNode $source, $basePath = '')
@@ -84,10 +83,6 @@ class Flat implements ConverterInterface
                 $arrayKeyAttribute = $this->arrayNodeConfig->getAssocArrayKeyAttribute($nodePath);
                 $isNumericArrayNode = $this->arrayNodeConfig->isNumericArray($nodePath);
                 $isArrayNode = $isNumericArrayNode || $arrayKeyAttribute;
-
-                if (isset($value[$nodeName]) && $nodeName === 'waitForElementClickable') {
-                    unset($value[$nodeName]);
-                }
 
                 if (isset($value[$nodeName]) && !$isArrayNode) {
                     throw new \UnexpectedValueException(
