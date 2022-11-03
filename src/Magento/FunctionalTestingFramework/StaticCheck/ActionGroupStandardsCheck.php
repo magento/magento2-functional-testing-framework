@@ -103,7 +103,11 @@ class ActionGroupStandardsCheck implements StaticCheckInterface
             $actionGroupReferencesDataArray = [];
             $actionGroupToArguments = [];
             $contents = $filePath->getContents();
-            preg_match_all(self::STEP_KEY_REGEX_PATTERN, $contents, $actionGroupReferences);
+            preg_match_all(
+                self::STEP_KEY_REGEX_PATTERN,
+                preg_replace('/<!--(.|\s)*?-->/', '', $contents),
+                $actionGroupReferences
+            );
             foreach ($actionGroupReferences[0] as $actionGroupReferencesData) {
                 $actionGroupReferencesDataArray[] = trim(
                     str_replace(['stepKey', '='], [""], $actionGroupReferencesData)
@@ -119,7 +123,8 @@ class ActionGroupStandardsCheck implements StaticCheckInterface
             );
             unset($actionGroupReferencesDataArray);
             if (isset($duplicateStepKeys) && count($duplicateStepKeys) > 0) {
-                throw new TestFrameworkException('Action group has duplicate step keys');
+                throw new TestFrameworkException('Action group has duplicate step keys '
+                  .implode(",", array_unique($duplicateStepKeys))." File Path ".$filePath);
             }
             /** @var DOMElement $actionGroup */
             $actionGroup = $this->getActionGroupDomElement($contents);
