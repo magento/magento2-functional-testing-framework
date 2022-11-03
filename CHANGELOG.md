@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.11.1
+---------
+
+### Fixes
+
+* Removed environment variable MAGENTO_ADMIN_PASSWORD
+
 3.11.0
 ---------
 ### Enhancements
