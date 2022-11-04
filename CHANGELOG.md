@@ -7,6 +7,7 @@ Magento Functional Testing Framework Changelog
 ### Fixes
 
 * Removed environment variable MAGENTO_ADMIN_PASSWORD
+* Fixed WaitForElementClickable action cannot be used more than once
 
 3.11.0
 ---------
