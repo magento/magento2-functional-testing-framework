@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "657428977803e30350f9c25ed94c9860",
+    "content-hash": "0a03c0d9728b114cf546845bd6a368fc",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -2315,7 +2315,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ~8.0.0 || ~8.1.0",
+                "php": "^7.3 || ~8.0.0 || ~8.1.0 || ~8.2.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
@@ -3141,7 +3141,7 @@
             },
             "require": {
                 "doctrine/instantiator": "^1.2",
-                "php": "^7.2 || ~8.0, <8.2",
+                "php": "^7.2 || ~8.0, <=8.2",
                 "phpdocumentor/reflection-docblock": "^5.2",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "sebastian/recursion-context": "^3.0 || ^4.0"
@@ -8190,7 +8190,6 @@
                 "symfony/polyfill-php80": "^1.16",
                 "symfony/service-contracts": "^1.1.6|^2"
             },
-            
             "conflict": {
                 "ext-psr": "<1.1|>=2",
                 "symfony/config": "<5.3",
@@ -8327,7 +8326,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">7.3",
+        "php": ">=7.4",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
