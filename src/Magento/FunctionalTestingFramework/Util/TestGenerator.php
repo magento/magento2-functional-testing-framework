@@ -349,11 +349,11 @@ class TestGenerator
             $allTag = @(array) next($test);
             $arrStores = [];
             foreach ($allTag as $value) {
-                $allArgs = (array) $value; 
+                $allArgs = (array) $value;
                 if (array_values($allArgs)[2] == 'actionGroup' || array_values($allArgs)[2] == 'helper') {
                     if (isset(array_values($allArgs)[3]['arguments']) && array_values($allArgs)[2] == 'actionGroup') {
                         $arrStores[] = array_keys(array_values($allArgs)[3]['arguments']);
-                    } else if (isset(array_values($allArgs)[3]) && array_values($allArgs)[2] == 'helper') {
+                    } elseif (isset(array_values($allArgs)[3]) && array_values($allArgs)[2] == 'helper') {
                         $arrStores[] = array_keys(array_values($allArgs)[3]);
                     }
                 }
