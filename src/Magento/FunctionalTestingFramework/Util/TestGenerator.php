@@ -342,9 +342,7 @@ class TestGenerator
         foreach ($filters as $filter) {
             $filter->filter($testObjects);
         }
-
         foreach ($testObjects as $test) {
-
             // Throw exception if found duplicate arguments in helper or actionGroup
             $allTag = @(array) next($test);
             $arrStores = [];
