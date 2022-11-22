@@ -350,7 +350,7 @@ class TestGenerator
                 $allArgs = (array) $value;
                 if (isset(array_values($allArgs)[2])) {
                     if (array_values($allArgs)[2] == 'actionGroup' || array_values($allArgs)[2] == 'helper') {
-                        if (isset(array_values($allArgs)[3]['arguments']) && array_values($allArgs)[2] == 'actionGroup') {
+                        if (isset(array_values($allArgs)[3]['arguments'])) {
                             $arrStores[] = array_keys(array_values($allArgs)[3]['arguments']);
                         } elseif (isset(array_values($allArgs)[3]) && array_values($allArgs)[2] == 'helper') {
                             $arrStores[] = array_keys(array_values($allArgs)[3]);
