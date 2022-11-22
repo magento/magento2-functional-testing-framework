@@ -344,6 +344,28 @@ class TestGenerator
         }
 
         foreach ($testObjects as $test) {
+
+            // Throw exception if found duplicate arguments in helper or actionGroup
+            $allTag = @(array) next($test);
+            $arrStores = [];
+            foreach ($allTag as $value) {
+                $allArgs = (array) $value; 
+                if (array_values($allArgs)[2] == 'actionGroup' || array_values($allArgs)[2] == 'helper') {
+                    if (isset(array_values($allArgs)[3]['arguments']) && array_values($allArgs)[2] == 'actionGroup') {
+                        $arrStores[] = array_keys(array_values($allArgs)[3]['arguments']);
+                    } else if (isset(array_values($allArgs)[3]) && array_values($allArgs)[2] == 'helper') {
+                        $arrStores[] = array_keys(array_values($allArgs)[3]);
+                    }
+                }
+            }
+            $err = [];
+            foreach ($arrStores as $arrStore) {
+                if (count(array_unique($arrStore)) != count($arrStore)) {
+                    $err = 'Duplicate argument not allowed in helper or actionGroup';
+                    throw new TestFrameworkException(implode(PHP_EOL, $err));
+                }
+            }
+
             try {
                 // Reset flag for new test
                 $removeLastTest = false;
