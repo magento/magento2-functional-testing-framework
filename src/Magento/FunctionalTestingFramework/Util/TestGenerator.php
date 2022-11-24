@@ -260,17 +260,19 @@ class TestGenerator
     public function assembleTestPhp($testObject)
     {
         // Throw exception if duplicate arguments found in helper or actionGroup
-        $fileToArr = @file($testObject->getFilename());
+        $fileToArr = file(@$testObject->getFilename());
         $argArr = [];
-        foreach (@$fileToArr as $key => $fileVal) {
+        if (isset($fileToArr)) {
+            foreach ($fileToArr as $key => $fileVal) {
             if (strpos($fileVal, "<argument name") == true) {
                 $argArr[$key] = explode(" ", trim($fileVal))[1];
+                }
             }
-        }
-        foreach (@$argArr as $key => $arrVal) {
-            if (@$argArr[$key + 1] == $arrVal || @$argArr[$key - 1] == $arrVal) {
-                $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
-                throw new TestFrameworkException(implode(PHP_EOL, $err));
+            foreach ($argArr as $key => $arrVal) {
+                if (@$argArr[$key + 1] == $arrVal || @$argArr[$key - 1] == $arrVal) {
+                    $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
+                    throw new TestFrameworkException(implode(PHP_EOL, $err));
+                }
             }
         }
 
