@@ -260,7 +260,7 @@ class TestGenerator
     public function assembleTestPhp($testObject)
     {
         // Throw exception if duplicate arguments found in helper or actionGroup
-        if (!empty($testObject->getFilename())) {
+        if (!empty($testObject->getFilename()) && file_exists($testObject->getFilename())) {
             $fileToArr = explode("\n", file_get_contents($testObject->getFilename()));
             $argArr = [];
             foreach ($fileToArr as $key => $fileVal) {
