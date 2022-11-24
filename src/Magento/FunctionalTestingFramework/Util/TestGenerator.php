@@ -263,17 +263,17 @@ class TestGenerator
         $fileToArr = file($testObject->getFilename());
         $argArr = [];
         foreach ($fileToArr as $key => $fileVal) {
-            if (strpos($fileVal,"<argument name") == true) {
-                $argArr[$key] = explode(" ",trim($fileVal))[1];
+            if (strpos($fileVal, "<argument name") == true) {
+                $argArr[$key] = explode(" ", trim($fileVal))[1];
             }
         }
         foreach ($argArr as $key => $arrVal) {
-            if ( @$argArr[$key + 1] == $arrVal || @$argArr[$key - 1] == $arrVal) {
+            if (@$argArr[$key + 1] == $arrVal || @$argArr[$key - 1] == $arrVal) {
                 $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
                 throw new TestFrameworkException(implode(PHP_EOL, $err));
             }
         }
-        
+
         $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
