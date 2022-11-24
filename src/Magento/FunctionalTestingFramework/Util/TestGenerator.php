@@ -259,6 +259,21 @@ class TestGenerator
      */
     public function assembleTestPhp($testObject)
     {
+        // Throw exception if duplicate arguments found in helper or actionGroup
+        $fileToArr = file($testObject->getFilename());
+        $argArr = [];
+        foreach ($fileToArr as $key => $fileVal) {
+            if (strpos($fileVal,"<argument name") == true) {
+                $argArr[$key] = explode(" ",trim($fileVal))[1];
+            }
+        }
+        foreach ($argArr as $key => $arrVal) {
+            if ( @$argArr[$key + 1] == $arrVal || @$argArr[$key - 1] == $arrVal) {
+                $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
+                throw new TestFrameworkException(implode(PHP_EOL, $err));
+            }
+        }
+        
         $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
@@ -343,29 +358,6 @@ class TestGenerator
             $filter->filter($testObjects);
         }
         foreach ($testObjects as $test) {
-            // Throw exception if duplicate arguments found in helper or actionGroup
-            $allTag = @(array) next($test);
-            $arrStores = [];
-            foreach ($allTag as $value) {
-                $allArgs = (array) $value;
-                if (isset(array_values($allArgs)[2])) {
-                    if (array_values($allArgs)[2] == 'actionGroup' || array_values($allArgs)[2] == 'helper') {
-                        if (isset(array_values($allArgs)[3]['arguments'])) {
-                            $arrStores[] = array_keys(array_values($allArgs)[3]['arguments']);
-                        } elseif (isset(array_values($allArgs)[3]) && array_values($allArgs)[2] == 'helper') {
-                            $arrStores[] = array_keys(array_values($allArgs)[3]);
-                        }
-                    }
-                }
-            }
-            $err = [];
-            foreach ($arrStores as $arrStore) {
-                if (count(array_unique($arrStore)) != count($arrStore)) {
-                    $err = 'Duplicate argument not allowed in helper or actionGroup';
-                    throw new TestFrameworkException(implode(PHP_EOL, $err));
-                }
-            }
-
             try {
                 // Reset flag for new test
                 $removeLastTest = false;
