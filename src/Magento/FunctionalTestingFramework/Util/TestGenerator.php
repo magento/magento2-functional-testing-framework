@@ -261,7 +261,7 @@ class TestGenerator
     {
         // Throw exception if duplicate arguments found in helper or actionGroup
         if (!empty($testObject->getFilename())) {
-            $fileToArr = file($testObject->getFilename());
+            $fileToArr = explode("\n", file_get_contents($testObject->getFilename()));
             $argArr = [];
             foreach ($fileToArr as $key => $fileVal) {
             if (strpos($fileVal, "<argument name") == true) {
