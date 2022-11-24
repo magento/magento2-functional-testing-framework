@@ -264,8 +264,8 @@ class TestGenerator
             $fileToArr = explode("\n", file_get_contents($testObject->getFilename()));
             $argArr = [];
             foreach ($fileToArr as $key => $fileVal) {
-            if (strpos($fileVal, "<argument name") == true) {
-                $argArr[$key] = explode(" ", trim($fileVal))[1];
+                if (strpos($fileVal, "<argument name") == true) {
+                    $argArr[$key] = explode(" ", trim($fileVal))[1];
                 }
             }
             foreach ($argArr as $key => $arrVal) {
