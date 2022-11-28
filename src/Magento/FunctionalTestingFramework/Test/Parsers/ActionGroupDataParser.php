@@ -11,6 +11,8 @@ use Magento\FunctionalTestingFramework\Config\DataInterface;
 /**
  * Class ActionGroupDataParser
  */
+#[\AllowDynamicProperties]
+
 class ActionGroupDataParser
 {
     /**
