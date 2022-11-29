@@ -269,7 +269,7 @@ class TestGenerator
                 }
             }
             foreach ($argArr as $key => $arrVal) {
-                if (!empty($argArr[$key + 1]) && $argArr[$key + 1] === $arrVal ) {
+                if (!empty($argArr[$key + 1]) && $argArr[$key + 1] === $arrVal) {
                     $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
                     throw new TestFrameworkException(implode(PHP_EOL, $err));
                 }
