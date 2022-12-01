@@ -46,13 +46,13 @@ class StaticChecksList implements StaticCheckListInterface
     {
         $this->checks = [
             'testDependencies' => new TestDependencyCheck(),
-            'actionGroupArguments' => new ActionGroupArgumentsCheck(),
+            'actionGroupArguments' => new ActionGroupStandardsCheck(),
             self::DEPRECATED_ENTITY_USAGE_CHECK_NAME => new DeprecatedEntityUsageCheck(),
             'annotations' => new AnnotationsCheck(),
             self::PAUSE_ACTION_USAGE_CHECK_NAME => new PauseActionUsageCheck(),
             self::UNUSED_ENTITY_CHECK => new UnusedEntityCheck(),
-            self::CREATED_DATA_FROM_OUTSIDE_ACTIONGROUP => new CreatedDataFromOutsideActionGroupCheck()
-        ] + $checks;
+            self::CREATED_DATA_FROM_OUTSIDE_ACTIONGROUP => new CreatedDataFromOutsideActionGroupCheck(),
+          ] + $checks;
 
         // Static checks error files directory
         if (null === self::$errorFilesPath) {

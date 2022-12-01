@@ -379,6 +379,48 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
+     * Test splitting tests and suites when none of the suites has test.
+     * For example, this can happen when --filter option is used.
+     *
+     * @return void
+     * @throws FastFailException
+     */
+    public function testTestsAndSuitesSplitByGroupNumberSuiteNoTest(): void
+    {
+        // mock tests for test object handler.
+        $this->createMockForTest(0);
+
+        // create test to size array
+        $sampleTestArray = [
+            'test1' => 1,
+            'test2' => 125,
+            'test3' => 35
+        ];
+
+        // create mock suite references
+        $sampleSuiteArray = [
+            'mockSuite1' => [],
+            'mockSuite2' => [],
+        ];
+
+        // perform sort
+        $testSorter = new ParallelGroupSorter();
+        $actualResult = $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 3);
+        // verify the resulting groups
+        $this->assertCount(3, $actualResult);
+
+        $expectedResults =  [
+            1 => ['test2'],
+            2 => ['test3'],
+            3 => ['test1']
+        ];
+
+        foreach ($actualResult as $groupNum => $group) {
+            $this->assertEquals($expectedResults[$groupNum], array_keys($group));
+        }
+    }
+
+    /**
      * Test splitting tests and suites with invalid group number.
      *
      * @return void
