@@ -6,6 +6,7 @@ Magento Functional Testing Framework Changelog
 
 ### Enhancements
 * PHP 8.2 upgrade
+* Added 8.2 PR check
 
 ### Fixes
 * Removed obsolete docs/ directory
