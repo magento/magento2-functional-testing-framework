@@ -1,6 +1,14 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.11.1
+---------
+
+### Fixes
+
+* Removed environment variable MAGENTO_ADMIN_PASSWORD
+* Fixed WaitForElementClickable action cannot be used more than once
+
 3.11.0
 ---------
 ### Enhancements
@@ -12,6 +20,7 @@ Magento Functional Testing Framework Changelog
 
 * Fixed incorrect MFTF test dependencies path
 * Removed PHP 7.3 build check from MFTF PR build as PHP 7.3 is no longer supported
+* Fixed fatal error when running generate:tests --config parallel -g 
 
 
 3.10.3
