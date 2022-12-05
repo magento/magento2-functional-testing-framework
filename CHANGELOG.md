@@ -4,12 +4,8 @@ Magento Functional Testing Framework Changelog
 3.12.0
 ---------
 
-### Enhancements
-* PHP 8.2 upgrade
-* Added 8.2 PHP PR check
-
 ### Fixes
-* Removed obsolete docs/ directory
+* Removed obsolete docs/directories
 
 3.11.1
 ---------
