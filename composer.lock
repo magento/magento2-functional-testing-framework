@@ -127,6 +127,144 @@
             "time": "2021-03-26T14:32:27+00:00"
         },
         {
+            "name": "allure-framework/allure-php-commons",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/allure-framework/allure-php-commons2.git",
+                "reference": "946e375e90cce9e43d1622890fb5a312ec8086bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/allure-framework/allure-php-commons2/zipball/946e375e90cce9e43d1622890fb5a312ec8086bb",
+                "reference": "946e375e90cce9e43d1622890fb5a312ec8086bb",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.12",
+                "ext-json": "*",
+                "php": "^8",
+                "psr/log": "^1 || ^2 || ^3",
+                "ramsey/uuid": "^3 || ^4"
+            },
+            "conflict": {
+                "amphp/byte-stream": "<1.5.1"
+            },
+            "require-dev": {
+                "jetbrains/phpstorm-attributes": "^1",
+                "phpunit/phpunit": "^9.5.10",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "squizlabs/php_codesniffer": "^3.6.2",
+                "vimeo/psalm": "^4.15"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Qameta\\Allure\\": "src",
+                    "Yandex\\Allure\\Adapter\\": "src/Legacy"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Baev",
+                    "email": "baev.dm@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Edward Surov",
+                    "email": "zoohie@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Allure PHP commons",
+            "homepage": "http://allure.qatools.ru/",
+            "keywords": [
+                "allure",
+                "commons",
+                "php",
+                "report",
+                "testing"
+            ],
+            "support": {
+                "email": "allure@qameta.io",
+                "issues": "https://github.com/allure-framework/allure-php-commons2/issues",
+                "source": "https://github.com/allure-framework/allure-php-commons"
+            },
+            "time": "2021-12-28T12:03:10+00:00"
+        },
+        {
+            "name": "allure-framework/allure-phpunit",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/allure-framework/allure-phpunit.git",
+                "reference": "3884842467bcba9607db9d7aa69b82dcf0424218"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/allure-framework/allure-phpunit/zipball/3884842467bcba9607db9d7aa69b82dcf0424218",
+                "reference": "3884842467bcba9607db9d7aa69b82dcf0424218",
+                "shasum": ""
+            },
+            "require": {
+                "allure-framework/allure-php-commons": "^2",
+                "php": "^8",
+                "phpunit/phpunit": "^9"
+            },
+            "conflict": {
+                "amphp/byte-stream": "<1.5.1"
+            },
+            "require-dev": {
+                "brianium/paratest": "^6.4.1",
+                "psalm/plugin-phpunit": "^0.16.1",
+                "squizlabs/php_codesniffer": "^3.6.2",
+                "vimeo/psalm": "^4.16.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Qameta\\Allure\\PHPUnit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Krutov",
+                    "email": "vania-pooh@yandex-team.ru",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Edward Surov",
+                    "email": "zoohie@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Allure PHPUnit integration",
+            "homepage": "http://allure.qatools.ru/",
+            "keywords": [
+                "allure",
+                "attachments",
+                "cases",
+                "phpunit",
+                "report",
+                "steps",
+                "testing"
+            ],
+            "support": {
+                "email": "allure@qameta.io",
+                "issues": "https://github.com/allure-framework/allure-phpunit/issues",
+                "source": "https://github.com/allure-framework/allure-phpunit"
+            },
+            "time": "2021-12-29T11:34:16+00:00"
+        },
+        {
             "name": "aws/aws-crt-php",
             "version": "v1.0.2",
             "source": {
