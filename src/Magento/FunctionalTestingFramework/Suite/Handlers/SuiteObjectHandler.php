@@ -80,7 +80,7 @@ class SuiteObjectHandler implements ObjectHandlerInterface
     {
         if (!array_key_exists($objectName, $this->suiteObjects)) {
             throw new TestReferenceException(
-                "Suite ${objectName} is not defined in xml or is invalid."
+                "Suite {$objectName} is not defined in xml or is invalid."
             );
         }
         return $this->suiteObjects[$objectName];
