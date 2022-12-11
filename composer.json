@@ -9,7 +9,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": ">7.4",
+        "php": ">=8.0",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
@@ -17,6 +17,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "allure-framework/allure-codeception": "^1.4",
+        "allure-framework/allure-phpunit": "^2",
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "^4.1",
         "codeception/module-asserts": "^1.1",
@@ -32,6 +33,7 @@
         "php-webdriver/webdriver": "^1.9.0",
         "spomky-labs/otphp": "^10.0",
         "symfony/console": "^4.4||^5.4",
+        "symfony/string": "^5.4",
         "symfony/dotenv": "^5.3",
         "symfony/finder": "^5.0",
         "symfony/http-foundation": "^5.0",
