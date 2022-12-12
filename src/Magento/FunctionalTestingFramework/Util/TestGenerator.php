@@ -1505,7 +1505,7 @@ class TestGenerator
                         $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
                         : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
-                        "Fields['{$fieldKey}'] = ${input};";
+                        "Fields['{$fieldKey}'] = {$input};";
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":

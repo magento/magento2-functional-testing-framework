@@ -68,7 +68,7 @@ class NameValidationUtil
         }
 
         if (!empty($illegalCharArray)) {
-            $errorMessage = "{$type} name \"${name}\" contains illegal characters, please fix and re-run.";
+            $errorMessage = "{$type} name \"{$name}\" contains illegal characters, please fix and re-run.";
 
             foreach ($illegalCharArray as $diffChar) {
                 $errorMessage .= "\nTest names cannot contain '{$diffChar}'";

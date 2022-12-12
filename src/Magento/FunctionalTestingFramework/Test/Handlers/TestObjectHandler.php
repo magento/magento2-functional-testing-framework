@@ -86,7 +86,7 @@ class TestObjectHandler implements ObjectHandlerInterface
     public function getObject($testName)
     {
         if (!array_key_exists($testName, $this->tests)) {
-            throw new TestReferenceException("Test ${testName} not defined in xml.");
+            throw new TestReferenceException("Test {$testName} not defined in xml.");
         }
         $testObject = $this->tests[$testName];
 

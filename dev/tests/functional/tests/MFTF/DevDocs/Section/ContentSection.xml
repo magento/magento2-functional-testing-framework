@@ -11,7 +11,7 @@
 <sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
     <section name="contentSection">
-        <element name="pageIntro" type="text" selector=".page-intro"/>
+        <element name="pageIntro" type="text" selector="#introduction-to-the-functional-testing-framework"/>
         <element name="parametrizedSelector" type="text" selector=".page-intro > {{justToProofItWorks}}" parameterized="true"/>
         <element name="deprecatedPageIntro" type="text" selector=".page-intro-old" deprecated="New element was introduced. Please use 'contentSection.pageIntro'"/>
     </section>
