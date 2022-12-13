@@ -24,6 +24,7 @@ use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Module\Util\ModuleUtils;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
 use Magento\FunctionalTestingFramework\Util\ConfigSanitizerUtil;
+use Qameta\Allure\Allure;
 use Yandex\Allure\Adapter\AllureException;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
@@ -148,6 +149,9 @@ class MagentoWebDriver extends WebDriver
     public function _initialize()
     {
         $this->config = ConfigSanitizerUtil::sanitizeWebDriverConfig($this->config);
+        Allure::getLifecycleConfigurator()->setOutputDirectory(
+            realpath(PROJECT_ROOT . '/dev/tests/acceptance/tests/_output/allure-results')
+        );
         parent::_initialize();
         $this->cleanJsError();
     }

@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Util;
 
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver\ModuleResolverService;
@@ -198,10 +199,12 @@ class ModuleResolver
 
         if (!$response) {
             $message = "Could not retrieve Modules from Magento Instance.";
+            $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
+            $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
             $context = [
                 "Admin Module List Url" => $url,
                 "MAGENTO_ADMIN_USERNAME" => getenv("MAGENTO_ADMIN_USERNAME"),
-                "MAGENTO_ADMIN_PASSWORD" => getenv("MAGENTO_ADMIN_PASSWORD"),
+                "MAGENTO_ADMIN_PASSWORD" => $secret,
             ];
             throw new FastFailException($message, $context);
         }

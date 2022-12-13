@@ -9,7 +9,7 @@
 <entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
     <entity name="MessageData">
-        <data key="message">Introduction to the Magento Functional Testing Framework</data>
+        <data key="message">Introduction to the Functional Testing Framework</data>
         <array key="numbers">
             <item name="zero">0</item>
             <item name="one">1</item>
