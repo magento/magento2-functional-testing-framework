@@ -30,6 +30,8 @@ use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
 use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Yandex\Allure\Adapter\Allure as YandexAllure;
+use Yandex\Allure\Adapter\Event\AddAttachmentEvent;
 
 /**
  * MagentoWebDriver module provides common Magento web actions through Selenium WebDriver.
@@ -910,10 +912,8 @@ class MagentoWebDriver extends WebDriver
         if ($this->current_test === null) {
             throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
         }
-
-        $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
-        $this->addAttachment($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html');
-
+        YandexAllure::lifecycle()->fire(new AddAttachmentEvent($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png'));
+        YandexAllure::lifecycle()->fire(new AddAttachmentEvent($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html'));
         $this->debug("Failure due to : {$fail->getMessage()}");
         $this->debug("Screenshot saved to {$this->pngReport}");
         $this->debug("Html saved to {$this->htmlReport}");
