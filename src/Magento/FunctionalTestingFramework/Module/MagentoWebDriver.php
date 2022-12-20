@@ -912,8 +912,10 @@ class MagentoWebDriver extends WebDriver
         if ($this->current_test === null) {
             throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
         }
-        YandexAllure::lifecycle()->fire(new AddAttachmentEvent($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png'));
-        YandexAllure::lifecycle()->fire(new AddAttachmentEvent($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html'));
+        YandexAllure::lifecycle()
+          ->fire(new AddAttachmentEvent($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png'));
+        YandexAllure::lifecycle()
+          ->fire(new AddAttachmentEvent($this->htmlReport, $test->getMetadata()->getName() . '.html', 'text/html'));
         $this->debug("Failure due to : {$fail->getMessage()}");
         $this->debug("Screenshot saved to {$this->pngReport}");
         $this->debug("Html saved to {$this->htmlReport}");
