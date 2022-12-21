@@ -908,7 +908,8 @@ class MagentoWebDriver extends WebDriver
         }
 
         if ($this->current_test === null) {
-            throw new \RuntimeException("Suite condition failure: \n" . " Something went wrong with selenium server/chrome driver ");
+            throw new \RuntimeException("Suite condition failure: \n" 
+               . " Something went wrong with selenium server/chrome driver ");
         }
 
         $this->addAttachment($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png');
