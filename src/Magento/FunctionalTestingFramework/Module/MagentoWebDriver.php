@@ -908,7 +908,7 @@ class MagentoWebDriver extends WebDriver
         }
 
         if ($this->current_test === null) {
-            throw new \RuntimeException("Suite condition failure: \n" 
+            throw new \RuntimeException("Suite condition failure: \n"
                . " Something went wrong with selenium server/chrome driver ");
         }
 
