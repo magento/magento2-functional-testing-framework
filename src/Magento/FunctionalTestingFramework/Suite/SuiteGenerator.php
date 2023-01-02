@@ -165,6 +165,7 @@ class SuiteGenerator
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
                 foreach ($tests as $testName) {
                     try {
+                        echo $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
                     } catch (FastFailException $e) {
                         throw $e;
