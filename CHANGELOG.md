@@ -1,6 +1,19 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.0.0
+---------
+### Enhancements
+
+* Added Supported for PHP 8.2 and enabled PR checks for PHP 8.2
+* Dropped Support for PHP 7.4 and disabled PR checks for PHP 7.4
+* Upgraded allure-framework/allure-phpunit to its latest version
+
+### Fixes
+
+* MFTF deprecation errors fixes
+* Composer downgraded from 2.4 to 2.2 due to lamina issue
+
 3.12.0
 ---------
 
