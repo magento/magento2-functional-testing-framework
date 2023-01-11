@@ -156,8 +156,9 @@ class SuiteGenerator
     {
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
-
         DirSetupUtil::createGroupDir($fullPath);
+        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
+        static $suiteCount = 0;
         $exceptionCollector = new ExceptionCollector();
         try {
             $relevantTests = [];
@@ -165,7 +166,8 @@ class SuiteGenerator
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
                 foreach ($tests as $testName) {
                     try {
-                        echo $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
+                        $suiteTests = $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
+                        file_put_contents($memberShipFilePath, $suiteTests, FILE_APPEND);
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
                     } catch (FastFailException $e) {
                         throw $e;
@@ -179,7 +181,7 @@ class SuiteGenerator
             } else {
                 $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
             }
-
+            $suiteCount++;
             if (empty($relevantTests)) {
                 $exceptionCollector->reset();
                 // There are suites that include no test on purpose for certain Magento edition.
