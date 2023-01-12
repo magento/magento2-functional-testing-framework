@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.0.1
+---------
+### Fixes
+
+* Fixed HTML files and images not attached to allure report issue
+
 4.0.0
 ---------
 ### Enhancements
