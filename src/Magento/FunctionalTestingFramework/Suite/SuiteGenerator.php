@@ -157,7 +157,7 @@ class SuiteGenerator
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
         DirSetupUtil::createGroupDir($fullPath);
-        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/groups/testgroupmembership.txt';
+        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
         static $suiteCount = 0;
         $exceptionCollector = new ExceptionCollector();
         try {
