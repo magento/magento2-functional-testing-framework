@@ -164,7 +164,7 @@ class SuiteGenerator
             $relevantTests = [];
             if (!empty($tests)) {
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
-                foreach ($tests as $testName) {
+                foreach ($tests as $key => $testName) {
                     try {
                         $suiteTests = $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
                         file_put_contents($memberShipFilePath, $suiteTests, FILE_APPEND);
