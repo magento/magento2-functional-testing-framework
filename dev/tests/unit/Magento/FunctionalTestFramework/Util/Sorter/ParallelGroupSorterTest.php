@@ -421,6 +421,45 @@ class ParallelGroupSorterTest extends MagentoTestCase
     }
 
     /**
+     * Test splitting into minimum groups.
+     *
+     * @return void
+     */
+    public function testSplitMinGroups(): void
+    {
+        // mock tests for test object handler.
+        $this->createMockForTest(0);
+
+        // create test to size array
+        $sampleTestArray = [
+            'test1' => 1,
+            'test2' => 125,
+            'test3' => 35
+        ];
+        // create mock suite references
+        $sampleSuiteArray = [
+            'mockSuite1' => ['mockTest1', 'mockTest2'],
+            'mockSuite2' => ['mockTest3', 'mockTest4'],
+        ];
+
+        // perform sort
+        $testSorter = new ParallelGroupSorter();
+        $actualResult = $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 3);
+        // verify the resulting groups
+        $this->assertCount(3, $actualResult);
+
+        $expectedResults =  [
+            1 => ['test2', 'test3', 'test1'],
+            2 => ['mockSuite1'],
+            3 => ['mockSuite2'],
+        ];
+
+        foreach ($actualResult as $groupNum => $group) {
+            $this->assertEquals($expectedResults[$groupNum], array_keys($group));
+        }
+    }
+
+    /**
      * Test splitting tests and suites with invalid group number.
      *
      * @return void
@@ -438,15 +477,16 @@ class ParallelGroupSorterTest extends MagentoTestCase
         ];
         // create mock suite references
         $sampleSuiteArray = [
-            'mockSuite1' => ['mockTest1', 'mockTest2']
+            'mockSuite1' => ['mockTest1', 'mockTest2'],
+            'mockSuite2' => ['mockTest3', 'mockTest4'],
         ];
 
         $this->expectException(FastFailException::class);
-        $this->expectExceptionMessage("Invalid parameter 'groupTotal': must be equal or greater than 2");
+        $this->expectExceptionMessage("Invalid parameter 'groupTotal': must be equal or greater than 3");
 
         // perform sort
         $testSorter = new ParallelGroupSorter();
-        $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 1);
+        $testSorter->getTestsGroupedByFixedGroupCount($sampleSuiteArray, $sampleTestArray, 2);
     }
 
     /**
