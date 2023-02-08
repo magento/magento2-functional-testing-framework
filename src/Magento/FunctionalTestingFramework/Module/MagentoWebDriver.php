@@ -910,7 +910,9 @@ class MagentoWebDriver extends WebDriver
         }
 
         if ($this->current_test === null) {
-            throw new \RuntimeException("Suite condition failure: \n" . $fail->getMessage());
+             throw new \RuntimeException("Suite condition failure: \n"
+                . " Something went wrong with selenium server/chrome driver : \n .  
+                    {$fail->getMessage()}\n{$fail->getTraceAsString()}");
         }
         YandexAllure::lifecycle()
           ->fire(new AddAttachmentEvent($this->pngReport, $test->getMetadata()->getName() . '.png', 'image/png'));
