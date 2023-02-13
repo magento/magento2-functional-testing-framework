@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.2.0
+---------
+### Fixes
+
+* Bumped `allure-framework/allure-codeception` dependency to `^1.5` to fix downstream dependency issues in Magento.
+
+
 4.1.0
 ---------
 ### Enhancements
