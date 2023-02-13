@@ -178,7 +178,7 @@ class SuiteGenerator
     {
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
-        
+
         DirSetupUtil::createGroupDir($fullPath);
         $exceptionCollector = new ExceptionCollector();
         try {
