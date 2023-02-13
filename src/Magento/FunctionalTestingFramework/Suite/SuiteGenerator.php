@@ -178,6 +178,7 @@ class SuiteGenerator
     {
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
+        
         DirSetupUtil::createGroupDir($fullPath);
         $exceptionCollector = new ExceptionCollector();
         try {
@@ -200,6 +201,7 @@ class SuiteGenerator
             } else {
                 $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
             }
+
             if (empty($relevantTests)) {
                 $exceptionCollector->reset();
                 // There are suites that include no test on purpose for certain Magento edition.
