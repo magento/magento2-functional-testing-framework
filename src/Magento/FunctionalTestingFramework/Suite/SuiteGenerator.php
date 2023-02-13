@@ -140,6 +140,28 @@ class SuiteGenerator
     }
 
     /**
+     * Function which generate Testgroupmembership file.
+     *
+     * @param array  $tests
+     * @return void
+     * @throws \Exception
+     */
+    public function generateTestgroupmembership($tests)
+    {
+        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
+        static $suiteCount = 0;
+        foreach ($tests as $key => $testName) {
+            try {
+                $suiteTests = $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
+                file_put_contents($memberShipFilePath, $suiteTests, FILE_APPEND);
+            } catch (FastFailException $e) {
+                throw $e;
+            }
+        }
+        $suiteCount++;
+    }
+
+    /**
      * Function which takes a suite name and a set of test names. The function then generates all relevant supporting
      * files and classes for the suite. The function takes an optional argument for suites which are split by a parallel
      * run so that any pre/post conditions can be duplicated.
@@ -157,17 +179,14 @@ class SuiteGenerator
         $relativePath = TestGenerator::GENERATED_DIR . DIRECTORY_SEPARATOR . $suiteName;
         $fullPath = FilePathFormatter::format(TESTS_MODULE_PATH) . $relativePath . DIRECTORY_SEPARATOR;
         DirSetupUtil::createGroupDir($fullPath);
-        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
-        static $suiteCount = 0;
         $exceptionCollector = new ExceptionCollector();
         try {
             $relevantTests = [];
             if (!empty($tests)) {
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
-                foreach ($tests as $key => $testName) {
+                $this->generateTestgroupmembership($tests);
+                foreach ($tests as $testName) {
                     try {
-                        $suiteTests = $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
-                        file_put_contents($memberShipFilePath, $suiteTests, FILE_APPEND);
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
                     } catch (FastFailException $e) {
                         throw $e;
@@ -181,7 +200,6 @@ class SuiteGenerator
             } else {
                 $relevantTests = SuiteObjectHandler::getInstance()->getObject($suiteName)->getTests();
             }
-            $suiteCount++;
             if (empty($relevantTests)) {
                 $exceptionCollector->reset();
                 // There are suites that include no test on purpose for certain Magento edition.
