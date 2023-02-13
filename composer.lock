@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "727da3f5d4a92c7997e8f2293b44cded",
+    "content-hash": "25d61754287efaedebc2056fe65f051e",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
