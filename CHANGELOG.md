@@ -1,6 +1,25 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.2.0
+---------
+### Fixes
+
+* Bumped `allure-framework/allure-codeception` dependency to `^1.5` to fix downstream dependency issues in Magento.
+
+
+4.1.0
+---------
+### Enhancements
+
+* Dropped Support for PHP 8.0 and disabled PR checks for PHP 8.0
+* Allow MFTF generate minimum possible groups runnable by codeception
+
+### Fixes
+
+* Fixed Allure report not generating issue
+* MFTF displays an appropriate message for unable to connect to Selenium server
+
 4.0.1
 ---------
 ### Fixes
