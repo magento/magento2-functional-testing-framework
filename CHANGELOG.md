@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.2.1
+---------
+### Fixes
+
+* Updated constraint for php-webdriver to restrict pulling versions above 1.14.0
+
 4.2.0
 ---------
 ### Fixes
