@@ -264,12 +264,7 @@ class TestGenerator
                 $argArr[$key] = explode(" ", trim($fileVal))[1];
             }
         }
-        foreach ($argArr as $key => $arrVal) {
-            if (!empty($argArr[$key + 1]) && $argArr[$key + 1] === $arrVal) {
-                $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
-                throw new TestFrameworkException(implode(PHP_EOL, $err));
-            }
-        }
+        
     }
 
     /**
