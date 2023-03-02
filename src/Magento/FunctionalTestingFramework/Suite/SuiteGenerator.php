@@ -143,7 +143,7 @@ class SuiteGenerator
      * Function which generate Testgroupmembership file.
      *
      * @param string $suiteName
-     * @param array $tests
+     * @param array  $tests
      * @return void
      * @throws \Exception
      */
