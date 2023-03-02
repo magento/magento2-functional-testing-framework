@@ -143,10 +143,11 @@ class SuiteGenerator
      * Function which generate Testgroupmembership file.
      *
      * @param array  $tests
+     * @param string  $suiteName
      * @return void
      * @throws \Exception
      */
-    public function generateTestgroupmembership($tests)
+    public function generateTestgroupmembership($suiteName, $tests)
     {
         $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
         static $suiteCount = 0;
