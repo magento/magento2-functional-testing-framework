@@ -186,7 +186,7 @@ class SuiteGenerator
             $relevantTests = [];
             if (!empty($tests)) {
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
-                $this->generateTestgroupmembership($tests);
+                $this->generateTestgroupmembership($suiteName, $tests);
                 foreach ($tests as $testName) {
                     try {
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
