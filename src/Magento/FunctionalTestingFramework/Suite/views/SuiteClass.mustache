@@ -103,7 +103,7 @@ class {{suiteName}} extends \Codeception\GroupObject
                 //Access private TestResultObject to find stack and if there are any errors (as opposed to failures)
                 $testResultObject = call_user_func(\Closure::bind(
                     function () use ($cest) {
-                        return $cest->getTestResultObject();
+                        return $cest->getResultAggregator();
                     },
                     $cest
                 ));
@@ -111,7 +111,7 @@ class {{suiteName}} extends \Codeception\GroupObject
 
                 if (!empty($errors)) {
                     foreach ($errors as $error) {
-                        if ($error->failedTest()->getTestMethod() == $cest->getName()) {
+                        if ($error->getTest()->getTestMethod() == $cest->getName()) {
                             // Do not attempt to run _after if failure was in the _after block
                             // Try to run _after but catch exceptions to prevent them from overwriting original failure.
                             print("LAST TEST IN SUITE FAILED, TEST AFTER MAY NOT BE SUCCESSFUL\n");
