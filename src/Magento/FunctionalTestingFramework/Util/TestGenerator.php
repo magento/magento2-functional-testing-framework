@@ -250,33 +250,43 @@ class TestGenerator
     /**
      * Throw exception if duplicate arguments found
      *
-     * @param string $fileContents
+     * @param string $fileName
      * @return void
      * @throws TestFrameworkException
      */
-    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents)
+    public function throwExceptionIfDuplicateArgumentsFound(string $fileName): void
     {
-        // Throw exception if duplicate arguments found in helper or actionGroup
+        $fileContents = file_get_contents($fileName);
         $fileToArr = explode("\n", $fileContents);
-        $argArr = [];
-        foreach ($fileToArr as $key => $fileVal) {
-            if (!empty(strpos($fileVal, "<argument name"))) {
-                $argArr[$key] = explode(" ", trim($fileVal))[1];
-            }
-        }
-        foreach ($argArr as $key => $arrVal) {
-            if (!str_contains('=', $arrVal)) {
-                continue;
-            }
-            if (!empty($argArr[$key + 1]) && $argArr[$key + 1] === $arrVal) {
-                $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
+        $argumentArray = [];
+        $actionGroupStart = false;
+        foreach ($fileToArr as $fileVal) {
+          $fileVal = trim($fileVal);
+          if (str_starts_with($fileVal, '<actionGroup') && !str_ends_with($fileVal, '/>')) {
+             $actionGroupStart = true;
+             continue;
+          }
+          if ($fileVal === '</actionGroup>') {
+            $argumentNameArray = [];
+            foreach ($argumentArray as $argument) {
+              $subtringStart = strpos($argument, 'name=');
+              $subtringStart += strlen('name=');
+              $size = strpos($argument, ' ', $subtringStart) - $subtringStart;
+              $argumentName = substr($argument, $subtringStart, $size);
+              if (in_array($argumentName, $argumentNameArray)) {
+                $err[] = sprintf('Duplicate argument name: %s in test file: %s', $argumentName, $fileName);
                 throw new TestFrameworkException(implode(PHP_EOL, $err));
+              }
+              $argumentNameArray[] = $argumentName;
             }
-            if (!empty($argArr[$key + 2]) && $argArr[$key + 2] === $arrVal) {
-                $err[] = 'Duplicate argument name '.$arrVal.' not allowed in helper or actionGroup';
-                throw new TestFrameworkException(implode(PHP_EOL, $err));
-            }
-        }
+            $argumentArray = [];
+            $actionGroupStart = false;
+            continue;
+          }
+          if ($actionGroupStart) {
+            $argumentArray[] = $fileVal;
+          }
+      }
     }
 
     /**
@@ -291,7 +301,7 @@ class TestGenerator
     public function assembleTestPhp($testObject)
     {
         if (!empty($testObject->getFilename()) && file_exists($testObject->getFilename())) {
-            $this->throwExceptionIfDuplicateArgumentsFound(file_get_contents($testObject->getFilename()));
+            $this->throwExceptionIfDuplicateArgumentsFound($testObject->getFilename());
         }
         $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
