@@ -456,8 +456,8 @@ class TestContextExtension extends BaseExtension
     /**
      * Reading stepKey from file.
      *
-     * @param Step $step
-     * @param String $filePath
+     * @param Step   $step
+     * @param string $filePath
      * @return string|null
      */
     private function retrieveStepKeyForAllure(Step $step, string $filePath)
