@@ -323,7 +323,7 @@ class TestContextExtension extends BaseExtension
         $stepKey = null;
 
         if (!($e->getStep() instanceof Comment)) {
-            $stepKey = $this->retrieveStepKeyForAllure($e->getStep());
+            $stepKey = $this->retrieveStepKeyForAllure($e->getStep(), $e->getTest()->getMetadata()->getFilename());
             $isActionGroup = (
                 strpos(
                     $e->getStep()->__toString(),
@@ -457,14 +457,19 @@ class TestContextExtension extends BaseExtension
      * Reading stepKey from file.
      *
      * @param Step $step
+     * @param String $filePath
      * @return string|null
      */
-    private function retrieveStepKeyForAllure(Step $step)
+    private function retrieveStepKeyForAllure(Step $step, string $filePath)
     {
         $stepKey = null;
         $stepLine = $step->getLineNumber();
-        $filePath = $step->getFilePath();
         $stepLine = $stepLine - 1;
+
+        //If the step's filepath is different from the test, it's a comment action.
+        if ($this->getRootDir() . $step->getFilePath() != $filePath) {
+            return "";
+        }
 
         if (!array_key_exists($filePath, $this->testFiles)) {
             $this->testFiles[$filePath] = explode(PHP_EOL, file_get_contents($filePath));
