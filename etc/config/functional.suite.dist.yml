@@ -7,7 +7,7 @@
 # Perform tests in browser using the WebDriver or PhpBrowser.
 # If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-class_name: AcceptanceTester
+actor: AcceptanceTester
 namespace: Magento\FunctionalTestingFramework
 modules:
     enabled:
@@ -27,9 +27,9 @@ modules:
             window_size: 1280x1024
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
-            pageload_timeout: "%WAIT_TIMEOUT%"
-            request_timeout: "%WAIT_TIMEOUT%"
-            connection_timeout: "%WAIT_TIMEOUT%"
+            pageload_timeout: "30"
+            request_timeout: "30"
+            connection_timeout: "30"
             host: "%SELENIUM_HOST%"
             port: "%SELENIUM_PORT%"
             protocol: "%SELENIUM_PROTOCOL%"

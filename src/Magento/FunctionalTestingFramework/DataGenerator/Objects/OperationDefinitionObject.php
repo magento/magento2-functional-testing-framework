@@ -167,7 +167,7 @@ class OperationDefinitionObject
         $this->operation = $operation;
         $this->dataType = $dataType;
         $this->apiMethod = $apiMethod;
-        $this->apiUri = trim($apiUri, '/');
+        $this->apiUri = trim($apiUri ?? '', '/');
         $this->auth = $auth;
         $this->headers = $headers;
         $this->params = $params;
