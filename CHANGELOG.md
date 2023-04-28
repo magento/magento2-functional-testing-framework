@@ -1,5 +1,16 @@
 Magento Functional Testing Framework Changelog
 ================================================
+4.3.0
+---------
+### Enhancements
+* Bumped `allure-framework/allure-codeception` dependency to `^2.1`.
+* Bumped `codeception/codeception` to `^5.0` and upgraded its dependent packages.
+* Replaced Yandex methods with Qameta related methods.
+* Created methods for modifying step name and for formatting allure.
+
+### Fixes
+* Fixed all issues and exceptions thrown after codeception upgrade.
+* Removed dependency of MagentoAllureAdapter in codeception.yml file.
 
 4.2.1
 ---------
