@@ -7,6 +7,7 @@ paths:
     data: tests/_data
     support: src/Magento/FunctionalTestingFramework
     envs: etc/_envs
+    output: tests/_output
 settings:
     silent: true
     colors: true
@@ -15,9 +16,9 @@ extensions:
     enabled:
         - Magento\FunctionalTestingFramework\Codeception\Subscriber\Console
         - Magento\FunctionalTestingFramework\Extension\TestContextExtension
-        - Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter
+        - Qameta\Allure\Codeception\AllureCodeception
     config:
-        Magento\FunctionalTestingFramework\Allure\Adapter\MagentoAllureAdapter:
+        Qameta\Allure\Codeception\AllureCodeception:
             deletePreviousResults: false
             outputDirectory: allure-results
             ignoredAnnotations:
