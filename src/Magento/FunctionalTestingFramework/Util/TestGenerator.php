@@ -262,8 +262,7 @@ class TestGenerator
         $actionGroupStart = false;
         foreach ($fileToArr as $fileVal) {
             $fileVal = trim($fileVal);
-            if (
-                (str_starts_with($fileVal, '<actionGroup') || str_starts_with($fileVal, '<helper')) && 
+            if ((str_starts_with($fileVal, '<actionGroup') || str_starts_with($fileVal, '<helper')) &&
                 !str_ends_with($fileVal, '/>')
             ) {
                 $actionGroupStart = true;
@@ -278,8 +277,8 @@ class TestGenerator
                     $argumentName = substr($argument, $subtringStart, $size);
                     if (in_array($argumentName, $argumentNameArray)) {
                         $err[] = sprintf(
-                            'Duplicate argument for actiongroup or helper with name: %s in test file: %s', 
-                            $argumentName, 
+                            'Duplicate argument for actiongroup or helper with name: %s in test file: %s',
+                            $argumentName,
                             $fileName
                         );
                         throw new TestFrameworkException(implode(PHP_EOL, $err));
