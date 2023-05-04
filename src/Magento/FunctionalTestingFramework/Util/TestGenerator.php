@@ -250,13 +250,13 @@ class TestGenerator
     /**
      * Throw exception if duplicate arguments found
      *
+     * @param string $fileContents
      * @param string $fileName
      * @return void
      * @throws TestFrameworkException
      */
-    public function throwExceptionIfDuplicateArgumentsFound(string $fileName): void
-    {
-        $fileContents = file_get_contents($fileName);
+    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, string $fileName = ''): void
+    {   
         $fileToArr = explode("\n", $fileContents);
         $argumentArray = [];
         $actionGroupStart = false;
@@ -301,7 +301,8 @@ class TestGenerator
     public function assembleTestPhp($testObject)
     {
         if (!empty($testObject->getFilename()) && file_exists($testObject->getFilename())) {
-            $this->throwExceptionIfDuplicateArgumentsFound($testObject->getFilename());
+            $fileContents = file_get_contents($testObject->getFilename());
+            $this->throwExceptionIfDuplicateArgumentsFound($fileContents, $testObject->getFilename());
         }
         $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
