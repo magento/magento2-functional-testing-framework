@@ -16,7 +16,7 @@ use Codeception\Exception\ModuleException;
  */
 class MagentoSequence extends Sequence
 {
-    protected $config = ['prefix' => ''];
+    protected array $config = ['prefix' => ''];
 }
 if (!function_exists('msq') && !function_exists('msqs')) {
     require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Util' . DIRECTORY_SEPARATOR . 'msq.php';

@@ -99,7 +99,7 @@ class TestObjectExtractor extends BaseObjectExtractor
         $testAnnotations = [];
         $testHooks = [];
         $filename = $testData['filename'] ?? null;
-        $fileNames = explode(",", $filename);
+        $fileNames = explode(",", $filename ?? '');
         $baseFileName = $fileNames[0];
         $module = $this->modulePathExtractor->extractModuleName($baseFileName);
         $testReference = $testData['extends']  ?? null;
