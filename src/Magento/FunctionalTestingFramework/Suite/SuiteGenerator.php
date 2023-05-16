@@ -95,6 +95,7 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
+        $this->generateTestgroupmembership($testManifest);
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
@@ -142,24 +143,44 @@ class SuiteGenerator
     /**
      * Function which generate Testgroupmembership file.
      *
-     * @param string $suiteName
-     * @param array  $tests
+     * @param $testManifest
      * @return void
      * @throws \Exception
      */
-    public function generateTestgroupmembership($suiteName, $tests)
+    public function generateTestgroupmembership($testManifest)
     {
         $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
-        static $suiteCount = 0;
-        foreach ($tests as $key => $testName) {
-            try {
-                $suiteTests = $suiteCount.":".$key.":".$suiteName.':'.$testName."\n";
-                file_put_contents($memberShipFilePath, $suiteTests, FILE_APPEND);
-            } catch (FastFailException $e) {
-                throw $e;
-            }
+
+        $testManifestArray = (array) $testManifest;
+        $prefix = chr(0).'*'.chr(0);
+        $defaultSuiteTests = $testManifestArray[$prefix.'testNameToSize'];
+
+        $suiteCount = 0;
+        $testCount = 0;
+        foreach ($defaultSuiteTests as $defaultSuiteTestName => $defaultTestValue) {
+            $defaultSuiteTestName = rtrim($defaultSuiteTestName, 'Cest');
+            $defaultSuiteTest = sprintf('%s:%s:%s\n', $suiteCount, 0, $defaultSuiteTestName);
+            file_put_contents($memberShipFilePath, $defaultSuiteTest, FILE_APPEND);
+            $testCount++;
         }
+
         $suiteCount++;
+        $suites = $testManifest->getSuiteConfig();
+        foreach ($suites as $suite => $tests) {
+            foreach ($tests as $key => $test) {
+                if(!is_numeric($key)) {
+                    foreach ($test as $testKey => $testName) {
+                        $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $testKey, $key, $testName);
+                        file_put_contents($memberShipFilePath, $suiteTest, FILE_APPEND);
+                        $suiteCount++;
+                    }
+                } else {
+                    $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $key, $suite, $test);
+                    file_put_contents($memberShipFilePath, $suiteTest, FILE_APPEND);
+                }
+            }
+            $suiteCount++;
+        }
     }
 
     /**
@@ -186,7 +207,6 @@ class SuiteGenerator
             $relevantTests = [];
             if (!empty($tests)) {
                 $this->validateTestsReferencedInSuite($suiteName, $tests, $originalSuiteName);
-                $this->generateTestgroupmembership($suiteName, $tests);
                 foreach ($tests as $testName) {
                     try {
                         $relevantTests[$testName] = TestObjectHandler::getInstance()->getObject($testName);
