@@ -172,12 +172,12 @@ class SuiteGenerator
             foreach ($tests as $key => $test) {
                 if (!is_numeric($key)) {
                     foreach ($test as $testKey => $testName) {
-                        $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $testKey, $key, $testName);
+                        $suiteTest = sprintf('%s:%s:%s:%s', $suiteCount, $testKey, $key, $testName);
                         file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
                         $suiteCount++;
                     }
                 } else {
-                    $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $key, $suite, $test);
+                    $suiteTest = sprintf('%s:%s:%s:%s', $suiteCount, $key, $suite, $test);
                     file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
                 }
             }
