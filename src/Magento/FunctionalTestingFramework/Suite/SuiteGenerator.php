@@ -143,7 +143,7 @@ class SuiteGenerator
     /**
      * Function which generate Testgroupmembership file.
      *
-     * @param $testManifest
+     * @param object $testManifest
      * @return void
      * @throws \Exception
      */
@@ -168,7 +168,7 @@ class SuiteGenerator
         $suites = $testManifest->getSuiteConfig();
         foreach ($suites as $suite => $tests) {
             foreach ($tests as $key => $test) {
-                if(!is_numeric($key)) {
+                if (!is_numeric($key)) {
                     foreach ($test as $testKey => $testName) {
                         $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $testKey, $key, $testName);
                         file_put_contents($memberShipFilePath, $suiteTest, FILE_APPEND);
