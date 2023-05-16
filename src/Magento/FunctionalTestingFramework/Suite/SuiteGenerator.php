@@ -158,9 +158,8 @@ class SuiteGenerator
         $suiteCount = 0;
         $testCount = 0;
         foreach ($defaultSuiteTests as $defaultSuiteTestName => $defaultTestValue) {
-            $defaultSuiteTestName = rtrim($defaultSuiteTestName, 'Cest');
-            $defaultSuiteTest = sprintf('%s:%s:%s\n', $suiteCount, 0, $defaultSuiteTestName);
-            file_put_contents($memberShipFilePath, $defaultSuiteTest, FILE_APPEND);
+            $defaultSuiteTest = sprintf('%s:%s:%s', $suiteCount, $testCount, $defaultSuiteTestName);
+            file_put_contents($memberShipFilePath, $defaultSuiteTest.PHP_EOL, FILE_APPEND);
             $testCount++;
         }
 
@@ -171,12 +170,12 @@ class SuiteGenerator
                 if (!is_numeric($key)) {
                     foreach ($test as $testKey => $testName) {
                         $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $testKey, $key, $testName);
-                        file_put_contents($memberShipFilePath, $suiteTest, FILE_APPEND);
+                        file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
                         $suiteCount++;
                     }
                 } else {
                     $suiteTest = sprintf('%s:%s:%s:%s\n', $suiteCount, $key, $suite, $test);
-                    file_put_contents($memberShipFilePath, $suiteTest, FILE_APPEND);
+                    file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
                 }
             }
             $suiteCount++;
