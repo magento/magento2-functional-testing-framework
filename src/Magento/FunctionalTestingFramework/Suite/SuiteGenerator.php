@@ -150,9 +150,7 @@ class SuiteGenerator
     public function generateTestgroupmembership($testManifest)
     {
         $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
-        if (!is_file($memberShipFilePath)) {
-            return;
-        }
+        
 
         $testManifestArray = (array) $testManifest;
         $prefix = chr(0).'*'.chr(0);
