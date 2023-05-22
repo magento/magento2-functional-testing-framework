@@ -262,13 +262,11 @@ class TestGenerator
         $actionGroupStart = false;
         foreach ($fileToArr as $fileVal) {
             $fileVal = trim($fileVal);
-            if ((str_starts_with($fileVal, '<actionGroup') || str_starts_with($fileVal, '<helper')) &&
-                !str_ends_with($fileVal, '/>')
-            ) {
+            if (str_starts_with($fileVal, '<actionGroup') && !str_ends_with($fileVal, '/>')) {
                 $actionGroupStart = true;
                 continue;
             }
-            if ($fileVal === '</actionGroup>' || $fileVal === '</helper>') {
+            if ($fileVal === '</actionGroup>') {
                 $argumentNameArray = [];
                 foreach ($argumentArray as $argument) {
                     $subtringStart = strpos($argument, 'name=');
@@ -277,7 +275,7 @@ class TestGenerator
                     $argumentName = substr($argument, $subtringStart, $size);
                     if (in_array($argumentName, $argumentNameArray)) {
                         $err[] = sprintf(
-                            'Duplicate argument for actiongroup or helper with name: %s in test file: %s',
+                            'Duplicate argument for actiongroup with name: %s in test file: %s',
                             $argumentName,
                             $fileName
                         );
