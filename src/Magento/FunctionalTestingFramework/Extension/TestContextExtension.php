@@ -168,7 +168,7 @@ class TestContextExtension extends BaseExtension
     /**
      * Function to add test under the suites
      *
-     * @param AllureLifecycleInterface          $lifecycle
+     * @param AllureLifecycleInterface $lifecycle
      * @param Test $cest
      * @return void
      */
