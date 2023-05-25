@@ -10,6 +10,7 @@ use Codeception\Events;
 use Codeception\Step;
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Qameta\Allure\Allure;
 use Qameta\Allure\Model\StepResult;
@@ -158,6 +159,53 @@ class TestContextExtension extends BaseExtension
                 $this->getFormattedSteps($testResult);
             }
         );
+
+        $group = null;
+        if ($this->options['groups'] !== null) {
+            $group =  $this->options['groups'][0];
+        }
+        if ($group !== null) {
+            $groupName = $this->sanitizeGroupName($group);
+            $lifecycle->updateTest(
+                function (TestResult $testResult) use ($groupName) {
+                    $labels = $testResult->getLabels();
+                    foreach ($labels as $label) {
+                        if ($label->getName() == "parentSuite") {
+                            $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
+                            break;
+                        }
+                    }
+                }
+            );
+        }
+    }
+
+    /**
+     * Function which santizes any group names changed by the framework for execution in order to consolidate reporting.
+     *
+     * @param string $group
+     * @return string
+     */
+    private function sanitizeGroupName($group): string
+    {
+        $suiteNames = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
+        $exactMatch = in_array($group, $suiteNames);
+
+        // if this is an existing suite name we dont' need to worry about changing it
+        if ($exactMatch || strpos($group, "_") === false) {
+          return $group;
+        }
+
+        // if we can't find this group in the generated suites we have to assume that the group was split for generation
+        $groupNameSplit = explode("_", $group);
+        array_pop($groupNameSplit);
+        array_pop($groupNameSplit);
+        $originalName = implode("_", $groupNameSplit);
+
+        // confirm our original name is one of the existing suite names otherwise just return the original group name
+        $originalName = in_array($originalName, $suiteNames) ? $originalName : $group;
+
+        return $originalName;
     }
 
     /**
