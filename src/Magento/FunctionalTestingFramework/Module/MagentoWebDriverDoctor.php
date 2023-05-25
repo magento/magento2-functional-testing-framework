@@ -91,8 +91,8 @@ class MagentoWebDriverDoctor extends MagentoWebDriver
                 $this->capabilities,
                 $this->connectionTimeoutInMs,
                 $this->requestTimeoutInMs,
-                $this->httpProxy,
-                $this->httpProxyPort
+                $this->config['http_proxy'],
+                $this->config['http_proxy_port']
             );
             if (null !== $this->remoteWebDriver) {
                 return;
