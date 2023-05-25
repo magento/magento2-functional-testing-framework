@@ -8,11 +8,13 @@ namespace Magento\FunctionalTestingFramework\Extension;
 
 use Codeception\Events;
 use Codeception\Step;
+use Codeception\Test\Test;
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Qameta\Allure\Allure;
+use Qameta\Allure\AllureLifecycleInterface;
 use Qameta\Allure\Model\StepResult;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -166,8 +168,8 @@ class TestContextExtension extends BaseExtension
     /**
      * Function to add test under the suites
      *
-     * @param $lifecycle
-     * @param $cest
+     * @param AllureLifecycleInterface $lifecycle
+     * @param Test $cest
      * @return void
      */
     private function addTestsInSuites($lifecycle, $cest): void
