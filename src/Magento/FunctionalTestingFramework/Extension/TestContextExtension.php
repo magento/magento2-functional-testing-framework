@@ -193,7 +193,7 @@ class TestContextExtension extends BaseExtension
 
         // if this is an existing suite name we dont' need to worry about changing it
         if ($exactMatch || strpos($group, "_") === false) {
-          return $group;
+            return $group;
         }
 
         // if we can't find this group in the generated suites we have to assume that the group was split for generation
