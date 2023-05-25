@@ -170,9 +170,10 @@ class TestContextExtension extends BaseExtension
      *
      * @param AllureLifecycleInterface $lifecycle
      * @param Test $cest
+     * 
      * @return void
      */
-    private function addTestsInSuites($lifecycle, $cest): void
+    private function addTestsInSuites(AllureLifecycleInterface $lifecycle, Test $cest): void
     {
         $groupName = null;
         if ($this->options['groups'] !== null) {
