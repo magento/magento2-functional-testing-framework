@@ -166,7 +166,8 @@ class TestContextExtension extends BaseExtension
     /**
      * Function to add test under the suites
      *
-     * @param string $group
+     * @param $lifecycle
+     * @param $cest
      * @return void
      */
     private function addTestsInSuites($lifecycle, $cest): void
