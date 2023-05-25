@@ -160,24 +160,24 @@ class TestContextExtension extends BaseExtension
             }
         );
 
-        $group = null;
+        $groupName = null;
         if ($this->options['groups'] !== null) {
             $group =  $this->options['groups'][0];
-        }
-        if ($group !== null) {
             $groupName = $this->sanitizeGroupName($group);
-            $lifecycle->updateTest(
-                function (TestResult $testResult) use ($groupName) {
-                    $labels = $testResult->getLabels();
-                    foreach ($labels as $label) {
-                        if ($label->getName() == "parentSuite") {
-                            $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
-                            break;
-                        }
+        }
+        $lifecycle->updateTest(
+            function (TestResult $testResult) use ($groupName, $cest) {
+                $labels = $testResult->getLabels();
+                foreach ($labels as $label) {
+                    if ($groupName !== null && $label->getName() === "parentSuite") {
+                        $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
+                    }
+                    if ($label->getName() === "package") {
+                        $label->setValue($cest->getReportFields()['class']);
                     }
                 }
-            );
-        }
+            }
+        );
     }
 
     /**
