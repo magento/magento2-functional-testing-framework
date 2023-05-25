@@ -163,6 +163,12 @@ class TestContextExtension extends BaseExtension
         $this->addTestsInSuites($lifecycle, $cest);
     }
 
+    /**
+     * Function to add test under the suites
+     *
+     * @param string $group
+     * @return void
+     */
     private function addTestsInSuites($lifecycle, $cest): void
     {
         $groupName = null;
@@ -172,16 +178,16 @@ class TestContextExtension extends BaseExtension
         }
         $lifecycle->updateTest(
             function (TestResult $testResult) use ($groupName, $cest) {
-            $labels = $testResult->getLabels();
-            foreach ($labels as $label) {
-                if ($groupName !== null && $label->getName() === "parentSuite") {
-                    $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
-                }
-                if ($label->getName() === "package") {
-                    $label->setValue($cest->getReportFields()['class']);
+                $labels = $testResult->getLabels();
+                foreach ($labels as $label) {
+                    if ($groupName !== null && $label->getName() === "parentSuite") {
+                        $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
+                    }
+                    if ($label->getName() === "package") {
+                        $label->setValue($cest->getReportFields()['class']);
+                    }
                 }
             }
-          }
         );
     }
 
