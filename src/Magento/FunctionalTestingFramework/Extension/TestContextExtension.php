@@ -168,8 +168,8 @@ class TestContextExtension extends BaseExtension
     /**
      * Function to add test under the suites.
      *
-     * @param string $lifecycle
-     * @param string $cest
+     * @param object $lifecycle
+     * @param object $cest
      *
      * @return void
      */
