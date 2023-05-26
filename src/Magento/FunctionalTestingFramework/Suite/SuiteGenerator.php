@@ -191,7 +191,32 @@ class SuiteGenerator
       // Output file path
       $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
 
-      file_put_contents($memberShipFilePath, "testing again" . PHP_EOL, FILE_APPEND);
+      $testCaseNumber = 0;
+
+      if(!empty($allGroupsContent)) {
+        foreach ($allGroupsContent as $groupId => $groupInfo) {
+          foreach ($groupInfo as $testName) {
+            // If file has -g then it is test suite
+            if (str_contains($testName, '-g')) {
+              $suitename = explode(" ", $testName);
+              $suitename[1] = trim($suitename[1]);
+              if(!empty($suites[$suitename[1]])) {
+                foreach ($suites[$suitename[1]] as $key => $test) {
+                  $suiteTest = sprintf('%s:%s:%s:%s', $groupId, $key, $suitename[1], $test);
+                  file_put_contents($memberShipFilePath, $suiteTest . PHP_EOL, FILE_APPEND);
+                }
+              }
+            }
+            // It is default test group
+            else {
+              $defaultSuiteTest = sprintf('%s:%s:%s', $groupId, $testCaseNumber, $testName);
+              file_put_contents($memberShipFilePath, $defaultSuiteTest . PHP_EOL, FILE_APPEND);
+            }
+            $testCaseNumber++;
+          }
+          $testCaseNumber = 0;
+        }
+      }
 
     }
 
