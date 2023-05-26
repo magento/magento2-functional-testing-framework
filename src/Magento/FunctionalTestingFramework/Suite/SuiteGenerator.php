@@ -169,6 +169,16 @@ class SuiteGenerator
 
       // Path to groups folder
       $baseDir = FilePathFormatter::format(TESTS_MODULE_PATH);
+      $path = $baseDir .'_generated/groups';
+
+      // Read all group files
+      if (is_dir($path)) {
+        $groupFiles = glob("$path/group*.txt");
+        if ($groupFiles === false) {
+          throw new RuntimeException("glob(): error with '$path'");
+        }
+        sort($groupFiles, SORT_NATURAL);
+      }
 
       // Read each file in the reverse order and form an array with groupId as key
       $groupNumber = 0;
@@ -181,7 +191,7 @@ class SuiteGenerator
       // Output file path
       $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
 
-      file_put_contents($memberShipFilePath, "testing" . PHP_EOL, FILE_APPEND);
+      file_put_contents($memberShipFilePath, "testing again" . PHP_EOL, FILE_APPEND);
 
     }
 
