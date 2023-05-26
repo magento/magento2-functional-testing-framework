@@ -149,38 +149,40 @@ class SuiteGenerator
      */
     public function generateTestgroupmembership($testManifest)
     {
-        $memberShipFilePath = FilePathFormatter::format(TESTS_MODULE_PATH).'_generated/testgroupmembership.txt';
-        
+      // Get suits and subsuites data array
+      $suites = $testManifest->getSuiteConfig();
 
-        $testManifestArray = (array) $testManifest;
-        $prefix = chr(0).'*'.chr(0);
-        $defaultSuiteTests = $testManifestArray[$prefix.'testNameToSize'];
-
-        $suiteCount = 0;
-        $testCount = 0;
-        foreach ($defaultSuiteTests as $defaultSuiteTestName => $defaultTestValue) {
-            $defaultSuiteTest = sprintf('%s:%s:%s', $suiteCount, $testCount, $defaultSuiteTestName);
-            file_put_contents($memberShipFilePath, $defaultSuiteTest.PHP_EOL, FILE_APPEND);
-            $testCount++;
-        }
-
-        $suiteCount++;
-        $suites = $testManifest->getSuiteConfig();
-        foreach ($suites as $suite => $tests) {
-            foreach ($tests as $key => $test) {
-                if (!is_numeric($key)) {
-                    foreach ($test as $testKey => $testName) {
-                        $suiteTest = sprintf('%s:%s:%s:%s', $suiteCount, $testKey, $key, $testName);
-                        file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
-                        $suiteCount++;
-                    }
-                } else {
-                    $suiteTest = sprintf('%s:%s:%s:%s', $suiteCount, $key, $suite, $test);
-                    file_put_contents($memberShipFilePath, $suiteTest.PHP_EOL, FILE_APPEND);
-                }
+      // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
+      if(!empty($suites)) {
+        foreach ($suites as $subSuites) {
+          if(!empty($subSuites)) {
+            foreach ($subSuites as $subSuiteName => $suiteTestNames) {
+              if (!is_numeric($subSuiteName)) {
+                $suites[$subSuiteName] = $suiteTestNames;
+              } else {
+                continue;
+              }
             }
-            $suiteCount++;
+          }
         }
+      }
+
+      // Path to groups folder
+      $baseDir = FilePathFormatter::format(TESTS_MODULE_PATH);
+
+      // Read each file in the reverse order and form an array with groupId as key
+      $groupNumber = 0;
+      while(!empty($groupFiles)){
+        $group = array_pop($groupFiles);
+        $allGroupsContent[$groupNumber] = file($group);
+        $groupNumber++;
+      }
+
+      // Output file path
+      $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
+
+      file_put_contents($memberShipFilePath, "testing" . PHP_EOL, FILE_APPEND);
+
     }
 
     /**
