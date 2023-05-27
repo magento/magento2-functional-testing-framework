@@ -95,7 +95,6 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
-        $this->generateTestgroupmembership($testManifest);
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
@@ -118,6 +117,7 @@ class SuiteGenerator
                 // if our first element is an array we know that we have split the suites
                 if (is_array($firstElement)) {
                     $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
+                  $this->generateTestgroupmembership($testManifest);
                 }
             } catch (FastFailException $e) {
                 throw $e;
