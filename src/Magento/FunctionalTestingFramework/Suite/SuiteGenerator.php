@@ -174,6 +174,8 @@ class SuiteGenerator
     // Read all group files
     if (is_dir($path)) {
       $groupFiles = glob("$path/group*.txt");
+      echo "Group files-> \n";
+      print_r($groupFiles); 
       if ($groupFiles === false) {
         throw new RuntimeException("glob(): error with '$path'");
       }
@@ -184,6 +186,7 @@ class SuiteGenerator
     $groupNumber = 0;
     $allGroupsContent = array();
     while(!empty($groupFiles)){
+      echo "Group files not empty";
       $group = array_pop($groupFiles);
       $allGroupsContent[$groupNumber] = file($group);
       $groupNumber++;
