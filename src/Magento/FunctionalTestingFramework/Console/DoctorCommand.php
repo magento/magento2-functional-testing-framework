@@ -198,7 +198,7 @@ class DoctorCommand extends Command
         unset($settings['modules']['config'][$magentoWebDriver]);
 
         $dispatcher = new EventDispatcher();
-        $suiteManager = new SuiteManager($dispatcher, self::SUITE, $settings);
+        $suiteManager = new SuiteManager($dispatcher, self::SUITE, $settings, []);
         try {
             $suiteManager->initialize();
             $this->context = ['Successful'];
