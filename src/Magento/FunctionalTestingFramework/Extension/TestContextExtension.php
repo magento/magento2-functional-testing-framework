@@ -267,15 +267,12 @@ class TestContextExtension extends BaseExtension
 
         AllureHelper::addAttachmentToCurrentStep($exception, $context . 'Exception');
 
-        //pop suppressed exceptions and attach to allure
-        $change = function () {
-            if ($this instanceof \PHPUnit\Framework\ExceptionWrapper) {
-                return $this->previous;
-            } else {
-                return $this->getPrevious();
-            }
-        };
-        $previousException = $change->call($exception);
+        $previousException = null;
+        if ($exception instanceof \PHPUnit\Framework\ExceptionWrapper) {
+            $previousException = $exception->getPreviousWrapped();
+        } elseif ($exception instanceof \Throwable) {
+            $previousException = $exception->getPrevious();
+        }
 
         if ($previousException !== null) {
             $this->attachExceptionToAllure($previousException, $testMethod);
