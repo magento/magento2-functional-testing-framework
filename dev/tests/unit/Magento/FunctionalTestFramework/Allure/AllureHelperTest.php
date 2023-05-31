@@ -8,158 +8,129 @@ declare(strict_types=1);
 namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
-use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
-use Magento\FunctionalTestingFramework\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
-use Yandex\Allure\Adapter\Allure;
-use Yandex\Allure\Adapter\AllureException;
-use Yandex\Allure\Adapter\Event\StepFinishedEvent;
-use Yandex\Allure\Adapter\Event\StepStartedEvent;
-use Yandex\Allure\Adapter\Model\Attachment;
+use Qameta\Allure\Allure;
+use Qameta\Allure\Io\DataSourceFactory;
+use Qameta\Allure\Model\AttachmentResult;
+use Qameta\Allure\Model\ResultFactoryInterface;
+use Qameta\Allure\Setup\LifecycleBuilderInterface;
+use const STDOUT;
 
+/**
+ * @covers \Qameta\Allure\Allure
+ */
 class AllureHelperTest extends TestCase
 {
-    private const MOCK_FILENAME = 'filename';
-
-    /**
-     * The AddAttachmentToStep should add an attachment to the current step.
-     *
-     * @return void
-     * @throws AllureException
-     */
-    public function testAddAttachmentToStep(): void
+    public function setUp(): void
     {
-        $expectedData = 'string';
-        $expectedCaption = 'caption';
-        $this->mockAttachmentWriteEvent($expectedData, $expectedCaption);
-
-        //Prepare Allure lifecycle
-        Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
-
-        //Call function
-        AllureHelper::addAttachmentToCurrentStep($expectedData, $expectedCaption);
-
-        // Assert Attachment is created as expected
-        $step = Allure::lifecycle()->getStepStorage()->pollLast();
-        $expectedAttachment = new Attachment($expectedCaption, self::MOCK_FILENAME, null);
-        $this->assertEquals($step->getAttachments()[0], $expectedAttachment);
+        Allure::reset();
     }
 
     /**
-     * The AddAttachmentToLastStep should add an attachment only to the last step.
-     *
-     * @return void
-     * @throws AllureException
+     * @dataProvider providerAttachmentProperties
      */
-    public function testAddAttachmentToLastStep(): void
-    {
-        $expectedData = 'string';
-        $expectedCaption = 'caption';
-        $this->mockAttachmentWriteEvent($expectedData, $expectedCaption);
+    public function testDoAddAttachmentMethod(
+        string $name,
+        $type,
+        ?string $fileExtension,
+    ): void {
+        $attachment = new AttachmentResult('a');
+        Allure::setLifecycleBuilder(
+            $this->createLifecycleBuilder($this->createResultFactoryWithAttachment($attachment)),
+        );
 
-        //Prepare Allure lifecycle
-        Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
-        Allure::lifecycle()->fire(new StepFinishedEvent('firstStep'));
-        Allure::lifecycle()->fire(new StepStartedEvent('secondStep'));
-        Allure::lifecycle()->fire(new StepFinishedEvent('secondStep'));
-
-        //Call function
-        AllureHelper::addAttachmentToLastStep($expectedData, $expectedCaption);
-
-        //Continue Allure lifecycle
-        Allure::lifecycle()->fire(new StepStartedEvent('thirdStep'));
-        Allure::lifecycle()->fire(new StepFinishedEvent('thirdStep'));
-
-        // Assert Attachment is created as expected on the right step
-        $rootStep = Allure::lifecycle()->getStepStorage()->pollLast();
-
-        $firstStep = $rootStep->getSteps()[0];
-        $secondStep = $rootStep->getSteps()[1];
-        $thirdStep = $rootStep->getSteps()[2];
-
-        $expectedAttachment = new Attachment($expectedCaption, self::MOCK_FILENAME, null);
-        $this->assertEmpty($firstStep->getAttachments());
-        $this->assertEquals($secondStep->getAttachments()[0], $expectedAttachment);
-        $this->assertEmpty($thirdStep->getAttachments());
+        AllureHelper::doAddAttachment(
+            DataSourceFactory::fromFile('test'),
+            'nameOfTheFile',
+            'typeOfTheFile',
+            $fileExtension
+        );
+        self::assertSame('nameOfTheFile', $attachment->getName());
+        self::assertSame('typeOfTheFile', $attachment->getType());
     }
 
     /**
-     * The AddAttachment actions should have files with different attachment names.
-     *
-     * @return void
-     * @throws AllureException
+     * @dataProvider providerAttachmentProperties
      */
-    public function testAddAttachmentUniqueName(): void
-    {
-        $expectedData = 'string';
-        $expectedCaption = 'caption';
+    public function testAddAttachmentToStep(
+        string $name,
+        ?string $type,
+        ?string $fileExtension,
+    ): void {
+        $attachment = new AttachmentResult('a');
+        Allure::setLifecycleBuilder(
+            $this->createLifecycleBuilder($this->createResultFactoryWithAttachment($attachment)),
+        );
 
-        //Prepare Allure lifecycle
-        Allure::lifecycle()->fire(new StepStartedEvent('firstStep'));
-
-        //Call function twice
-        AllureHelper::addAttachmentToCurrentStep($expectedData, $expectedCaption);
-        AllureHelper::addAttachmentToCurrentStep($expectedData, $expectedCaption);
-
-        // Assert file names for both attachments are not the same.
-        $step = Allure::lifecycle()->getStepStorage()->pollLast();
-        $attachmentOne = $step->getAttachments()[0]->getSource();
-        $attachmentTwo = $step->getAttachments()[1]->getSource();
-        $this->assertNotEquals($attachmentOne, $attachmentTwo);
+        Allure::attachment($name, 'nameOfTheFile', $type, $fileExtension);
+        self::assertSame($name, $attachment->getName());
+        self::assertSame($type, $attachment->getType());
+        self::assertSame($fileExtension, $attachment->getFileExtension());
     }
 
     /**
-     * Clear Allure Lifecycle.
-     *
-     * @return void
+     * @dataProvider providerAttachmentProperties
      */
-    protected function tearDown(): void
-    {
-        Allure::setDefaultLifecycle();
+    public function testAddAttachmentFileToStep(
+        string $name,
+        ?string $type,
+        ?string $fileExtension,
+    ): void {
+        $attachment = new AttachmentResult('a');
+        Allure::setLifecycleBuilder(
+            $this->createLifecycleBuilder($this->createResultFactoryWithAttachment($attachment)),
+        );
 
-        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue(null);
+        Allure::attachmentFile($name, 'b', $type, '.html');
+        self::assertSame('c', $attachment->getName());
+        self::assertSame('.html', $attachment->getFileExtension());
     }
 
     /**
-     * Mock entire attachment writing mechanisms.
-     *
-     * @param string $filePathOrContents
-     * @param string $caption
-     *
-     * @return void
+     * @return iterable<string, array{string, string|null, string|null}>
      */
-    private function mockAttachmentWriteEvent(string $filePathOrContents, string $caption): void
+    public static function providerAttachmentProperties(): iterable
     {
-        $mockInstance = $this->getMockBuilder(AddUniqueAttachmentEvent::class)
-            ->setConstructorArgs([$filePathOrContents, $caption])
-            ->disallowMockingUnknownTypes()
-            ->onlyMethods(['getAttachmentFileName'])
-            ->getMock();
+        return [
+            'Only name' => ['c', null, null],
+            'Name and type' => ['c', 'd', null],
+            'Name and file extension' => ['c', null, 'd'],
+            'Name, type and file extension' => ['c', 'd', 'e'],
+        ];
+    }
 
-        $mockInstance
-            ->method('getAttachmentFileName')
-            ->willReturn(self::MOCK_FILENAME);
+    private function createResultFactoryWithAttachment(AttachmentResult $attachment): ResultFactoryInterface
+    {
+        $resultFactory = $this->createStub(ResultFactoryInterface::class);
+        $resultFactory
+            ->method('createAttachment')
+            ->willReturn($attachment);
 
-        $objectManagerMockInstance = $this->createMock(ObjectManager::class);
-        $objectManagerMockInstance
-            ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function (string $class) use ($mockInstance) {
-                        if ($class === AddUniqueAttachmentEvent::class) {
-                            return $mockInstance;
-                        }
+        return $resultFactory;
+    }
 
-                        return null;
-                    }
-                )
-            );
+    private function createLifecycleBuilder(
+        ?ResultFactoryInterface $resultFactory = null,
+        ?AllureLifecycleInterface $lifecycle = null,
+        ?StatusDetectorInterface $statusDetector = null,
+    ): LifecycleBuilderInterface {
+        $builder = $this->createStub(LifecycleBuilderInterface::class);
+        if (isset($resultFactory)) {
+            $builder
+                ->method('getResultFactory')
+                ->willReturn($resultFactory);
+        }
+        if (isset($lifecycle)) {
+            $builder
+                ->method('createLifecycle')
+                ->willReturn($lifecycle);
+        }
+        if (isset($statusDetector)) {
+            $builder
+                ->method('getStatusDetector')
+                ->willReturn($statusDetector);
+        }
 
-        $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($objectManagerMockInstance, $objectManagerMockInstance);
+        return $builder;
     }
 }

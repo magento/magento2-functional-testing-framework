@@ -52,16 +52,6 @@ Example:
 MAGENTO_ADMIN_USERNAME=admin
 ```
 
-### MAGENTO_ADMIN_PASSWORD
-
-The password that tests will use to log in to the Magento Admin page.
-
-Example:
-
-```conf
-MAGENTO_ADMIN_PASSWORD=1234reTyt%$7
-```
-
 ## Advanced configuration
 
 Depending on the environment you use, you may need to configure MFTF more precisely by setting additional configuration parameters.
@@ -362,7 +352,7 @@ WAIT_TIMEOUT=30
 ### ENABLE_PAUSE
 
 Enables the ability to pause test execution at any point, and enter an interactive shell where you can try commands in action.
-When pause is enabled, MFTF will generate pause() command in _failed() hook so that test will pause execution when failed. 
+When pause is enabled, MFTF will generate pause() command in _failed() hook so that test will pause execution when failed.
 
 ```conf
 ENABLE_PAUSE=true
