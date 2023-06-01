@@ -23,7 +23,11 @@ class AllureHelper
     public static function addAttachmentToCurrentStep($data, $caption): void
     {
         if (!is_string($data)) {
-            $data = serialize($data);
+            try {
+                $data = serialize($data);
+            } catch (Exception $exception) {
+                throw  new \Exception($data->getMessage());
+            }
         }
         if (@file_exists($data) && is_file($data)) {
             Allure::attachmentFile($caption, $data);
