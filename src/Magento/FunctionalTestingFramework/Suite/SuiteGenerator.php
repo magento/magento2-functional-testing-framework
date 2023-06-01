@@ -95,6 +95,7 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
+        $this->generateTestgroupmembership($testManifest);
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
@@ -117,7 +118,7 @@ class SuiteGenerator
                 // if our first element is an array we know that we have split the suites
                 if (is_array($firstElement)) {
                     $this->generateSplitSuiteFromTest($suiteName, $suiteContent);
-                  $this->generateTestgroupmembership($testManifest);
+
                 }
             } catch (FastFailException $e) {
                 throw $e;
@@ -151,7 +152,8 @@ class SuiteGenerator
     {
     // Get suits and subsuites data array
     $suites = $testManifest->getSuiteConfig();
-
+echo "suites-> <pre>";
+print_r($suites);
     // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
     if(!empty($suites)) {
       foreach ($suites as $subSuites) {
@@ -186,7 +188,6 @@ class SuiteGenerator
     $groupNumber = 0;
     $allGroupsContent = array();
     while(!empty($groupFiles)){
-      echo "Group files not empty";
       $group = array_pop($groupFiles);
       $allGroupsContent[$groupNumber] = file($group);
       $groupNumber++;
@@ -202,8 +203,10 @@ print_r($allGroupsContent);
         foreach ($groupInfo as $testName) {
           // If file has -g then it is test suite
           if (str_contains($testName, '-g')) {
+            echo "testname-> $testName \n";
             $suitename = explode(" ", $testName);
             $suitename[1] = trim($suitename[1]);
+            echo "$suitename-> $suitename[1] \n";
             if(!empty($suites[$suitename[1]])) {
               foreach ($suites[$suitename[1]] as $key => $test) {
                 $suiteTest = sprintf('%s:%s:%s:%s', $groupId, $key, $suitename[1], $test);
