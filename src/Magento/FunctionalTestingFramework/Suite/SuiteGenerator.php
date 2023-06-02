@@ -196,8 +196,7 @@ print_r($suites);
     // Output file path
     $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
     $testCaseNumber = 0;
-echo "groups array-><pre>";
-print_r($allGroupsContent);
+
     if(!empty($allGroupsContent)) {
       foreach ($allGroupsContent as $groupId => $groupInfo) {
         foreach ($groupInfo as $testName) {
@@ -217,7 +216,7 @@ print_r($allGroupsContent);
           // It is default test group
           else {
             $defaultSuiteTest = sprintf('%s:%s:%s', $groupId, $testCaseNumber, $testName);
-            file_put_contents($memberShipFilePath, $defaultSuiteTest . PHP_EOL, FILE_APPEND);
+            file_put_contents($memberShipFilePath, $defaultSuiteTest, FILE_APPEND);
           }
           $testCaseNumber++;
         }
