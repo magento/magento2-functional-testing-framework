@@ -199,17 +199,17 @@ class SuiteGenerator
 
         // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
         if (!empty($suites)) {
-          foreach ($suites as $subSuites) {
-            if (!empty($subSuites)) {
-              foreach ($subSuites as $subSuiteName => $suiteTestNames) {
-                if (!is_numeric($subSuiteName)) {
-                  $suites[$subSuiteName] = $suiteTestNames;
-                } else {
-                  continue;
+            foreach ($suites as $subSuites) {
+                if (!empty($subSuites)) {
+                    foreach ($subSuites as $subSuiteName => $suiteTestNames) {
+                        if (!is_numeric($subSuiteName)) {
+                            $suites[$subSuiteName] = $suiteTestNames;
+                        } else {
+                            continue;
+                        }
+                    }
                 }
-              }
             }
-          }
         }
         return $suites;
     }
@@ -224,23 +224,24 @@ class SuiteGenerator
     {
         // Read all group files
         if (is_dir($path)) {
-          $groupFiles = glob("$path/group*.txt");
-          if ($groupFiles === false) {
-            throw new RuntimeException("glob(): error with '$path'");
-          }
-          sort($groupFiles, SORT_NATURAL);
+            $groupFiles = glob("$path/group*.txt");
+            if ($groupFiles === false) {
+                throw new RuntimeException("glob(): error with '$path'");
+            }
+            sort($groupFiles, SORT_NATURAL);
         }
 
         // Read each file in the reverse order and form an array with groupId as key
         $groupNumber = 0;
         $allGroupsContent = [];
         while (!empty($groupFiles)) {
-          $group = array_pop($groupFiles);
-          $allGroupsContent[$groupNumber] = file($group);
-          $groupNumber++;
+            $group = array_pop($groupFiles);
+            $allGroupsContent[$groupNumber] = file($group);
+            $groupNumber++;
         }
         return $allGroupsContent;
     }
+    
     /**
      * Function which takes a suite name and a set of test names. The function then generates all relevant supporting
      * files and classes for the suite. The function takes an optional argument for suites which are split by a parallel
