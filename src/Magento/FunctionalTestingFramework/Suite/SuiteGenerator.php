@@ -203,12 +203,11 @@ class SuiteGenerator
 
                         if (!empty($suites[$suitename[1]])) {
                             foreach ($suites[$suitename[1]] as $key => $test) {
-                            $suiteTest = sprintf('%s:%s:%s:%s', $groupId, $key, $suitename[1], $test);
-                            file_put_contents($memberShipFilePath, $suiteTest . PHP_EOL, FILE_APPEND);
+                                $suiteTest = sprintf('%s:%s:%s:%s', $groupId, $key, $suitename[1], $test);
+                                file_put_contents($memberShipFilePath, $suiteTest . PHP_EOL, FILE_APPEND);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         $defaultSuiteTest = sprintf('%s:%s:%s', $groupId, $testCaseNumber, $testName);
                         file_put_contents($memberShipFilePath, $defaultSuiteTest, FILE_APPEND);
                     }
