@@ -147,47 +147,15 @@ class SuiteGenerator
      * @return void
      * @throws \Exception
      */
-    public function generateTestgroupmembership($testManifest)
+    public function generateTestgroupmembership($testManifest): void
     {
-        // Get suits and subsuites data array
-        $suites = $testManifest->getSuiteConfig();
-
-        // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
-        if (!empty($suites)) {
-            foreach ($suites as $subSuites) {
-                if (!empty($subSuites)) {
-                    foreach ($subSuites as $subSuiteName => $suiteTestNames) {
-                        if (!is_numeric($subSuiteName)) {
-                            $suites[$subSuiteName] = $suiteTestNames;
-                        } else {
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
+        $suites = $this->getSuitesDetails($testManifest);
 
         // Path to groups folder
         $baseDir = FilePathFormatter::format(TESTS_MODULE_PATH);
         $path = $baseDir .'_generated/groups';
 
-        // Read all group files
-        if (is_dir($path)) {
-            $groupFiles = glob("$path/group*.txt");
-            if ($groupFiles === false) {
-                throw new RuntimeException("glob(): error with '$path'");
-            }
-            sort($groupFiles, SORT_NATURAL);
-        }
-
-        // Read each file in the reverse order and form an array with groupId as key
-        $groupNumber = 0;
-        $allGroupsContent = [];
-        while (!empty($groupFiles)) {
-            $group = array_pop($groupFiles);
-            $allGroupsContent[$groupNumber] = file($group);
-            $groupNumber++;
-        }
+        $allGroupsContent = $this->readAllGroupFiles($path);
 
         // Output file path
         $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
@@ -218,6 +186,61 @@ class SuiteGenerator
         }
     }
 
+    /**
+     * Function to format suites details
+     *
+     * @param object $testManifest
+     * @return array $suites
+     */
+    private function getSuitesDetails($testManifest): array
+    {
+        // Get suits and subsuites data array
+        $suites = $testManifest->getSuiteConfig();
+
+        // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
+        if (!empty($suites)) {
+          foreach ($suites as $subSuites) {
+            if (!empty($subSuites)) {
+              foreach ($subSuites as $subSuiteName => $suiteTestNames) {
+                if (!is_numeric($subSuiteName)) {
+                  $suites[$subSuiteName] = $suiteTestNames;
+                } else {
+                  continue;
+                }
+              }
+            }
+          }
+        }
+        return $suites;
+    }
+
+  /**
+   * Function to read all group* text files inside /groups folder
+   *
+   * @param object $path
+   * @return array $allGroupsContent
+   */
+    private function readAllGroupFiles($path): array
+    {
+        // Read all group files
+        if (is_dir($path)) {
+          $groupFiles = glob("$path/group*.txt");
+          if ($groupFiles === false) {
+            throw new RuntimeException("glob(): error with '$path'");
+          }
+          sort($groupFiles, SORT_NATURAL);
+        }
+
+        // Read each file in the reverse order and form an array with groupId as key
+        $groupNumber = 0;
+        $allGroupsContent = [];
+        while (!empty($groupFiles)) {
+          $group = array_pop($groupFiles);
+          $allGroupsContent[$groupNumber] = file($group);
+          $groupNumber++;
+        }
+        return $allGroupsContent;
+    }
     /**
      * Function which takes a suite name and a set of test names. The function then generates all relevant supporting
      * files and classes for the suite. The function takes an optional argument for suites which are split by a parallel
