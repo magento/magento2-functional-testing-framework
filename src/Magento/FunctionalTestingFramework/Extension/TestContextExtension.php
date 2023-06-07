@@ -189,7 +189,6 @@ class TestContextExtension extends BaseExtension
                     }
                     if ($label->getName() === "package") {
                         $className = $cest->getReportFields()['class'];
-                        $className = str_replace('\_default', '', $className);
                         $label->setValue($className);
                     }
                 }
