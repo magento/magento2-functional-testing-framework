@@ -25,7 +25,7 @@ class AllureHelper
         if (!is_string($data)) {
             try {
                 $data = serialize($data);
-            } catch (Exception $exception) {
+            } catch (\Exception $exception) {
                 throw  new \Exception($data->getMessage());
             }
         }
