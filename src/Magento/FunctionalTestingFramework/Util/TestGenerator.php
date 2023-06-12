@@ -259,10 +259,7 @@ class TestGenerator
     {
         $parsedSteps = $testObject->getUnresolvedSteps();
         foreach ($parsedSteps as $parsedStep) {
-            if(
-                $parsedStep->getType() !== 'actionGroup' &&
-                $parsedStep->getType() !== 'helper'
-            ) {
+            if ($parsedStep->getType() !== 'actionGroup' && $parsedStep->getType() !== 'helper') {
                 continue;
             }
             $attributesActions = $parsedStep->getCustomActionAttributes();
@@ -277,10 +274,7 @@ class TestGenerator
             $argumentArray = [];
             foreach ($fileToArr as $fileVal) {
                 $fileVal = trim($fileVal);
-                if (
-                    (str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) &&
-                    str_contains($fileVal, $stepKey)
-                ) {
+                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) && str_contains($fileVal, $stepKey)) {
                     $actionGroupStart = true;
                     continue;
                 }
@@ -288,7 +282,7 @@ class TestGenerator
                     foreach ($arguments as $argumentName => $argumentValue) {
                         $argumentCounter = 0;
                         foreach ($argumentArray as $rawArgument) {
-                            if (str_contains($rawArgument, '<argument') && str_contains($rawArgument, $argumentName)){
+                            if (str_contains($rawArgument, '<argument') && str_contains($rawArgument, $argumentName)) {
                                 $argumentCounter++;
                             }
                             if ($argumentCounter > 1) {
