@@ -247,48 +247,68 @@ class TestGenerator
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
     }
+    
     /**
      * Throw exception if duplicate arguments found
      *
      * @param string $fileContents
-     * @param string $fileName
+     * @param TestObject $testObject
      * @return void
      * @throws TestFrameworkException
      */
-    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, string $fileName = ''): void
+    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, TestObject $testObject): void
     {
-        $fileToArr = explode("\n", $fileContents);
-        $argumentArray = [];
-        $actionGroupStart = false;
-        foreach ($fileToArr as $fileVal) {
-            $fileVal = trim($fileVal);
-            if (str_starts_with($fileVal, '<actionGroup') && !str_ends_with($fileVal, '/>')) {
-                $actionGroupStart = true;
+        $parsedSteps = $testObject->getUnresolvedSteps();
+        foreach ($parsedSteps as $parsedStep) {
+            if(
+                $parsedStep->getType() !== 'actionGroup' &&
+                $parsedStep->getType() !== 'helper'
+            ) {
                 continue;
             }
-            if ($fileVal === '</actionGroup>') {
-                $argumentNameArray = [];
-                foreach ($argumentArray as $argument) {
-                    $subtringStart = strpos($argument, 'name=');
-                    $subtringStart += strlen('name=');
-                    $size = strpos($argument, ' ', $subtringStart) - $subtringStart;
-                    $argumentName = substr($argument, $subtringStart, $size);
-                    if (in_array($argumentName, $argumentNameArray)) {
-                        $err[] = sprintf(
-                            'Duplicate argument for actiongroup with name: %s in test file: %s',
-                            $argumentName,
-                            $fileName
-                        );
-                        throw new TestFrameworkException(implode(PHP_EOL, $err));
-                    }
-                    $argumentNameArray[] = $argumentName;
+            $attributesActions = $parsedStep->getCustomActionAttributes();
+            if (!key_exists('arguments', $attributesActions)) {
+                continue;
+            }
+            $arguments = $attributesActions['arguments'];
+            $stepKey = $parsedStep->getStepKey();
+
+            $fileToArr = explode("\n", $fileContents);
+            $actionGroupStart = false;
+            $argumentArray = [];
+            foreach ($fileToArr as $fileVal) {
+                $fileVal = trim($fileVal);
+                if (
+                    (str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) &&
+                    str_contains($fileVal, $stepKey)
+                ) {
+                    $actionGroupStart = true;
+                    continue;
                 }
-                $argumentArray = [];
-                $actionGroupStart = false;
-                continue;
-            }
-            if ($actionGroupStart) {
-                $argumentArray[] = $fileVal;
+                if (str_contains($fileVal, '</actionGroup') || str_contains($fileVal, '</helper')) {
+                    foreach ($arguments as $argumentName => $argumentValue) {
+                        $argumentCounter = 0;
+                        foreach ($argumentArray as $rawArgument) {
+                            if (str_contains($rawArgument, '<argument') && str_contains($rawArgument, $argumentName)){
+                                $argumentCounter++;
+                            }
+                            if ($argumentCounter > 1) {
+                                $err[] = sprintf(
+                                    'Duplicate argument(%s) for stepKey: %s in test file: %s',
+                                    $argumentName,
+                                    $stepKey,
+                                    $testObject->getFileName()
+                                );
+                                throw new TestFrameworkException(implode(PHP_EOL, $err));
+                            }
+                        }
+                        $actionGroupStart = false;
+                        $argumentArray = [];
+                    }
+                }
+                if ($actionGroupStart) {
+                    $argumentArray[] = $fileVal;
+                }
             }
         }
     }
