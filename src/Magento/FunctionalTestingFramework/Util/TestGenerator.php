@@ -255,7 +255,7 @@ class TestGenerator
      * @return void
      * @throws TestFrameworkException
      */
-    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, TestObject $testObject): void
+    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, $testObject): void
     {
         $parsedSteps = $testObject->getUnresolvedSteps();
         foreach ($parsedSteps as $parsedStep) {
