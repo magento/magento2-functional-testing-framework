@@ -286,7 +286,7 @@ class TestGenerator
                     foreach ($arguments as $argumentName => $argumentValue) {
                         $argumentCounter = 0;
                         foreach ($argumentArray as $rawArgument) {
-                            if (str_contains($rawArgument, '<argument') && str_contains($rawArgument, $argumentName)) {
+                            if (str_contains($rawArgument, '<argument') && str_contains($rawArgument, 'name="'.$argumentName.'"')) {
                                 $argumentCounter++;
                             }
                             if ($argumentCounter > 1) {
