@@ -257,6 +257,9 @@ class TestGenerator
      */
     public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, $testObject): void
     {
+        if (!($testObject instanceof TestObject)) {
+            return;
+        }
         $parsedSteps = $testObject->getUnresolvedSteps();
         foreach ($parsedSteps as $parsedStep) {
             if ($parsedStep->getType() !== 'actionGroup' && $parsedStep->getType() !== 'helper') {
