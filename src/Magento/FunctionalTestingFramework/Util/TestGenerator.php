@@ -250,7 +250,7 @@ class TestGenerator
     
     /**
      * Throw exception if duplicate arguments found
-     * @param string $fileContents
+     * @param string     $fileContents
      * @param TestObject $testObject
      * @return void
      * @throws TestFrameworkException
@@ -274,7 +274,8 @@ class TestGenerator
             $argumentArray = [];
             foreach ($fileToArr as $fileVal) {
                 $fileVal = trim($fileVal);
-                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) && str_contains($fileVal, $stepKey)) {
+                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) && 
+                    str_contains($fileVal, $stepKey)) {
                     $actionGroupStart = true;
                     continue;
                 }
