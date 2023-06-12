@@ -274,7 +274,7 @@ class TestGenerator
             $argumentArray = [];
             foreach ($fileToArr as $fileVal) {
                 $fileVal = trim($fileVal);
-                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) && 
+                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) &&
                     str_contains($fileVal, $stepKey)) {
                     $actionGroupStart = true;
                     continue;
