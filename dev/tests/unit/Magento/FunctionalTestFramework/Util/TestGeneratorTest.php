@@ -347,7 +347,7 @@ class TestGeneratorTest extends MagentoTestCase
         );
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $this->expectException(TestFrameworkException::class);
-        $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($fileContents);
+        $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($fileContents, $test1);
     }
 
     /**
