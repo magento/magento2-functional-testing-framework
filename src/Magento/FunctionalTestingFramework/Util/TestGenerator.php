@@ -250,7 +250,6 @@ class TestGenerator
     
     /**
      * Throw exception if duplicate arguments found
-     *
      * @param string $fileContents
      * @param TestObject $testObject
      * @return void
