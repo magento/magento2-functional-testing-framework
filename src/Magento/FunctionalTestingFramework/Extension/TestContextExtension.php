@@ -8,10 +8,13 @@ namespace Magento\FunctionalTestingFramework\Extension;
 
 use Codeception\Events;
 use Codeception\Step;
+use Codeception\Test\Test;
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Qameta\Allure\Allure;
+use Qameta\Allure\AllureLifecycleInterface;
 use Qameta\Allure\Model\StepResult;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionObject;
 use Magento\FunctionalTestingFramework\Test\Objects\ActionGroupObject;
@@ -158,6 +161,68 @@ class TestContextExtension extends BaseExtension
                 $this->getFormattedSteps($testResult);
             }
         );
+
+        $this->addTestsInSuites($lifecycle, $cest);
+    }
+
+    /**
+     * Function to add test under the suites.
+     *
+     * @param object $lifecycle
+     * @param object $cest
+     *
+     * @return void
+     */
+    private function addTestsInSuites($lifecycle, $cest): void
+    {
+        $groupName = null;
+        if ($this->options['groups'] !== null) {
+            $group =  $this->options['groups'][0];
+            $groupName = $this->sanitizeGroupName($group);
+        }
+        $lifecycle->updateTest(
+            function (TestResult $testResult) use ($groupName, $cest) {
+                $labels = $testResult->getLabels();
+                foreach ($labels as $label) {
+                    if ($groupName !== null && $label->getName() === "parentSuite") {
+                        $label->setValue(sprintf('%s\%s', $label->getValue(), $groupName));
+                    }
+                    if ($label->getName() === "package") {
+                        $className = $cest->getReportFields()['class'];
+                        $className = preg_replace('{_[0-9]*_G}', '', $className);
+                        $label->setValue($className);
+                    }
+                }
+            }
+        );
+    }
+
+    /**
+     * Function which santizes any group names changed by the framework for execution in order to consolidate reporting.
+     *
+     * @param string $group
+     * @return string
+     */
+    private function sanitizeGroupName($group): string
+    {
+        $suiteNames = array_keys(SuiteObjectHandler::getInstance()->getAllObjects());
+        $exactMatch = in_array($group, $suiteNames);
+
+        // if this is an existing suite name we dont' need to worry about changing it
+        if ($exactMatch || strpos($group, "_") === false) {
+            return $group;
+        }
+
+        // if we can't find this group in the generated suites we have to assume that the group was split for generation
+        $groupNameSplit = explode("_", $group);
+        array_pop($groupNameSplit);
+        array_pop($groupNameSplit);
+        $originalName = implode("_", $groupNameSplit);
+
+        // confirm our original name is one of the existing suite names otherwise just return the original group name
+        $originalName = in_array($originalName, $suiteNames) ? $originalName : $group;
+
+        return $originalName;
     }
 
     /**
@@ -267,15 +332,12 @@ class TestContextExtension extends BaseExtension
 
         AllureHelper::addAttachmentToCurrentStep($exception, $context . 'Exception');
 
-        //pop suppressed exceptions and attach to allure
-        $change = function () {
-            if ($this instanceof \PHPUnit\Framework\ExceptionWrapper) {
-                return $this->previous;
-            } else {
-                return $this->getPrevious();
-            }
-        };
-        $previousException = $change->call($exception);
+        $previousException = null;
+        if ($exception instanceof \PHPUnit\Framework\ExceptionWrapper) {
+            $previousException = $exception->getPreviousWrapped();
+        } elseif ($exception instanceof \Throwable) {
+            $previousException = $exception->getPrevious();
+        }
 
         if ($previousException !== null) {
             $this->attachExceptionToAllure($previousException, $testMethod);
