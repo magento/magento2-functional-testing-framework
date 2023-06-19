@@ -1,6 +1,15 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.3.2
+---------
+### Enhancements
+* 'bootstrap' argument added to indicate that no additional background processes will be run and the jobs complete in the foreground process.
+
+### Fixes
+* Fixed serialization of weakmap exception thrown for every internal exception after codeception upgrade.
+* Fixed suites no longer separated by MFTF Suite.
+
 4.3.1
 ---------
 ### Fixes
