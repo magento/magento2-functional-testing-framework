@@ -1,5 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+4.3.1
+---------
+### Fixes
+* Fixed cannot bind closure to scope of internal class Exception.
+* Fixed broken Mftf doctor command.
+
 4.3.0
 ---------
 ### Enhancements
