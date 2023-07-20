@@ -347,7 +347,7 @@ class TestGeneratorTest extends MagentoTestCase
         );
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $this->expectException(TestFrameworkException::class);
-        $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($fileContents, $test1);
+        $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($testGeneratorObject);
     }
 
     /**
@@ -394,7 +394,7 @@ class TestGeneratorTest extends MagentoTestCase
             'filename'
         );
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
-        $result = $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($fileContents, $test1);
+        $result = $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($testGeneratorObject);
         $this->assertEquals($result, "");
     }
 
