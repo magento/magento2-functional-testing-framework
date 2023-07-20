@@ -263,7 +263,7 @@ class TestGenerator
         if (!empty($fileName) && file_exists($fileName)) {
             return;
         }
-
+        $fileContents = file_get_contents($fileName);
         $parsedSteps = $testObject->getUnresolvedSteps();
         foreach ($parsedSteps as $parsedStep) {
             if ($parsedStep->getType() !== 'actionGroup' && $parsedStep->getType() !== 'helper') {
