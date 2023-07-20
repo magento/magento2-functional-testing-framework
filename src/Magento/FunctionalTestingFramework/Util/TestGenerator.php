@@ -255,11 +255,16 @@ class TestGenerator
      * @return void
      * @throws TestFrameworkException
      */
-    public function throwExceptionIfDuplicateArgumentsFound(string $fileContents, $testObject): void
+    public function throwExceptionIfDuplicateArgumentsFound($testObject): void
     {
         if (!($testObject instanceof TestObject)) {
             return;
         }
+        $fileName = $testObject->getFilename();
+        if (!empty($fileName) && file_exists($fileName)) {
+            return;
+        }
+
         $parsedSteps = $testObject->getUnresolvedSteps();
         foreach ($parsedSteps as $parsedStep) {
             if ($parsedStep->getType() !== 'actionGroup' && $parsedStep->getType() !== 'helper') {
