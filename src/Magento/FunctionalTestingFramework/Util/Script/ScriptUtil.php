@@ -67,6 +67,26 @@ class ScriptUtil
             return $message . ": No errors found.";
         }
 
+        $this->printTofile($errors, $filePath, $message);
+
+        $errorCount = count($errors);
+
+        return $message . ": Errors found across {$errorCount} file(s). Error details output to {$filePath}";
+    }
+
+    public function printWarningsToFile(array $warnings, string $filePath, string $message): string
+    {
+        if (empty($warnings)) {
+            return "" . ": No warnings found.";
+        }
+        $this->printTofile($warnings, $filePath, $message);
+        $errorCount = count($warnings);
+
+        return $message . ": Warnings found across {$errorCount} file(s). Warning details output to {$filePath}";
+    }
+
+    private function printTofile($contents, string $filePath, string $message)
+    {
         $dirname = dirname($filePath);
         if (!file_exists($dirname)) {
             mkdir($dirname, 0777, true);
@@ -74,15 +94,11 @@ class ScriptUtil
 
         $fileResource = fopen($filePath, 'w');
 
-        foreach ($errors as $test => $error) {
+        foreach ($contents as $test => $error) {
             fwrite($fileResource, $error[0] . PHP_EOL);
         }
 
         fclose($fileResource);
-        $errorCount = count($errors);
-        $output = $message . ": Errors found across {$errorCount} file(s). Error details output to {$filePath}";
-
-        return $output;
     }
 
     /**
