@@ -67,25 +67,38 @@ class ScriptUtil
             return $message . ": No errors found.";
         }
 
-        $this->printTofile($errors, $filePath, $message);
+        $this->printTofile($errors, $filePath);
 
         $errorCount = count($errors);
 
         return $message . ": Errors found across {$errorCount} file(s). Error details output to {$filePath}";
     }
 
+    /**
+     * Prints out given warnings to file, and returns summary result string
+     * @param array  $warnings
+     * @param string $filePath
+     * @param string $message
+     * @return string
+     */
     public function printWarningsToFile(array $warnings, string $filePath, string $message): string
     {
         if (empty($warnings)) {
-            return "" . ": No warnings found.";
+            return $message . ": No warnings found.";
         }
-        $this->printTofile($warnings, $filePath, $message);
+        $this->printTofile($warnings, $filePath);
         $errorCount = count($warnings);
 
         return $message . ": Warnings found across {$errorCount} file(s). Warning details output to {$filePath}";
     }
 
-    private function printTofile($contents, string $filePath, string $message)
+    /**
+     * Writes contents to filePath
+     * @param array  $contents
+     * @param string $filePath
+     * @return void
+     */
+    private function printTofile(array $contents, string $filePath)
     {
         $dirname = dirname($filePath);
         if (!file_exists($dirname)) {

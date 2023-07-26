@@ -115,11 +115,10 @@ class TestDependencyCheck implements StaticCheckInterface
 
         // Build array of entities found in allow-list files
         // Expect one entity per file line, no commas or anything else
-        foreach ($allModules as $modulePath)
-        {
+        foreach ($allModules as $modulePath) {
             if (file_exists($modulePath . DIRECTORY_SEPARATOR . self::ALLOW_LIST_FILENAME)) {
                 $contents = file_get_contents($modulePath . DIRECTORY_SEPARATOR . self::ALLOW_LIST_FILENAME);
-                foreach(explode("\n", $contents) as $entity) {
+                foreach (explode("\n", $contents) as $entity) {
                     $this->allowFailureEntities[$entity] = true;
                 }
             }
@@ -150,7 +149,6 @@ class TestDependencyCheck implements StaticCheckInterface
         $this->errors += $this->findErrorsInFileSet($actionGroupXmlFiles);
         $this->errors += $this->findErrorsInFileSet($dataXmlFiles);
 
-
         // hold on to the output and print any errors to a file
         $this->output = $this->scriptUtil->printErrorsToFile(
             $this->errors,
@@ -159,10 +157,10 @@ class TestDependencyCheck implements StaticCheckInterface
         );
         if (!empty($this->warnings)) {
             $this->output .= "\n " . $this->scriptUtil->printWarningsToFile(
-                    $this->warnings,
-                    StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::WARNING_LOG_FILENAME . '.txt',
-                    self::ERROR_LOG_MESSAGE
-                );
+                $this->warnings,
+                StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::WARNING_LOG_FILENAME . '.txt',
+                self::ERROR_LOG_MESSAGE
+            );
         }
     }
 
