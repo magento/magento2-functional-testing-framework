@@ -113,6 +113,8 @@ class TestDependencyCheck implements StaticCheckInterface
             );
         }
 
+        // Build array of entities found in allow-list files
+        // Expect one entity per file line, no commas or anything else
         foreach ($allModules as $modulePath)
         {
             if (file_exists($modulePath . DIRECTORY_SEPARATOR . self::ALLOW_LIST_FILENAME)) {
