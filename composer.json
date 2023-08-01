@@ -31,16 +31,16 @@
         "mustache/mustache": "~2.5",
         "nikic/php-parser": "^4.4",
         "php-webdriver/webdriver": "^1.14.0",
-        "spomky-labs/otphp": "^10.0",
+        "spomky-labs/otphp": "^10.0||^11.0",
         "symfony/console": "^4.4||^5.4",
-        "symfony/string": "^5.4",
-        "symfony/dotenv": "^5.3",
-        "symfony/finder": "^5.0",
-        "symfony/http-foundation": "^5.0",
-        "symfony/mime": "^5.0",
+        "symfony/string": "^5.4||^6.3",
+        "symfony/dotenv": "^5.3||^6.3",
+        "symfony/finder": "^5.0||^6.3",
+        "symfony/http-foundation": "^5.0||^6.3",
+        "symfony/mime": "^5.0||^6.3",
         "symfony/process": "^4.4||^5.4",
         "weew/helpers-array": "^1.3",
-        "doctrine/annotations": "^1.13"
+        "doctrine/annotations": "^2.0"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.3.1",
@@ -49,7 +49,7 @@
         "phpmd/phpmd": "^2.8.0",
         "phpunit/phpunit": "<=9.5.20",
         "sebastian/phpcpd": "~6.0.0",
-        "squizlabs/php_codesniffer": "~3.6.0"
+        "squizlabs/php_codesniffer": "~3.7.0"
     },
     "suggest": {
         "hoa/console": "Enables <pause /> action and interactive console functionality"
