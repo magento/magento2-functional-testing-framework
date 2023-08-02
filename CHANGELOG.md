@@ -1,6 +1,14 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.3.3
+---------
+### Enhancements
+* Enhance the details in the testgroupmembership.txt file.
+
+### Fixes
+* Fixed MFTF helpers & actionGroups allow duplicate argument names to be passed.
+
 4.3.2
 ---------
 ### Enhancements
