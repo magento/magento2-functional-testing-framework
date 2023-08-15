@@ -152,8 +152,13 @@ class {{suiteName}} extends \Codeception\GroupObject
             );
             $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
             foreach ($availableSessions as $session) {
-                $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost);
-                $remoteWebDriver->quit();
+                try {
+                    $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost);
+                    $remoteWebDriver->quit();
+                } catch (\Exception $exception) {
+                    print("Failed trying to quit WebDriver session. Exception message: " . $exception->getMessage() . " Test execution will continue." . PHP_EOL);
+                    // Session already closed so nothing to do
+                }
             }
         }
     }
