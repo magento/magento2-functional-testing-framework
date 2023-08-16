@@ -188,7 +188,6 @@ class functionalSuiteHooks extends \Codeception\GroupObject
             $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
             foreach ($availableSessions as $session) {
                 try {
-                    // Create an instance of ChromeOptions:
                     $chromeOptions = new ChromeOptions();
                     $capabilities = DesiredCapabilities::chrome();
                     $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,

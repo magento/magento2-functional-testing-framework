@@ -168,11 +168,11 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
             $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
             foreach ($availableSessions as $session) {
                 try {
-                   $chromeOptions = new ChromeOptions();
-                   $capabilities = DesiredCapabilities::chrome();
-                   $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,
-                   $webDriverConfig['connection_timeout'], $webDriverConfig['request_timeout'], true, $capabilities);
-                   $remoteWebDriver->quit();
+                    $chromeOptions = new ChromeOptions();
+                    $capabilities = DesiredCapabilities::chrome();
+                    $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,
+                    $webDriverConfig['connection_timeout'], $webDriverConfig['request_timeout'], true, $capabilities);
+                    $remoteWebDriver->quit();
                 } catch (\Exception $exception) {
                     print("Failed trying to quit WebDriver session. Exception message: " . $exception->getMessage() . " Test execution will continue." . PHP_EOL);
                     // Session already closed so nothing to do
