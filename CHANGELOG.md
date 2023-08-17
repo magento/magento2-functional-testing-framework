@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.3.4
+---------
+### Fixes
+* Resolving an issue when test is marked as failed due to Suite after section failure
+
 4.3.3
 ---------
 ### Enhancements

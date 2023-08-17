@@ -29,12 +29,6 @@ class {{suiteName}} extends \Codeception\GroupObject
     private $testCount = {{testCount}};
     private $preconditionFailure = null;
     private $currentTestRun = 0;
-    /**
-         * Remote Web Driver
-         *
-         * @var RemoteWebDriver
-    */
-    private $remoteWebDriver = null;
     {{#helpers}}
     /**
      * @var \Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer
@@ -160,12 +154,16 @@ class {{suiteName}} extends \Codeception\GroupObject
             );
             $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
             foreach ($availableSessions as $session) {
-                // Create an instance of ChromeOptions:
-                $chromeOptions = new ChromeOptions();
-                $capabilities = DesiredCapabilities::chrome();
-                $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,
-                $webDriverConfig['connection_timeout'], $webDriverConfig['request_timeout'], true, $capabilities);
-                $remoteWebDriver->quit();
+                try {
+                    $chromeOptions = new ChromeOptions();
+                    $capabilities = DesiredCapabilities::chrome();
+                    $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,
+                    $webDriverConfig['connection_timeout'], $webDriverConfig['request_timeout'], true, $capabilities);
+                    $remoteWebDriver->quit();
+                } catch (\Exception $exception) {
+                    print("Failed trying to quit WebDriver session. Exception message: " . $exception->getMessage() . " Test execution will continue." . PHP_EOL);
+                    // Session already closed so nothing to do
+                }
             }
         }
     }
