@@ -29,12 +29,6 @@ class {{suiteName}} extends \Codeception\GroupObject
     private $testCount = {{testCount}};
     private $preconditionFailure = null;
     private $currentTestRun = 0;
-    /**
-         * Remote Web Driver
-         *
-         * @var RemoteWebDriver
-    */
-    private $remoteWebDriver = null;
     {{#helpers}}
     /**
      * @var \Magento\FunctionalTestingFramework\Helper\HelperContainer $helperContainer
