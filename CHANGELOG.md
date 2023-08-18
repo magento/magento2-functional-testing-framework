@@ -12,6 +12,7 @@ Magento Functional Testing Framework Changelog
 * Bumped `symfony/finder` dependency to `^6.3`.
 * Bumped `symfony/http-foundation` dependency to `^6.3`.
 * Bumped `symfony/mime` dependency to `^6.3`.
+* Enhanced MFTF Modularity Test with "allow failure list".
 
 4.3.4
 ---------
