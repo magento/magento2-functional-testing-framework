@@ -337,7 +337,7 @@ class TestObject
      */
     public function getCustomData()
     {
-        return $this->customData;
+        return null;
     }
 
     /**
