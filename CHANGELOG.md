@@ -1,6 +1,10 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.4.1
+---------
+* Same as previous release
+
 4.4.0
 ---------
 ### Enhancements
