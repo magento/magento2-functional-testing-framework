@@ -38,6 +38,16 @@ class UnusedEntityCheck implements StaticCheckInterface
     private $scriptUtil;
 
     /**
+     * @var array
+     */
+    private $errors = [];
+
+    /**
+     * @var string
+     */
+    private $output = '';
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param  InputInterface $input
@@ -625,7 +635,7 @@ class UnusedEntityCheck implements StaticCheckInterface
     /**
      * Return output
      *
-     * @return array
+     * @return string
      */
     public function getOutput()
     {
