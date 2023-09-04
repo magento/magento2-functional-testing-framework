@@ -4,7 +4,7 @@ Magento Functional Testing Framework Changelog
 4.4.2
 ---------
 ### Fixes
-* Fixed deprecation warnings.
+* Fixed PHP 8.2 deprecation warnings.
 
 4.4.1
 ---------
