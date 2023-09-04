@@ -48,9 +48,9 @@ class Reader extends \Magento\FunctionalTestingFramework\Config\Reader\Filesyste
         $this->fileName = $fileName;
         $this->idAttributes = array_replace($this->idAttributes, $idAttributes);
         $this->schemaFile = $schemaLocator->getSchema();
-        $this->isValidated = $validationState->isValidated();
-        $this->perFileSchema = $schemaLocator->getPerFileSchema() &&
-        $this->isValidated ? $schemaLocator->getPerFileSchema() : null;
+        $isValidated = $validationState->isValidated();
+        $this->perFileSchema = $schemaLocator->getPerFileSchema() && $isValidated ?
+            $schemaLocator->getPerFileSchema() : null;
         $this->domDocumentClass = $domDocumentClass;
         $this->defaultScope = $defaultScope;
     }
