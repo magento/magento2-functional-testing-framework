@@ -1,9 +1,5 @@
 Magento Functional Testing Framework Changelog
 ================================================
-4.4.2
----------
-### Enhancements
-* Increase browser resolution to 1920x1080.
 
 4.4.1
 ---------
