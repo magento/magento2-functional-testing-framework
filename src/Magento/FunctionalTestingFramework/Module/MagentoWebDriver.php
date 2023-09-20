@@ -1033,6 +1033,10 @@ class MagentoWebDriver extends WebDriver
     {
         $cronGroups = array_filter($cronGroups);
 
+        if (isset($cronGroups[0]) && !isset($cronGroups[1])) {
+            $arguments .= ' --bootstrap=standaloneProcessStarted=1';
+        }
+
         $waitFor = $this->getCronWait($cronGroups);
 
         if ($waitFor) {

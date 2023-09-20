@@ -95,6 +95,7 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
+        $this->generateTestgroupmembership($testManifest);
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
@@ -139,6 +140,108 @@ class SuiteGenerator
         $this->generateSuiteFromTest($suiteName, []);
     }
 
+    /**
+     * Function which generate Testgroupmembership file.
+     *
+     * @param object $testManifest
+     * @return void
+     * @throws \Exception
+     */
+    public function generateTestgroupmembership($testManifest): void
+    {
+        $suites = $this->getSuitesDetails($testManifest);
+
+        // Path to groups folder
+        $baseDir = FilePathFormatter::format(TESTS_MODULE_PATH);
+        $path = $baseDir .'_generated/groups';
+
+        $allGroupsContent = $this->readAllGroupFiles($path);
+
+        // Output file path
+        $memberShipFilePath = $baseDir.'_generated/testgroupmembership.txt';
+        $testCaseNumber = 0;
+
+        if (!empty($allGroupsContent)) {
+            foreach ($allGroupsContent as $groupId => $groupInfo) {
+                foreach ($groupInfo as $testName) {
+                    // If file has -g then it is test suite
+                    if (str_contains($testName, '-g')) {
+                        $suitename = explode(" ", $testName);
+                        $suitename[1] = trim($suitename[1]);
+
+                        if (!empty($suites[$suitename[1]])) {
+                            foreach ($suites[$suitename[1]] as $key => $test) {
+                                $suiteTest = sprintf('%s:%s:%s:%s', $groupId, $key, $suitename[1], $test);
+                                file_put_contents($memberShipFilePath, $suiteTest . PHP_EOL, FILE_APPEND);
+                            }
+                        }
+                    } else {
+                        $defaultSuiteTest = sprintf('%s:%s:%s', $groupId, $testCaseNumber, $testName);
+                        file_put_contents($memberShipFilePath, $defaultSuiteTest, FILE_APPEND);
+                    }
+                    $testCaseNumber++;
+                }
+                $testCaseNumber = 0;
+            }
+        }
+    }
+
+    /**
+     * Function to format suites details
+     *
+     * @param object $testManifest
+     * @return array $suites
+     */
+    private function getSuitesDetails($testManifest): array
+    {
+        // Get suits and subsuites data array
+        $suites = $testManifest->getSuiteConfig();
+
+        // Add subsuites array[2nd dimension] to main array[1st dimension] to access it directly later
+        if (!empty($suites)) {
+            foreach ($suites as $subSuites) {
+                if (!empty($subSuites)) {
+                    foreach ($subSuites as $subSuiteName => $suiteTestNames) {
+                        if (!is_numeric($subSuiteName)) {
+                            $suites[$subSuiteName] = $suiteTestNames;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        return $suites;
+    }
+
+  /**
+   * Function to read all group* text files inside /groups folder
+   *
+   * @param object $path
+   * @return array $allGroupsContent
+   */
+    private function readAllGroupFiles($path): array
+    {
+        // Read all group files
+        if (is_dir($path)) {
+            $groupFiles = glob("$path/group*.txt");
+            if ($groupFiles === false) {
+                throw new RuntimeException("glob(): error with '$path'");
+            }
+            sort($groupFiles, SORT_NATURAL);
+        }
+
+        // Read each file in the reverse order and form an array with groupId as key
+        $groupNumber = 0;
+        $allGroupsContent = [];
+        while (!empty($groupFiles)) {
+            $group = array_pop($groupFiles);
+            $allGroupsContent[$groupNumber] = file($group);
+            $groupNumber++;
+        }
+        return $allGroupsContent;
+    }
+    
     /**
      * Function which takes a suite name and a set of test names. The function then generates all relevant supporting
      * files and classes for the suite. The function takes an optional argument for suites which are split by a parallel

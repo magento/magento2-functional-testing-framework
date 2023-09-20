@@ -61,6 +61,11 @@ class CreatedDataFromOutsideActionGroupCheck implements StaticCheckInterface
     private $scriptUtil;
 
     /**
+     * @var array
+     */
+    private $actionGroupXmlFile = [];
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input

@@ -1,5 +1,51 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+4.4.1
+---------
+* Same as previous release
+
+4.4.0
+---------
+### Enhancements
+* Bumped `doctrine/annotations` dependency to `^2.0`.
+* Bumped `squizlabs/php_codesniffer` dependency to `^3.7`.
+* Bumped `php-webdriver/webdriver` dependency to `^1.14`.
+* Bumped `symfony/string` dependency to `^6.3`.
+* Bumped `symfony/dotenv` dependency to `^6.3`.
+* Bumped `symfony/finder` dependency to `^6.3`.
+* Bumped `symfony/http-foundation` dependency to `^6.3`.
+* Bumped `symfony/mime` dependency to `^6.3`.
+* Enhanced MFTF Modularity Test with "allow failure list".
+
+4.3.4
+---------
+### Fixes
+* Resolving an issue when test is marked as failed due to Suite after section failure
+
+4.3.3
+---------
+### Enhancements
+* Enhance the details in the testgroupmembership.txt file.
+
+### Fixes
+* Fixed MFTF helpers & actionGroups allow duplicate argument names to be passed.
+
+4.3.2
+---------
+### Enhancements
+* 'bootstrap' argument added to indicate that no additional background processes will be run and the jobs complete in the foreground process.
+
+### Fixes
+* Fixed serialization of weakmap exception thrown for every internal exception after codeception upgrade.
+* Fixed suites no longer separated by MFTF Suite.
+
+4.3.1
+---------
+### Fixes
+* Fixed cannot bind closure to scope of internal class Exception.
+* Fixed broken Mftf doctor command.
+
 4.3.0
 ---------
 ### Enhancements

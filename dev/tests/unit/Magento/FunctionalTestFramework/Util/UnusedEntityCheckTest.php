@@ -42,11 +42,11 @@ class UnusedEntityCheckTest extends MagentoTestCase
 
     public function testUnusedActiongroupFilesReturnedWhenActionXmlFilesAreNotEmpty()
     {
-        $this->scriptUtil = new ScriptUtil();
+        $scriptUtil = new ScriptUtil();
         $unusedEntityCheck = new UnusedEntityCheck();
         $domDocument = new \DOMDocument();
-        $modulePaths = $this->scriptUtil->getAllModulePaths();
-        $actionGroupXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "ActionGroup");
+        $modulePaths = $scriptUtil->getAllModulePaths();
+        $actionGroupXmlFiles = $scriptUtil->getModuleXmlFilesByScope($modulePaths, "ActionGroup");
         $actionGroupFiles = ['DeprecationCheckActionGroup' =>
             '/verification/DeprecationCheckModule/ActionGroup/DeprecationCheckActionGroup.xml',
             'ActionGroupWithMultiplePausesActionGroup'=>
@@ -82,9 +82,9 @@ class UnusedEntityCheckTest extends MagentoTestCase
     public function testUnusedSectionFilesReturnedWhenSectionXmlFilesAreNotEmpty()
     {
         $unusedEntityCheck = new UnusedEntityCheck();
-        $this->scriptUtil = new ScriptUtil();
-        $modulePaths = $this->scriptUtil->getAllModulePaths();
-        $sectionXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Section");
+        $scriptUtil = new ScriptUtil();
+        $modulePaths = $scriptUtil->getAllModulePaths();
+        $sectionXmlFiles = $scriptUtil->getModuleXmlFilesByScope($modulePaths, "Section");
 
         $domDocument = new \DOMDocument();
         $section = [
@@ -119,9 +119,9 @@ class UnusedEntityCheckTest extends MagentoTestCase
     {
         $unusedEntityCheck = new UnusedEntityCheck();
         $domDocument = new \DOMDocument();
-        $this->scriptUtil = new ScriptUtil();
-        $modulePaths = $this->scriptUtil->getAllModulePaths();
-        $pageXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Page");
+        $scriptUtil = new ScriptUtil();
+        $modulePaths = $scriptUtil->getAllModulePaths();
+        $pageXmlFiles = $scriptUtil->getModuleXmlFilesByScope($modulePaths, "Page");
         $page = [
             'DeprecationCheckPage' => '/verification/DeprecationCheckModule/Page/DeprecationCheckPage.xml',
             'DeprecatedPage' => '/verification/TestModule/Page/DeprecatedPage.xml',
@@ -164,9 +164,9 @@ class UnusedEntityCheckTest extends MagentoTestCase
     {
         $unusedEntityCheck = new UnusedEntityCheck();
         $domDocument = new \DOMDocument();
-        $this->scriptUtil = new ScriptUtil();
-        $modulePaths = $this->scriptUtil->getAllModulePaths();
-        $dataXmlFiles = $this->scriptUtil->getModuleXmlFilesByScope($modulePaths, "Data");
+        $scriptUtil = new ScriptUtil();
+        $modulePaths = $scriptUtil->getAllModulePaths();
+        $dataXmlFiles = $scriptUtil->getModuleXmlFilesByScope($modulePaths, "Data");
         $data = [
             "simpleData" =>
             [
