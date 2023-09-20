@@ -3,6 +3,7 @@
 namespace Group;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Module\MagentoWebDriver;
@@ -11,6 +12,7 @@ use Magento\FunctionalTestingFramework\Module\MagentoActionProxies;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
+use Facebook\WebDriver\Chrome\ChromeOptions;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -159,8 +161,16 @@ class functionalSuiteWithComments extends \Codeception\GroupObject
             );
             $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
             foreach ($availableSessions as $session) {
-                $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost);
-                $remoteWebDriver->quit();
+                try {
+                    $chromeOptions = new ChromeOptions();
+                    $capabilities = DesiredCapabilities::chrome();
+                    $remoteWebDriver = RemoteWebDriver::createBySessionID($session['id'], $wdHost,
+                    $webDriverConfig['connection_timeout'], $webDriverConfig['request_timeout'], true, $capabilities);
+                    $remoteWebDriver->quit();
+                } catch (\Exception $exception) {
+                    print("Failed trying to quit WebDriver session. Exception message: " . $exception->getMessage() . " Test execution will continue." . PHP_EOL);
+                    // Session already closed so nothing to do
+                }
             }
         }
     }

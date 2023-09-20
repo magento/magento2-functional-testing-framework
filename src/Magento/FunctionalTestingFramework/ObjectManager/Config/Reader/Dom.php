@@ -65,6 +65,6 @@ class Dom extends \Magento\FunctionalTestingFramework\Config\Reader\Filesystem
      */
     protected function _createConfigMerger($mergerClass, $initialContents)
     {
-        return new $mergerClass($initialContents, $this->_idAttributes, self::TYPE_ATTRIBUTE, $this->_perFileSchema);
+        return new $mergerClass($initialContents, $this->idAttributes, self::TYPE_ATTRIBUTE, $this->perFileSchema);
     }
 }
