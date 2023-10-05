@@ -24,7 +24,7 @@ modules:
             backend_name: "%MAGENTO_BACKEND_NAME%"
             browser: 'chrome'
             restart: true
-            window_size: 1280x1024
+            window_size: 1920x1080
             username: "%MAGENTO_ADMIN_USERNAME%"
             password: "%MAGENTO_ADMIN_PASSWORD%"
             pageload_timeout: "%WAIT_TIMEOUT%"
@@ -38,4 +38,4 @@ modules:
             capabilities:
                 unhandledPromptBehavior: "ignore"
                 chromeOptions:
-                    args: ["--no-sandbox", "--window-size=1280,1024", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough", "--disable-dev-shm-usage", "--ignore-certificate-errors", "--disable-component-update", "--disable-features=OptimizationHints","--disable-background-networking","--disable-domain-reliability","--disable-breakpad"]
+                    args: ["--no-sandbox", "--window-size=1920,1080", "--disable-extensions", "--enable-automation", "--disable-gpu", "--enable-Passthrough", "--disable-dev-shm-usage", "--ignore-certificate-errors", "--disable-component-update", "--disable-features=OptimizationHints","--disable-background-networking","--disable-domain-reliability","--disable-breakpad"]
