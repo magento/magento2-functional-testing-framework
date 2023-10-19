@@ -6,14 +6,14 @@
     },
     "contacts": {
         "team": {
-            "name": "Magento Quality Engineering / Pangolin",
+            "name": "Adobe Commerce Quality Engineering / Pangolin",
             "DL": "GRP-Pangolin",
             "slackChannel": "mftf"
         }
     },
     "ticketTracker": {
         "functionalJiraQueue": {
-            "projectKey": "MQE",
+            "projectKey": "ACQE",
             "component": "Framework - MFTF"
         },
         "securityJiraQueue": {
