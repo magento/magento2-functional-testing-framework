@@ -64,12 +64,8 @@ class RunTestGroupCommand extends BaseGenerateCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $xml = ($input->getOption('xml'))
-            ? '--xml'
-            : "";
-        $noAnsi = ($input->getOption('no-ansi'))
-            ? '--no-ansi'
-            : "";
+        $xml = ($input->getOption('xml')) ? '--xml' : "";
+        $noAnsi = ($input->getOption('no-ansi')) ? '--no-ansi' : "";
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
@@ -140,11 +136,7 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 $process->setTimeout(0);
                 $returnCodes[] = $process->run(
                     function ($type, $buffer) use ($output, $noAnsi) {
-                        if ($noAnsi != "") {
-                            $pattern = "/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/";
-                            // Use preg_replace to remove ANSI escape codes from the  string
-                            $buffer = preg_replace($pattern, '', $buffer);
-                        }
+                        $buffer = $this->disableAnsiColorCodes($buffer, $noAnsi);
                         $output->write($buffer);
                     }
                 );
@@ -166,5 +158,20 @@ class RunTestGroupCommand extends BaseGenerateCommand
             $exitCode = 0;
         }
         return max($exitCode, $generationErrorCode);
+    }
+
+    /**
+     * @param string $buffer
+     * @param string $noAnsi
+     * @return string
+     */
+    private function disableAnsiColorCodes($buffer, $noAnsi) :string
+    {
+        if (empty($noAnsi)) {
+            return $buffer;
+        }
+        $pattern = "/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/";
+        // Use preg_replace to remove ANSI escape codes from the  string
+        return preg_replace($pattern, '', $buffer);
     }
 }
