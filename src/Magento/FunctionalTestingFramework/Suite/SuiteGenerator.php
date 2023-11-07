@@ -95,7 +95,6 @@ class SuiteGenerator
      */
     public function generateAllSuites($testManifest)
     {
-        $this->generateTestgroupmembership($testManifest);
         $suites = $testManifest->getSuiteConfig();
 
         foreach ($suites as $suiteName => $suiteContent) {
