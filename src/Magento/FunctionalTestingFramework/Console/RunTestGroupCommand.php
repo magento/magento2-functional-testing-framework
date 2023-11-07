@@ -67,6 +67,9 @@ class RunTestGroupCommand extends BaseGenerateCommand
         $xml = ($input->getOption('xml'))
             ? '--xml'
             : "";
+        $noAnsi = ($input->getOption('no-ansi'))
+            ? '--no-ansi'
+            : "";
         $skipGeneration = $input->getOption('skip-generate');
         $force = $input->getOption('force');
         $groups = $input->getArgument('groups');
@@ -136,7 +139,12 @@ class RunTestGroupCommand extends BaseGenerateCommand
                 $process->setIdleTimeout(600);
                 $process->setTimeout(0);
                 $returnCodes[] = $process->run(
-                    function ($type, $buffer) use ($output) {
+                    function ($type, $buffer) use ($output, $noAnsi) {
+                        if ($noAnsi != "") {
+                            $pattern = "/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/";
+                            // Use preg_replace to remove ANSI escape codes from the  string
+                            $buffer = preg_replace($pattern, '', $buffer);
+                        }
                         $output->write($buffer);
                     }
                 );
