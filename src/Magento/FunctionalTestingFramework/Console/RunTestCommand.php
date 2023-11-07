@@ -276,7 +276,7 @@ class RunTestCommand extends BaseGenerateCommand
         $process->setTimeout(0);
 
         return $process->run(function ($type, $buffer) use ($output, $noAnsi) {
-            if ( $noAnsi != "") {
+            if ($noAnsi != "") {
                 $pattern = "/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/";
                 // Use preg_replace to remove ANSI escape codes from the  string
                 $buffer = preg_replace($pattern, '', $buffer);
