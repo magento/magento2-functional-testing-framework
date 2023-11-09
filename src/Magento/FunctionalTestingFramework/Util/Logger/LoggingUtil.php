@@ -39,7 +39,6 @@ class LoggingUtil
         return self::$instance;
     }
 
-
     /**
      * Avoids instantiation of LoggingUtil by new.
      * @return void
