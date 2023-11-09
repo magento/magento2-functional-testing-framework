@@ -76,7 +76,7 @@ class ResilientGenerationTest extends MftfTestCase
 
         $property = new \ReflectionProperty(SuiteGenerator::class, "instance");
         $property->setAccessible(true);
-        $property->setValue(null,null);
+        $property->setValue(null, null);
 
         $property = new \ReflectionProperty(DirSetupUtil::class, "DIR_CONTEXT");
         $property->setAccessible(true);
