@@ -43,7 +43,7 @@
         "doctrine/annotations": "^2.0"
     },
     "require-dev": {
-        "brainmaestro/composer-git-hooks": "^2.3.1",
+        "brainmaestro/composer-git-hooks": "^2.8.5",
         "codacy/coverage": "^1.4",
         "php-coveralls/php-coveralls": "^1.0||^2.2",
         "phpmd/phpmd": "^2.8.0",
