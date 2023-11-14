@@ -31,7 +31,7 @@
         "mustache/mustache": "~2.5",
         "nikic/php-parser": "^4.4",
         "php-webdriver/webdriver": "^1.14.0",
-        "spomky-labs/otphp": "^10.0",
+        "spomky-labs/otphp": "^10.0||^11.0",
         "symfony/console": "^5.4||^6.0",
         "symfony/string": "^5.4||^6.0",
         "symfony/dotenv": "^5.3||^6.0",
