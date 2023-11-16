@@ -231,9 +231,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 $testManifest->createTestGroups($configNumber);
             }
 
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+
             $testManifest->generate();
 
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+            SuiteGenerator::getInstance()->generateTestgroupmembership($testManifest);
         } catch (\Exception $e) {
             if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
                 GenerationErrorHandler::getInstance()->printErrorSummary();
