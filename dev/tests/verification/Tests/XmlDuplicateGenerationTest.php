@@ -9,7 +9,7 @@ use Magento\FunctionalTestingFramework\Test\Handlers\ActionGroupObjectHandler;
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use tests\util\MftfTestCase;
 
-class XmlDuplicateGerationTest extends MftfTestCase
+class XmlDuplicateGenerationTest extends MftfTestCase
 {
     const XML_DUPLICATE_TEST = 'XmlDuplicateTest';
     const XML_DUPLICATE_ACTIONGROUP = 'xmlDuplicateActionGroup';
@@ -39,4 +39,5 @@ class XmlDuplicateGerationTest extends MftfTestCase
         TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_MERGE_TEST);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
+
 }
