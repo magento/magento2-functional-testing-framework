@@ -24,6 +24,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 class SecretCredentialDataTestCest
 {
     /**
+    
      * @Features({"AdminNotification"})
      * @param AcceptanceTester $I
      * @return void
