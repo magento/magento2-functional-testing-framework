@@ -21,7 +21,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
-class SecretCredentialDataTest
+class SecretCredentialDataTestCest
 {
     /**
      * @Features({"AdminNotification"})
@@ -61,14 +61,14 @@ class SecretCredentialDataTest
 
         $I->fillField("#username", "Hardcoded"); // stepKey: fillFieldUsingHardCodedData1
         $I->fillSecretField("#username", $I->getSecret("carriers_dhl_id_eu"));
-            // stepKey: fillFieldUsingSecretCredData1
+        // stepKey: fillFieldUsingSecretCredData1
         $magentoCliUsingHardcodedData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled 0");
-            // stepKey: magentoCliUsingHardcodedData1
+        // stepKey: magentoCliUsingHardcodedData1
         $I->comment($magentoCliUsingHardcodedData1);
 
         $magentoCliUsingSecretCredData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled " .
             $I->getSecret("payment_authorizenet_login"));
-            // stepKey: magentoCliUsingSecretCredData1
+        // stepKey: magentoCliUsingSecretCredData1
         $I->comment($magentoCliUsingSecretCredData1);
     }
 }
