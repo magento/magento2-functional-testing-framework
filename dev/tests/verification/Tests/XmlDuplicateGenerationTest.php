@@ -39,5 +39,4 @@ class XmlDuplicateGenerationTest extends MftfTestCase
         TestObjectHandler::getInstance()->getObject(self::XML_DUPLICATE_MERGE_TEST);
         $this->addToAssertionCount(1); // No exception thrown thus far, can assert dupes didn't cause an error.
     }
-
 }
