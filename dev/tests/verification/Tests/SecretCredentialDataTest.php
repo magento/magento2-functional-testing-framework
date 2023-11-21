@@ -4,7 +4,7 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\AcceptanceTest\_default\Backend;
+namespace tests\verification\Tests;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
@@ -21,7 +21,7 @@ use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
-class SecretCredentialDataTestCest
+class SecretCredentialDataTest
 {
     /**
      * @Features({"AdminNotification"})
