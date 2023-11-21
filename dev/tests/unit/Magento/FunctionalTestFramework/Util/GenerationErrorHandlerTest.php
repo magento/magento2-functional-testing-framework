@@ -254,7 +254,7 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      *
      * @return array
      */
-    public function getAllErrorMessagesDataProvider(): array
+    public static function getAllErrorMessagesDataProvider(): array
     {
         return [
             ['', []],
