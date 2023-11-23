@@ -169,8 +169,6 @@ class TestDependencyUtil
         }
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
-            $filTerString = [];
-            $contents = "";
             $flag = false;
             foreach ($filterList['excludeGroup'] as $filterListData) {
                 $contents = file_get_contents($testDependencyArray[0]["file_path"]);
