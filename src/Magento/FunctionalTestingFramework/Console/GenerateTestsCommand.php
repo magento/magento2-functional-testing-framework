@@ -252,7 +252,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // check test dependencies log command
         if (!empty($log)) {
             if ($log === "testEntityJson") {
-                $this->getTestEntityJson($tests);
+                $this->getTestEntityJson($tests, $filterList ??[]);
                 $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
                 if (isset($_ENV['MAGENTO_BP'])) {
                     $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
@@ -395,9 +395,9 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException|FastFailException
      */
-    private function getTestEntityJson(array $tests = [])
+    private function getTestEntityJson(array $tests = [], $filterList)
     {
-        $testDependencies = $this->getTestDependencies($tests);
+        $testDependencies = $this->getTestDependencies($filterList, $tests);
         $this->array2Json($testDependencies);
     }
 
@@ -409,7 +409,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException
      */
-    public function getTestDependencies(array $tests = []): array
+    public function getTestDependencies($filterList, array $tests = []): array
     {
         $this->scriptUtil = new ScriptUtil();
         $this->testDependencyUtil = new TestDependencyUtil();
@@ -442,7 +442,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         list($testDependencies, $extendedTestMapping) = $this->findTestDependentModule($testXmlFiles);
-        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $extendedTestMapping);
+        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $filterList, $extendedTestMapping);
     }
 
     /**
