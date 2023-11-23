@@ -252,7 +252,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // check test dependencies log command
         if (!empty($log)) {
             if ($log === "testEntityJson") {
-                $this->getTestEntityJson($tests, $filterList ??[]);
+                $this->getTestEntityJson($filterList ??[], $tests);
                 $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
                 if (isset($_ENV['MAGENTO_BP'])) {
                     $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
@@ -395,7 +395,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException|FastFailException
      */
-    private function getTestEntityJson(array $tests = [], $filterList)
+    private function getTestEntityJson($filterList, array $tests = [])
     {
         $testDependencies = $this->getTestDependencies($filterList, $tests);
         $this->array2Json($testDependencies);
@@ -403,13 +403,14 @@ class GenerateTestsCommand extends BaseGenerateCommand
 
     /**
      * Function responsible for getting test dependencies in array
+     * @param array $filterList
      * @param array $tests
      * @return array
      * @throws FastFailException
      * @throws TestFrameworkException
      * @throws XmlException
      */
-    public function getTestDependencies($filterList, array $tests = []): array
+    public function getTestDependencies(array $filterList, array $tests = []): array
     {
         $this->scriptUtil = new ScriptUtil();
         $this->testDependencyUtil = new TestDependencyUtil();
@@ -442,7 +443,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         list($testDependencies, $extendedTestMapping) = $this->findTestDependentModule($testXmlFiles);
-        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $filterList, $extendedTestMapping);
+        return $this->testDependencyUtil->mergeDependenciesForExtendingTests(
+            $testDependencies,
+            $filterList,
+            $extendedTestMapping
+        );
     }
 
     /**

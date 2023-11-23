@@ -144,11 +144,15 @@ class TestDependencyUtil
     /**
      * Return array of merge test modules and file path with same test name.
      * @param array $testDependencies
+     * @param array $filterList
      * @param array $extendedTestMapping
      * @return array
      */
-    public function mergeDependenciesForExtendingTests(array $testDependencies, $filterList,  array $extendedTestMapping = []): array
-    {
+    public function mergeDependenciesForExtendingTests(
+        array $testDependencies,
+        array $filterList,
+        array $extendedTestMapping = []
+    ): array {
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
             foreach ($extendedTestMapping as $value) {
