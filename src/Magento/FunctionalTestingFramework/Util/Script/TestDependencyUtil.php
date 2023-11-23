@@ -147,7 +147,7 @@ class TestDependencyUtil
      * @param array $extendedTestMapping
      * @return array
      */
-    public function mergeDependenciesForExtendingTests(array $testDependencies, array $extendedTestMapping = []): array
+    public function mergeDependenciesForExtendingTests(array $testDependencies, $filterList,  array $extendedTestMapping = []): array
     {
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
@@ -165,19 +165,30 @@ class TestDependencyUtil
         }
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
-            $testDependencies[] = [
-                "file_path" => array_column($testDependencyArray, 'file_path'),
-                "full_name" => $testDependencyArray[0]["full_name"],
-                "test_name" => $testDependencyArray[0]["test_name"],
-                "test_modules" =>array_values(
-                    array_unique(
-                        call_user_func_array(
-                            'array_merge',
-                            array_column($testDependencyArray, 'test_modules')
+                $filTerString = [];
+                $contents = "";
+                $flag = false;
+                foreach ($filterList['excludeGroup'] as $filterListData) {
+                    $contents = file_get_contents($testDependencyArray[0]["file_path"]);
+                    if (str_contains($contents, $filterListData)) {
+                        $flag = true;
+                    }
+                }
+            if ($flag == false) {
+                $testDependencies[] = [
+                    "file_path" => array_column($testDependencyArray, 'file_path'),
+                    "full_name" => $testDependencyArray[0]["full_name"],
+                    "test_name" => $testDependencyArray[0]["test_name"],
+                    "test_modules" => array_values(
+                        array_unique(
+                            call_user_func_array(
+                                'array_merge',
+                                array_column($testDependencyArray, 'test_modules')
+                            )
                         )
-                    )
-                ),
-            ];
+                    ),
+                ];
+            }
         }
         return $testDependencies;
     }
