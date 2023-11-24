@@ -169,15 +169,21 @@ class TestDependencyUtil
         }
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
-            $flag = false;
-            foreach ($filterList['excludeGroup'] as $filterListData) {
-                $contents = file_get_contents($testDependencyArray[0]["file_path"]);
-                if (str_contains($contents, $filterListData)) {
-                    $flag = true;
-                }
-            }
-            if ($flag == false) {
+            $domDocument = new \DOMDocument();
+            $domDocument->load($testDependencyArray[0]["file_path"]);
+            $filterResult = $this->getAttributesFromDOMNodeList(
+                $domDocument->getElementsByTagName("group"),
+                ["type" => "value"]
+            );
+            $excludeGroup = $filterList['excludeGroup']??[];
+            if (count(array_intersect(
+                call_user_func_array('array_merge', $filterResult),
+                $excludeGroup
+            ))==0
+            ) {
                 $testDependencies[] = [
+                    'filter'=> call_user_func_array('array_merge', $filterResult),
+                    'excludeGroup'=>$filterList['excludeGroup'],
                     "file_path" => array_column($testDependencyArray, 'file_path'),
                     "full_name" => $testDependencyArray[0]["full_name"],
                     "test_name" => $testDependencyArray[0]["test_name"],
@@ -193,5 +199,29 @@ class TestDependencyUtil
             }
         }
         return $testDependencies;
+    }
+
+    /**
+     * Return attribute value for each node in DOMNodeList as an array
+     *
+     * @param  DOMNodeList $nodes
+     * @param  string      $attributeName
+     * @return array
+     */
+    private function getAttributesFromDOMNodeList($nodes, $attributeName)
+    {
+        $attributes = [];
+        foreach ($nodes as $node) {
+            if (is_string($attributeName)) {
+                $attributeValues = $node->getAttribute($attributeName);
+            } else {
+                $attributeValues = [$node->getAttribute(key($attributeName)) =>
+                    $node->getAttribute($attributeName[key($attributeName)])];
+            }
+            if (!empty($attributeValues)) {
+                $attributes[] = array_values($attributeValues);
+            }
+        }
+        return array_values($attributes);
     }
 }
