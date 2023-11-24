@@ -182,8 +182,6 @@ class TestDependencyUtil
             ))==0
             ) {
                 $testDependencies[] = [
-                    'filter'=> call_user_func_array('array_merge', $filterResult),
-                    'excludeGroup'=>$filterList['excludeGroup'],
                     "file_path" => array_column($testDependencyArray, 'file_path'),
                     "full_name" => $testDependencyArray[0]["full_name"],
                     "test_name" => $testDependencyArray[0]["test_name"],
