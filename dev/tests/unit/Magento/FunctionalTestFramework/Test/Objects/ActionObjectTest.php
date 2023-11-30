@@ -262,7 +262,7 @@ class ActionObjectTest extends MagentoTestCase
         // bypass the private constructor
         $property = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -301,7 +301,7 @@ class ActionObjectTest extends MagentoTestCase
         // bypass the private constructor
         $property = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
 
         // Call the method under test
         $actionObject->resolveReferences();
@@ -478,7 +478,7 @@ class ActionObjectTest extends MagentoTestCase
         // bypass the private constructor
         $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
     }
 
     /**
@@ -498,7 +498,7 @@ class ActionObjectTest extends MagentoTestCase
         // bypass the private constructor
         $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($dataInstance);
+        $property->setValue(null, $dataInstance);
     }
 
     /**

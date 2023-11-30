@@ -534,7 +534,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
     {
         $dataObjectHandler = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
         $dataObjectHandler->setAccessible(true);
-        $dataObjectHandler->setValue(null);
+        $dataObjectHandler->setValue(null, null);
 
         $dataProfileSchemaParser = $this->createMock(DataProfileSchemaParser::class);
         $dataProfileSchemaParser
@@ -574,7 +574,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($objectManagerMockInstance);
+        $objectManagerProperty->setValue(null, $objectManagerMockInstance);
     }
 
     /**
@@ -589,11 +589,11 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         // Clear out Singleton between tests
         $persistedObjectHandlerProperty = new ReflectionProperty(PersistedObjectHandler::class, "INSTANCE");
         $persistedObjectHandlerProperty->setAccessible(true);
-        $persistedObjectHandlerProperty->setValue(null);
+        $persistedObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue(null);
+        $objectManagerProperty->setValue(null, null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
     }
