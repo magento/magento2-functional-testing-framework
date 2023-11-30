@@ -212,8 +212,8 @@ class TestDependencyUtil
             $filterData->filter($testObjects);
         }
         foreach ($testObjects as $testObjects) {
-            $testNames[] = $testObjects->getName();
+            $testValues[] = $testObjects->getName();
         }
-        return $testNames;
+        return $testValues;
     }
 }
