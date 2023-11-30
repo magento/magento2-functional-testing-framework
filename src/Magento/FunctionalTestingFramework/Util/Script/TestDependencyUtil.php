@@ -5,6 +5,10 @@
  */
 namespace Magento\FunctionalTestingFramework\Util\Script;
 
+use  Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Filter\FilterList;
+
+
 /**
  * TestDependencyUtil class that contains helper functions for static and upgrade scripts
  *
@@ -153,6 +157,7 @@ class TestDependencyUtil
         array $filterList,
         array $extendedTestMapping = []
     ): array {
+        $filteredTestNames = (count($filterList)>0)?$this->getFilteredValues($filterList):[];
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
             foreach ($extendedTestMapping as $value) {
@@ -169,18 +174,7 @@ class TestDependencyUtil
         }
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
-            $domDocument = new \DOMDocument();
-            $domDocument->load($testDependencyArray[0]["file_path"]);
-            $filterResult = $this->getAttributesFromDOMNodeList(
-                $domDocument->getElementsByTagName("group"),
-                ["type" => "value"]
-            );
-            $excludeGroup = $filterList['excludeGroup']??[];
-            if (count(array_intersect(
-                call_user_func_array('array_merge', $filterResult),
-                $excludeGroup
-            ))==0
-            ) {
+            if((empty($filteredTestNames)) || (in_array($testDependencyArray[0]["test_name"],$filteredTestNames))) {
                 $testDependencies[] = [
                     "file_path" => array_column($testDependencyArray, 'file_path'),
                     "full_name" => $testDependencyArray[0]["full_name"],
@@ -200,26 +194,18 @@ class TestDependencyUtil
     }
 
     /**
-     * Return attribute value for each node in DOMNodeList as an array
-     *
-     * @param  DOMNodeList $nodes
-     * @param  string      $attributeName
      * @return array
      */
-    private function getAttributesFromDOMNodeList($nodes, $attributeName)
-    {
-        $attributes = [];
-        foreach ($nodes as $node) {
-            if (is_string($attributeName)) {
-                $attributeValues = $node->getAttribute($attributeName);
-            } else {
-                $attributeValues = [$node->getAttribute(key($attributeName)) =>
-                    $node->getAttribute($attributeName[key($attributeName)])];
-            }
-            if (!empty($attributeValues)) {
-                $attributes[] = array_values($attributeValues);
-            }
+    public function getFilteredValues(array $filterList) {
+
+        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+        $fileList = new FilterList($filterList);
+        foreach( $fileList->getFilters() as $filterData) {
+            $filterData->filter($testObjects);
         }
-        return array_values($attributes);
+        foreach ($testObjects as $testObjects) {
+            $testNames[] = $testObjects->getName();
+        }
+        return $testNames;
     }
 }
