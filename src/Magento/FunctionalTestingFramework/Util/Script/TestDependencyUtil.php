@@ -201,6 +201,7 @@ class TestDependencyUtil
     }
 
     /**
+     * @param array $filterList
      * @return array
      */
     public function getFilteredValues(array $filterList)
