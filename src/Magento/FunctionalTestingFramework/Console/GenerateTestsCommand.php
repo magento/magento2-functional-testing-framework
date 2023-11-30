@@ -395,7 +395,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException|FastFailException
      */
-    private function getTestEntityJson($filterList, array $tests = [])
+    private function getTestEntityJson(array $filterList, array $tests = [])
     {
         $testDependencies = $this->getTestDependencies($filterList, $tests);
         $this->array2Json($testDependencies);
