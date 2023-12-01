@@ -175,13 +175,8 @@ class TestDependencyUtil
         foreach ($temp_array as $testDependencyArray) {
             if ((
                 empty($filteredTestNames)) ||
-                (
-                    in_array(
-                        $testDependencyArray[0]["test_name"],
-                        $filteredTestNames
-                    )
-                )
-                ) {
+                isset($filteredTestNames[$testDependencyArray[0]["test_name"]])
+            ) {
                 $testDependencies[] = [
                     "file_path" => array_column($testDependencyArray, 'file_path'),
                     "full_name" => $testDependencyArray[0]["full_name"],
@@ -211,9 +206,9 @@ class TestDependencyUtil
         foreach ($fileList->getFilters() as $filterData) {
             $filterData->filter($testObjects);
         }
-        foreach ($testObjects as $testObjects) {
-            $testValues[] = $testObjects->getName();
-        }
+        $testValues = array_map(function($testObjects) {
+            return $testObjects->getName();
+        }, $testObjects);
         return $testValues;
     }
 }
