@@ -156,7 +156,7 @@ class TestDependencyUtil
         array $filterList,
         array $extendedTestMapping = []
     ): array {
-        $filteredTestNames = (count($filterList)>0)?$this->getFilteredValues($filterList):[];
+        $filteredTestNames = (count($filterList)>0)?$this->getFilteredTestNames($filterList):[];
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
             foreach ($extendedTestMapping as $value) {
@@ -199,7 +199,7 @@ class TestDependencyUtil
      * @param array $filterList
      * @return array
      */
-    public function getFilteredValues(array $filterList)
+    public function getFilteredTestNames(array $filterList)
     {
         $testObjects = TestObjectHandler::getInstance()->getAllObjects();
         $fileList = new FilterList($filterList);
