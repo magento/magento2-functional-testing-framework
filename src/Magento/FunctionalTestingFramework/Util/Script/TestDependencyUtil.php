@@ -174,7 +174,7 @@ class TestDependencyUtil
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
             if ((
-                empty($filteredTestNames)) ||
+                empty($filterList)) ||
                 isset($filteredTestNames[$testDependencyArray[0]["test_name"]])
             ) {
                 $testDependencies[] = [
