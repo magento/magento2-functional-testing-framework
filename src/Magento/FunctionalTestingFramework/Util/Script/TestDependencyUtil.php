@@ -206,7 +206,7 @@ class TestDependencyUtil
         foreach ($fileList->getFilters() as $filterData) {
             $filterData->filter($testObjects);
         }
-        $testValues = array_map(function($testObjects) {
+        $testValues = array_map(function ($testObjects) {
             return $testObjects->getName();
         }, $testObjects);
         return $testValues;
