@@ -157,7 +157,7 @@ class TestDependencyUtil
         array $filterList,
         array $extendedTestMapping = []
     ): array {
-        $filteredTestNames = (count($filterList)>0)?$this->getFilteredTestNames($filterList):[];
+        $filteredTestNames = (count($filterList)>0)?$this->getFilteredTestNames():[];
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
             foreach ($extendedTestMapping as $value) {
@@ -196,18 +196,18 @@ class TestDependencyUtil
         return $testDependencies;
     }
 
-       /**
-     * @param array $filterList
+    /**
+     * Return array of merge test modules and file path with same test name.
      * @return array
      */
-    public function getFilteredValues(array $filterList)
+    public function getFilteredTestNames()
     {
         $testObjects = TestObjectHandler::getInstance()->getAllObjects();
         $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
         foreach ($filters as $filter) {
             $filter->filter($testObjects);
         }
-        $testValues = array_map(function($testObjects) {
+        $testValues = array_map(function ($testObjects) {
             return $testObjects->getName();
         }, $testObjects);
         return $testValues;
