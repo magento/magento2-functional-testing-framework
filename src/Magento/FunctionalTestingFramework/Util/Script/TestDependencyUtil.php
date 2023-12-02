@@ -7,6 +7,7 @@ namespace Magento\FunctionalTestingFramework\Util\Script;
 
 use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 
 /**
  * TestDependencyUtil class that contains helper functions for static and upgrade scripts
@@ -195,18 +196,18 @@ class TestDependencyUtil
         return $testDependencies;
     }
 
-    /**
+       /**
      * @param array $filterList
      * @return array
      */
-    public function getFilteredTestNames(array $filterList)
+    public function getFilteredValues(array $filterList)
     {
         $testObjects = TestObjectHandler::getInstance()->getAllObjects();
-        $fileList = new FilterList($filterList);
-        foreach ($fileList->getFilters() as $filterData) {
-            $filterData->filter($testObjects);
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        foreach ($filters as $filter) {
+            $filter->filter($testObjects);
         }
-        $testValues = array_map(function ($testObjects) {
+        $testValues = array_map(function($testObjects) {
             return $testObjects->getName();
         }, $testObjects);
         return $testValues;
