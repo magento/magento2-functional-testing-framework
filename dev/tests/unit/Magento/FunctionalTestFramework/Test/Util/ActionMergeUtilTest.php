@@ -107,7 +107,7 @@ class ActionMergeUtilTest extends MagentoTestCase
         $dataFieldName = 'myfield';
         $dataFieldValue = 'myValue';
         $userInputKey = "userInput";
-        $userInputValue = "{{" . "${dataObjectName}.${dataFieldName}}}";
+        $userInputValue = "{{" . "{$dataObjectName}.{$dataFieldName}}}";
         $actionName = "myAction";
         $actionType = "myCustomType";
 
