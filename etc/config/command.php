@@ -14,7 +14,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
     $tokenPassedIn = urldecode($_POST['token'] ?? '');
     $command = urldecode($_POST['command'] ?? '');
     $arguments = urldecode($_POST['arguments'] ?? '');
-    $timeout = floatval(urldecode($_POST['timeout'] ?? 60));
+    $timeout = floatval(urldecode($_POST['timeout'] ?? getenv('MAGENTO_CLI_WAIT_TIMEOUT')));
 
     // Token returned will be null if the token we passed in is invalid
     $tokenFromMagento = $tokenModel->loadByToken($tokenPassedIn)->getToken();
