@@ -1,5 +1,14 @@
 Magento Functional Testing Framework Changelog
 ================================================
+4.5.0
+---------
+### Enhancements
+* Increase browser resolution to 1920x1080.
+* Add metadata to ACQE Repositories.
+* Add magento admin password to credentials example.
+
+### Fixes
+* Fixed test failure while running any test suite with an argument.
 
 4.4.2
 ---------
