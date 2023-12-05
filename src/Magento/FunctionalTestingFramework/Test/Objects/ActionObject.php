@@ -72,6 +72,7 @@ class ActionObject
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PARAMETER = '/\(.+\)/';
     const ACTION_ATTRIBUTE_VARIABLE_REGEX_PATTERN = '/({{[\w]+\.[\w\[\]]+}})|({{[\w]+\.[\w]+\((?(?!}}).)+\)}})/';
     const STRING_PARAMETER_REGEX = "/'[^']+'/";
+    const DEFAULT_COMMAND_WAIT_TIMEOUT = 60;
     const ACTION_ATTRIBUTE_USERINPUT = 'userInput';
     const ACTION_TYPE_COMMENT = 'comment';
     const ACTION_TYPE_HELPER = 'helper';
@@ -190,7 +191,8 @@ class ActionObject
      */
     public static function getDefaultMagentoCLIWaitTimeout()
     {
-        return getenv('MAGENTO_CLI_WAIT_TIMEOUT');
+        $timeout = getenv('MAGENTO_CLI_WAIT_TIMEOUT');
+        return $timeout !== false ? $timeout : self::DEFAULT_COMMAND_WAIT_TIMEOUT;
     }
 
     /**
