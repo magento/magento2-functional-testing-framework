@@ -36,7 +36,6 @@ class LoggingUtil
         if (self::$instance === null) {
             self::$instance = new LoggingUtil();
         }
-
         return self::$instance;
     }
 

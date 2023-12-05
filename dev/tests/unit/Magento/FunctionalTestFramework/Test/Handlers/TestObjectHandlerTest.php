@@ -391,7 +391,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
 
         $mockDataParser = $this->createMock(TestDataParser::class);
         $mockDataParser
@@ -440,7 +440,7 @@ class TestObjectHandlerTest extends MagentoTestCase
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($objectManagerMockInstance);
+        $objectManagerProperty->setValue(null, $objectManagerMockInstance);
 
         $resolver = ModuleResolver::getInstance();
         $property = new ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');
