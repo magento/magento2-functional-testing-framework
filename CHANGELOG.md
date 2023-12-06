@@ -1,5 +1,17 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+4.6.0
+---------
+### Enhancements
+* Added Supported for PHP 8.3 and enabled PR checks for PHP 8.3
+* Bumped `symfony/console` dependency to `^6.0`
+* Bumped `laminas/laminas-diactoros` dependency to `^3.0`
+
+### Fixes
+* Fixed 8.3 deprecation errors.
+* Fixed The build with PTS enabled doesn't apply filter issue.
+
 4.5.0
 ---------
 ### Enhancements
