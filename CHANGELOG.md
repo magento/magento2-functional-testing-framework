@@ -4,7 +4,7 @@ Magento Functional Testing Framework Changelog
 4.6.0
 ---------
 ### Enhancements
-* Added Supported for PHP 8.3 and enabled PR checks for PHP 8.3.
+* Added Support for PHP 8.3 and enabled PR checks for PHP 8.3.
 * Bumped `symfony/console` dependency to `^6.0`.
 * Bumped `laminas/laminas-diactoros` dependency to `^3.0`.
 * Added no-ansi option to bin/mftf command.
