@@ -192,7 +192,7 @@ class ActionObject
     public static function getDefaultMagentoCLIWaitTimeout()
     {
         $timeout = getenv('MAGENTO_CLI_WAIT_TIMEOUT');
-        return $timeout !== false ? $timeout : self::DEFAULT_COMMAND_WAIT_TIMEOUT;
+        return !empty($timeout) ? $timeout : self::DEFAULT_COMMAND_WAIT_TIMEOUT;
     }
 
     /**
