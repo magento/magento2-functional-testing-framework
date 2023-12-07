@@ -553,7 +553,7 @@ class OperationDataArrayResolverTest extends MagentoTestCase
 
         $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
     }
 
     /**
@@ -578,6 +578,6 @@ class OperationDataArrayResolverTest extends MagentoTestCase
 
         $property = new ReflectionProperty(OperationDefinitionObjectHandler::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
     }
 }

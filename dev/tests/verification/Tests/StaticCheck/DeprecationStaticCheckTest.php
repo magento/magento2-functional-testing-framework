@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
 use ReflectionProperty;
 use Symfony\Component\Console\Input\InputInterface;
 use tests\util\MftfStaticTestCase;
+use ReflectionClass;
 
 class DeprecationStaticCheckTest extends MftfStaticTestCase
 {
@@ -33,10 +34,8 @@ class DeprecationStaticCheckTest extends MftfStaticTestCase
         $staticCheck = new DeprecatedEntityUsageCheck();
 
         $input = $this->mockInputInterface(self::TEST_MODULE_PATH);
-        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
-        $property->setAccessible(true);
-        $property->setValue(self::STATIC_RESULTS_DIR);
-
+        $reflectionClass = new ReflectionClass(StaticChecksList::class);
+        $reflectionClass->setStaticPropertyValue('errorFilesPath', self::STATIC_RESULTS_DIR);
         /** @var InputInterface $input */
         $staticCheck->execute($input);
 
@@ -55,8 +54,7 @@ class DeprecationStaticCheckTest extends MftfStaticTestCase
      */
     public function tearDown(): void
     {
-        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
-        $property->setAccessible(true);
-        $property->setValue(null);
+        $reflectionClass = new ReflectionClass(StaticChecksList::class);
+        $reflectionClass->setStaticPropertyValue('errorFilesPath', null);
     }
 }

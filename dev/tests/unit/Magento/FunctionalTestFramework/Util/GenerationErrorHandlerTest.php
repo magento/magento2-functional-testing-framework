@@ -340,6 +340,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     {
         $property = new ReflectionProperty(GenerationErrorHandler::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
     }
 }
