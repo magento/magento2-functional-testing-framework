@@ -1,0 +1,59 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/BasicFunctionalTest/MagentoCliTest.xml<br>")
+ */
+class MagentoCliTestCest
+{
+	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	  * @param AcceptanceTester $I
+	  * @throws \Exception
+	  */
+	public function _after(AcceptanceTester $I)
+	{
+		if ($this->isSuccess) {
+			unlink(__FILE__);
+		}
+	}
+
+	/**
+	 * @Features({"TestModule"})
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function MagentoCliTest(AcceptanceTester $I)
+	{
+		$magentoCli1 = $I->magentoCLI("maintenance:enable", 45, "\"stuffHere\""); // stepKey: magentoCli1
+		$I->comment($magentoCli1);
+		$magentoCli2 = $I->magentoCLI("maintenance:enable", 120, "\"stuffHere\""); // stepKey: magentoCli2
+		$I->comment($magentoCli2);
+		$magentoCli3 = $I->magentoCLISecret("config:set somePath " . $I->getSecret("someKey"), 45); // stepKey: magentoCli3
+		$I->comment($magentoCli3); // stepKey: magentoCli3
+		$magentoCli4 = $I->magentoCLISecret("config:set somePath " . $I->getSecret("someKey"), 120); // stepKey: magentoCli4
+		$I->comment($magentoCli4); // stepKey: magentoCli4
+	}
+
+	public function _passed(AcceptanceTester $I)
+	{
+		// Test passed successfully.
+		$this->isSuccess = true;
+	}
+}

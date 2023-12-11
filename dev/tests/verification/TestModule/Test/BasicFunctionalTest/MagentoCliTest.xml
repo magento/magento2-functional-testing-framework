@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="MagentoCliTest">
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" stepKey="magentoCli1"/>
+        <magentoCLI command="maintenance:enable" arguments="&quot;stuffHere&quot;" timeout="120" stepKey="magentoCli2"/>
+        <magentoCLI command="config:set somePath {{_CREDS.someKey}}" stepKey="magentoCli3"/>
+        <magentoCLI command="config:set somePath {{_CREDS.someKey}}" timeout="120" stepKey="magentoCli4"/>
+    </test>
+</tests>
