@@ -842,7 +842,7 @@ class TestGenerator
             }
 
             if (in_array($actionObject->getType(), ActionObject::COMMAND_ACTION_ATTRIBUTES)) {
-                $time = $time ?? ActionObject::DEFAULT_COMMAND_WAIT_TIMEOUT;
+                $time = $time ?? ActionObject::getDefaultMagentoCLIWaitTimeout();
             } else {
                 $time = $time ?? ActionObject::getDefaultWaitTimeout();
             }
