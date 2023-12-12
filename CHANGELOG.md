@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.6.1
+---------
+### Enhancements
+* Supported setting custom timeout value for `magentoCLI` command via an environment variable `MAGENTO_CLI_WAIT_TIMEOUT`.
+
 4.6.0
 ---------
 ### Enhancements
