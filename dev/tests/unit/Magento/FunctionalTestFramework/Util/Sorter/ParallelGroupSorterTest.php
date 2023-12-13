@@ -496,7 +496,7 @@ class ParallelGroupSorterTest extends MagentoTestCase
     {
         $instanceProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue(null);
+        $instanceProperty->setValue(null, null);
     }
 
     /**

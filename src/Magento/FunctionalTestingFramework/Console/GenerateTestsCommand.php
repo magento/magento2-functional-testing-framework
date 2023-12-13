@@ -231,9 +231,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
                 $testManifest->createTestGroups($configNumber);
             }
 
+            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+
             $testManifest->generate();
 
-            SuiteGenerator::getInstance()->generateAllSuites($testManifest);
+            SuiteGenerator::getInstance()->generateTestgroupmembership($testManifest);
         } catch (\Exception $e) {
             if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
                 GenerationErrorHandler::getInstance()->printErrorSummary();
@@ -250,7 +252,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // check test dependencies log command
         if (!empty($log)) {
             if ($log === "testEntityJson") {
-                $this->getTestEntityJson($tests);
+                $this->getTestEntityJson($filterList ??[], $tests);
                 $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
                 if (isset($_ENV['MAGENTO_BP'])) {
                     $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
@@ -393,21 +395,22 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException|FastFailException
      */
-    private function getTestEntityJson(array $tests = [])
+    private function getTestEntityJson(array $filterList, array $tests = [])
     {
-        $testDependencies = $this->getTestDependencies($tests);
+        $testDependencies = $this->getTestDependencies($filterList, $tests);
         $this->array2Json($testDependencies);
     }
 
     /**
      * Function responsible for getting test dependencies in array
+     * @param array $filterList
      * @param array $tests
      * @return array
      * @throws FastFailException
      * @throws TestFrameworkException
      * @throws XmlException
      */
-    public function getTestDependencies(array $tests = []): array
+    public function getTestDependencies(array $filterList, array $tests = []): array
     {
         $this->scriptUtil = new ScriptUtil();
         $this->testDependencyUtil = new TestDependencyUtil();
@@ -440,7 +443,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         list($testDependencies, $extendedTestMapping) = $this->findTestDependentModule($testXmlFiles);
-        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $extendedTestMapping);
+        return $this->testDependencyUtil->mergeDependenciesForExtendingTests(
+            $testDependencies,
+            $filterList,
+            $extendedTestMapping
+        );
     }
 
     /**

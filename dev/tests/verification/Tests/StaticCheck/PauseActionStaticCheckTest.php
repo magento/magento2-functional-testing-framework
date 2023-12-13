@@ -8,9 +8,11 @@ namespace tests\verification\Tests;
 use Exception;
 use Magento\FunctionalTestingFramework\StaticCheck\PauseActionUsageCheck;
 use Magento\FunctionalTestingFramework\StaticCheck\StaticChecksList;
+use Magento\FunctionalTestingFramework\Suite\Handlers\SuiteObjectHandler;
 use ReflectionProperty;
 use Symfony\Component\Console\Input\InputInterface;
 use tests\util\MftfStaticTestCase;
+use ReflectionClass;
 
 class PauseActionStaticCheckTest extends MftfStaticTestCase
 {
@@ -34,10 +36,8 @@ class PauseActionStaticCheckTest extends MftfStaticTestCase
         $staticCheck = new PauseActionUsageCheck();
 
         $input = $this->mockInputInterface(self::TEST_MODULE_PATH);
-
-        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
-        $property->setAccessible(true);
-        $property->setValue(self::STATIC_RESULTS_DIR);
+        $reflectionClass = new ReflectionClass(StaticChecksList::class);
+        $reflectionClass->setStaticPropertyValue('errorFilesPath', self::STATIC_RESULTS_DIR);
 
         /** @var InputInterface $input */
         $staticCheck->execute($input);
@@ -57,8 +57,7 @@ class PauseActionStaticCheckTest extends MftfStaticTestCase
      */
     public static function tearDownAfterClass(): void
     {
-        $property = new ReflectionProperty(StaticChecksList::class, 'errorFilesPath');
-        $property->setAccessible(true);
-        $property->setValue(null);
+        $reflectionClass = new ReflectionClass(StaticChecksList::class);
+        $reflectionClass->setStaticPropertyValue('errorFilesPath', null);
     }
 }

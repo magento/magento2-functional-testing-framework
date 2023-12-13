@@ -1,6 +1,39 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.6.1
+---------
+### Enhancements
+* Supported setting custom timeout value for `magentoCLI` command via an environment variable `MAGENTO_CLI_WAIT_TIMEOUT`.
+
+4.6.0
+---------
+### Enhancements
+* Added Support for PHP 8.3 and enabled PR checks for PHP 8.3.
+* Bumped `symfony/console` dependency to `^6.0`.
+* Bumped `laminas/laminas-diactoros` dependency to `^3.0`.
+* Added no-ansi option to bin/mftf command.
+
+### Fixes
+* Fixed 8.3 deprecation errors.
+* Fixed The build with PTS enabled doesn't apply filter issue.
+* Change MFTF command <magentoCLI> to maintain Magento CLI output.
+
+4.5.0
+---------
+### Enhancements
+* Increase browser resolution to 1920x1080.
+* Add metadata to ACQE Repositories.
+* Add magento admin password to credentials example.
+
+### Fixes
+* Fixed test failure while running any test suite with an argument.
+
+4.4.2
+---------
+### Fixes
+* Fixed PHP 8.2 deprecation warnings.
+
 4.4.1
 ---------
 * Same as previous release

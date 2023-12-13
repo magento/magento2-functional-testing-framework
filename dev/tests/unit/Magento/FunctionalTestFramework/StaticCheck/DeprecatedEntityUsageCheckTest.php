@@ -297,7 +297,7 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
             'INSTANCE'
         );
         $operationDefinitionObjectHandlerProperty->setAccessible(true);
-        $operationDefinitionObjectHandlerProperty->setValue(null);
+        $operationDefinitionObjectHandlerProperty->setValue(null, null);
 
         $mockOperationParser = $this->createMock(OperationDefinitionParser::class);
         $mockOperationParser
@@ -328,7 +328,7 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue($mockObjectManagerInstance);
+        $property->setValue(null, $mockObjectManagerInstance);
     }
 
     /**
@@ -343,11 +343,11 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
             'INSTANCE'
         );
         $operationDefinitionObjectHandlerProperty->setAccessible(true);
-        $operationDefinitionObjectHandlerProperty->setValue(null);
+        $operationDefinitionObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue(null);
+        $objectManagerProperty->setValue(null, null);
     }
 
     /**
