@@ -530,9 +530,9 @@ class MagentoWebDriver extends WebDriver
     /**
      * Takes given $command and executes it against bin/magento or custom exposed entrypoint. Returns command output.
      *
-     * @param string  $command
-     * @param integer $timeout
-     * @param string  $arguments
+     * @param string       $command
+     * @param integer|null $timeout
+     * @param string|null  $arguments
      * @return string
      *
      * @throws TestFrameworkException
@@ -846,9 +846,9 @@ class MagentoWebDriver extends WebDriver
      * Function used to create data that contains sensitive credentials in a <createData> <field> override.
      * The data is decrypted immediately prior to data creation to avoid exposure in console or log.
      *
-     * @param string $command
-     * @param null   $timeout
-     * @param null   $arguments
+     * @param string       $command
+     * @param integer|null $timeout
+     * @param string|null  $arguments
      * @throws TestFrameworkException
      * @return string
      */

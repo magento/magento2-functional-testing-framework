@@ -5,6 +5,10 @@
  */
 namespace Magento\FunctionalTestingFramework\Util\Script;
 
+use Magento\FunctionalTestingFramework\Test\Handlers\TestObjectHandler;
+use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+
 /**
  * TestDependencyUtil class that contains helper functions for static and upgrade scripts
  *
@@ -144,11 +148,16 @@ class TestDependencyUtil
     /**
      * Return array of merge test modules and file path with same test name.
      * @param array $testDependencies
+     * @param array $filterList
      * @param array $extendedTestMapping
      * @return array
      */
-    public function mergeDependenciesForExtendingTests(array $testDependencies, array $extendedTestMapping = []): array
-    {
+    public function mergeDependenciesForExtendingTests(
+        array $testDependencies,
+        array $filterList,
+        array $extendedTestMapping = []
+    ): array {
+        $filteredTestNames = (count($filterList)>0)?$this->getFilteredTestNames():[];
         $temp_array = array_reverse(array_column($testDependencies, "test_name"), true);
         if (!empty($extendedTestMapping)) {
             foreach ($extendedTestMapping as $value) {
@@ -165,20 +174,42 @@ class TestDependencyUtil
         }
         $testDependencies = [];
         foreach ($temp_array as $testDependencyArray) {
-            $testDependencies[] = [
-                "file_path" => array_column($testDependencyArray, 'file_path'),
-                "full_name" => $testDependencyArray[0]["full_name"],
-                "test_name" => $testDependencyArray[0]["test_name"],
-                "test_modules" =>array_values(
-                    array_unique(
-                        call_user_func_array(
-                            'array_merge',
-                            array_column($testDependencyArray, 'test_modules')
+            if ((
+                empty($filterList)) ||
+                isset($filteredTestNames[$testDependencyArray[0]["test_name"]])
+            ) {
+                $testDependencies[] = [
+                    "file_path" => array_column($testDependencyArray, 'file_path'),
+                    "full_name" => $testDependencyArray[0]["full_name"],
+                    "test_name" => $testDependencyArray[0]["test_name"],
+                    "test_modules" => array_values(
+                        array_unique(
+                            call_user_func_array(
+                                'array_merge',
+                                array_column($testDependencyArray, 'test_modules')
+                            )
                         )
-                    )
-                ),
-            ];
+                    ),
+                ];
+            }
         }
         return $testDependencies;
+    }
+
+    /**
+     * Return array of merge test modules and file path with same test name.
+     * @return array
+     */
+    public function getFilteredTestNames()
+    {
+        $testObjects = TestObjectHandler::getInstance()->getAllObjects();
+        $filters = MftfApplicationConfig::getConfig()->getFilterList()->getFilters();
+        foreach ($filters as $filter) {
+            $filter->filter($testObjects);
+        }
+        $testValues = array_map(function ($testObjects) {
+            return $testObjects->getName();
+        }, $testObjects);
+        return $testValues;
     }
 }
