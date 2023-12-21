@@ -456,7 +456,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      * @return void
      * @throws Exception
      */
-    public function testGetFilteredTestNamesWhenFilterisAppliedForExcludeGroup()
+    public function testGetFilteredTestNamesWhenExcludeGroupFilterIsApplied()
     {
         $fileList = new FilterList(['excludeGroup' => ['test']]);
         $toh = TestObjectHandler::getInstance()->getAllObjects();
@@ -472,7 +472,7 @@ class TestObjectHandlerTest extends MagentoTestCase
      * @return void
      * @throws Exception
      */
-    public function testGetFilteredTestNamesWhenFilterisAppliedForIncludeGroup()
+    public function testGetFilteredTestNamesWhenIncludeGroupFilterIsApplied()
     {
         $fileList = new FilterList(['includeGroup' => ['test']]);
         $toh = TestObjectHandler::getInstance()->getAllObjects();
