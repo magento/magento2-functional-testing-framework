@@ -491,12 +491,13 @@ class TestObjectHandlerTest extends MagentoTestCase
      */
     public function testGetFilteredTestNamesWhenNoFilterIsApplied()
     {
-        $fileList = new FilterList(['includeGroup' => ['test']]);
+        $fileList = new FilterList();
         $toh = TestObjectHandler::getInstance()->getAllObjects();
         $testDependencyUtil = new TestDependencyUtil();
         $result = $testDependencyUtil->getFilteredTestNames($toh, $fileList->getFilters());
         $this->assertIsArray($result);
         $this->assertEquals(count($result), 1);
+        //returns all test Names
         $this->assertEquals($result['testTest'], 'testTest');
     }
 }
