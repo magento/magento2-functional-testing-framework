@@ -24,6 +24,8 @@ use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestDataArrayBuilder;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Filter\FilterList;
+use Magento\FunctionalTestingFramework\Util\Script\TestDependencyUtil;
 
 class TestObjectHandlerTest extends MagentoTestCase
 {
@@ -446,5 +448,56 @@ class TestObjectHandlerTest extends MagentoTestCase
         $property = new ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');
         $property->setAccessible(true);
         $property->setValue($resolver, $paths);
+    }
+
+    /**
+     * Basic test for exclude group Filter
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetFilteredTestNamesWhenExcludeGroupFilterIsApplied()
+    {
+        $fileList = new FilterList(['excludeGroup' => ['test']]);
+        $toh = TestObjectHandler::getInstance()->getAllObjects();
+        $testDependencyUtil = new TestDependencyUtil();
+        $result = $testDependencyUtil->getFilteredTestNames($toh, $fileList->getFilters());
+        $this->assertIsArray($result);
+        $this->assertEquals(count($result), 0);
+    }
+
+    /**
+     * Basic test for include group Filter
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetFilteredTestNamesWhenIncludeGroupFilterIsApplied()
+    {
+        $fileList = new FilterList(['includeGroup' => ['test']]);
+        $toh = TestObjectHandler::getInstance()->getAllObjects();
+        $testDependencyUtil = new TestDependencyUtil();
+        $result = $testDependencyUtil->getFilteredTestNames($toh, $fileList->getFilters());
+        $this->assertIsArray($result);
+        $this->assertEquals(count($result), 1);
+        $this->assertEquals($result['testTest'], 'testTest');
+    }
+
+    /**
+     * Basic test when no filter applied
+     *
+     * @return void
+     * @throws Exception
+     */
+    public function testGetFilteredTestNamesWhenNoFilterIsApplied()
+    {
+        $fileList = new FilterList();
+        $toh = TestObjectHandler::getInstance()->getAllObjects();
+        $testDependencyUtil = new TestDependencyUtil();
+        $result = $testDependencyUtil->getFilteredTestNames($toh, $fileList->getFilters());
+        $this->assertIsArray($result);
+        $this->assertEquals(count($result), 1);
+        //returns all test Names
+        $this->assertEquals($result['testTest'], 'testTest');
     }
 }
