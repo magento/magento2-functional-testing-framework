@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.7.0
+---------
+### Enhancements
+*  Bumped all symfony dependencies to `^6.0
+*  Unit Test for PTS enabled doesn't apply filter fix
+
 4.6.1
 ---------
 ### Enhancements
