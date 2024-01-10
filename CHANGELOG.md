@@ -1,7 +1,7 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
-4.6.2
+4.7.0
 ---------
 ### Enhancements
 *  Bumped all symfony dependencies to `^6.0
