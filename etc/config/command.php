@@ -98,7 +98,7 @@ function escapeCommand($command)
  */
 function validateCommand($magentoBinary, $command)
 {
-    exec($magentoBinary . ' list', $commandList);
+    exec($magentoBinary . ' list --no-ansi', $commandList);
     // Trim list of commands after first whitespace
     $commandList = array_map("trimAfterWhitespace", $commandList);
     return in_array(trimAfterWhitespace($command), $commandList);

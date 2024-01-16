@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.3.5
+---------
+### Fixes
+* Fixed ANSI Color codes getting appended to output of bin/magento command.
+
 4.3.4
 ---------
 ### Fixes
