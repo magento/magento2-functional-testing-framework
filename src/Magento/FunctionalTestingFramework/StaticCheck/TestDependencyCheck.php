@@ -179,7 +179,7 @@ class TestDependencyCheck implements StaticCheckInterface
      */
     public function getOutput(): string
     {
-        return $this->output;
+        return $this->output??"";
     }
 
     /**
