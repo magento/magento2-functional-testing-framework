@@ -50,10 +50,10 @@
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.8.5",
-        "codacy/coverage": "^1.4",
         "php-coveralls/php-coveralls": "^1.0||^2.2",
         "phpmd/phpmd": "^2.8.0",
         "phpunit/phpunit": "^10.0",
+
         "squizlabs/php_codesniffer": "~3.7.0"
     },
     "suggest": {
