@@ -4,20 +4,9 @@
  * See COPYING.txt for license details.
  */
 
-namespace tests\verification\Tests;
+namespace Magento\FunctionalTestingFramework\Tests\Verification;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
-use \Codeception\Util\Locator;
-use Yandex\Allure\Adapter\Annotation\Features;
-use Yandex\Allure\Adapter\Annotation\Stories;
-use Yandex\Allure\Adapter\Annotation\Title;
-use Yandex\Allure\Adapter\Annotation\Description;
-use Yandex\Allure\Adapter\Annotation\Parameter;
-use Yandex\Allure\Adapter\Annotation\Severity;
-use Yandex\Allure\Adapter\Model\SeverityLevel;
-use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
