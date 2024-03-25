@@ -129,7 +129,7 @@ class ClassFileNamingCheck implements StaticCheckInterface
      * @param  $fileType string
      * @return array
      */
-    private function findErrorsInFileSet($files, $fileType)
+    public function findErrorsInFileSet($files, $fileType)
     {
         $errors = [];
         /** @var SplFileInfo $filePath */
