@@ -125,7 +125,9 @@ class ClassFileNamingCheck implements StaticCheckInterface
 
     /**
      * Returns Violations if found
-     * @return string
+     * @param  $files SplFileInfo
+     * @param  $fileType string
+     * @return array
      */
     private function findErrorsInFileSet($files, $fileType)
     {
