@@ -163,7 +163,7 @@ class ClassFileNamingCheck implements StaticCheckInterface
      * @param  string      $attributeName
      * @return array
      */
-    private function getAttributesFromDOMNodeList($nodes, $attributeName)
+    public function getAttributesFromDOMNodeList($nodes, $attributeName)
     {
         $attributes = [];
         foreach ($nodes as $node) {
