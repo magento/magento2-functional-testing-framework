@@ -16,7 +16,7 @@ class ClassFileNameCheckTest extends MagentoTestCase
     /**
      * This Test checks if the file name is renamed to match the class name if  mismatch found in class and file name
      */
-    public function testClasAndFileMismatchStaticCheckWhenViolationsFound()
+    public function testClassAndFileMismatchStaticCheckWhenViolationsFound()
     {
         $scriptUtil = new ScriptUtil();
         $modulePaths = $scriptUtil->getAllModulePaths();
@@ -30,7 +30,7 @@ class ClassFileNameCheckTest extends MagentoTestCase
      * This Test checks if the file name is renamed to match the class name if
      * mismatch not found in class and file name
      */
-    public function testClasAndFileMismatchStaticCheckWhenViolationsNotFound()
+    public function testClassAndFileMismatchStaticCheckWhenViolationsNotFound()
     {
         $scriptUtil = new ScriptUtil();
         $modulePaths = $scriptUtil->getAllModulePaths();
