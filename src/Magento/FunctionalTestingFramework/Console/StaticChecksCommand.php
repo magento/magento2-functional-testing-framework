@@ -117,7 +117,7 @@ class StaticChecksCommand extends Command
 
             $staticOutput = $staticCheck->getOutput();
             LoggingUtil::getInstance()->getLogger(get_class($staticCheck))->info($staticOutput);
-            $this->ioStyle->text($staticOutput);
+            $this->ioStyle->text($staticOutput??"");
 
             $this->ioStyle->text('Total execution time is ' . (string)($end - $start) . ' seconds.' . PHP_EOL);
         }
