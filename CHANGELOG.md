@@ -4,7 +4,7 @@ Magento Functional Testing Framework Changelog
 4.7.2
 ---------
 ### Enhancements
-* Fail static tests when introduced filename does not equal the MFTF object name 
+* Fail static test when introduced filename does not equal the MFTF object name 
   contained within.
 
 4.7.1
