@@ -6,7 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\Upgrade;
 
-use Magento\FunctionalTestingFramework\StaticCheck\ActionGroupArgumentsCheck;
+use Magento\FunctionalTestingFramework\StaticCheck\ActionGroupStandardsCheck;
 use Magento\FunctionalTestingFramework\Util\Script\ScriptUtil;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,7 +40,7 @@ class RemoveUnusedArguments implements UpgradeInterface
         $fileSystem = new Filesystem();
         foreach ($xmlFiles as $file) {
             $contents = $file->getContents();
-            $argumentsCheck = new ActionGroupArgumentsCheck();
+            $argumentsCheck = new ActionGroupStandardsCheck();
             /** @var DOMElement $actionGroup */
             $actionGroup = $argumentsCheck->getActionGroupDomElement($contents);
             $allArguments = $argumentsCheck->extractActionGroupArguments($actionGroup);
