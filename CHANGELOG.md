@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.0
+---------
+### Enhancements
+* Bumped phpunit/phpunit to ^10.0
+* Bumped allure-framework/allure-phpunit to ^3
+* Bumped codeception/module-webdriver ^4.0
+
 4.7.2
 ---------
 ### Enhancements
