@@ -34,7 +34,7 @@ class ModuleUtilTest extends TestCase
      *
      * @return array
      */
-    public function inDataProvider(): array
+    public static function inDataProvider(): array
     {
         $ctr1 = '';
         $ctr2 = '';

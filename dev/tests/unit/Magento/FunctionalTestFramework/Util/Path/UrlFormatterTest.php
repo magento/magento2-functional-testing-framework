@@ -58,7 +58,7 @@ class UrlFormatterTest extends MagentoTestCase
      *
      * @return array
      */
-    public function formatDataProvider(): array
+    public static function formatDataProvider(): array
     {
         $url1 = 'http://magento.local/index.php';
         $url2 = $url1 . '/';
@@ -97,7 +97,7 @@ class UrlFormatterTest extends MagentoTestCase
      *
      * @return array
      */
-    public function formatExceptionDataProvider(): array
+    public static function formatExceptionDataProvider(): array
     {
         return [
             ['', null]

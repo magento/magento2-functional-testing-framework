@@ -41,7 +41,7 @@ class GenerateTestsCommandTest extends TestCase
      *
      * @return array
      */
-    public function configParallelOptions(): array
+    public static function configParallelOptions(): array
     {
         return [
             [null, null, ['parallelByTime', 600000]],   /* #0 */

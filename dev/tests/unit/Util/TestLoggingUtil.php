@@ -31,7 +31,7 @@ class TestLoggingUtil extends TestCase
      */
     private function __construct()
     {
-        parent::__construct(null, [], '');
+        parent::__construct('', [], '');
     }
 
     /**
