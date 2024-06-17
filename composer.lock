@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05b0c01ac74ec5759e894c033284a3d2",
+    "content-hash": "d7502676b92c5a98d2e2b45caaced667",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -268,7 +268,6 @@
         },
         {
             "name": "aws/aws-sdk-php",
-
             "version": "3.295.9",
             "source": {
                 "type": "git",
@@ -358,7 +357,6 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-
                 "source": "https://github.com/aws/aws-sdk-php/tree/3.295.9"
             },
             "time": "2024-01-10T19:07:38+00:00"
@@ -431,7 +429,6 @@
             "time": "2024-01-08T19:04:58+00:00"
         },
         {
-
             "name": "behat/gherkin",
             "version": "v4.9.0",
             "source": {

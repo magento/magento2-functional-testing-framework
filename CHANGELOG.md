@@ -1,6 +1,16 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.0
+---------
+### Enhancements
+* Bumped phpunit/phpunit to ^10.0
+* Bumped allure-framework/allure-phpunit to ^3
+* Bumped codeception/module-webdriver ^4.0
+
+### Fixes
+* Fixed Class "Magento\FunctionalTestingFramework\StaticCheck\ActionGroupArgumentsCheck" not found on running vendor/bin/mftf build:project --upgrade.
+
 4.7.2
 ---------
 ### Enhancements
