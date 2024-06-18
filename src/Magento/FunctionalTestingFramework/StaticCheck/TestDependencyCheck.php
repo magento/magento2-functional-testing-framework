@@ -155,7 +155,7 @@ class TestDependencyCheck implements StaticCheckInterface
             StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
-        if (!empty($this->warnings) && !empty($this->errors) ) {
+        if (!empty($this->warnings) && !empty($this->errors)) {
             $this->output .= "\n " . $this->scriptUtil->printWarningsToFile(
                 $this->warnings,
                 StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::WARNING_LOG_FILENAME . '.txt',
