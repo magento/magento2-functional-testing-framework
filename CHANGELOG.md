@@ -1,6 +1,19 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.1
+---------
+### Enhancements
+* Bumped allure-codeception to ^2.4
+* Bumped squizlabs/php_codesniffer to 3.10.1
+* Bumped composer/composer to 2.7.7
+* Bumped monolog/monolog to 3.6.0
+* Bumped spomky-labs/otphp to 11.3.0
+* Bumped aws-sdk-php to 3.314.1
+
+### Fixes
+* Unneeded reports are shown when MFTF Static tests fail.
+
 4.8.0
 ---------
 ### Enhancements
