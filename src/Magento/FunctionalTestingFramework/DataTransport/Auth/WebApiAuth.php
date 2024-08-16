@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport\Auth;
 
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
@@ -53,18 +54,26 @@ class WebApiAuth
      * @throws FastFailException
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function getAdminToken($username = null, $password = null)
     {
         $login = $username ?? getenv('MAGENTO_ADMIN_USERNAME');
-        $password = $password ?? getenv('MAGENTO_ADMIN_PASSWORD');
+        try {
+            $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
+            $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
+            $password = $password ?? $secret;
+        } catch (TestFrameworkException $e) {
+            $message = "Password not found in credentials file";
+            throw new FastFailException($message . $e->getMessage(), $e->getContext());
+        }
         if (!$login || !$password) {
             $message = 'Cannot retrieve API token without credentials. Please fill out .env.';
             $context = [
                     'MAGENTO_BASE_URL' => getenv('MAGENTO_BASE_URL'),
                     'MAGENTO_BACKEND_BASE_URL' => getenv('MAGENTO_BACKEND_BASE_URL'),
                     'MAGENTO_ADMIN_USERNAME' => getenv('MAGENTO_ADMIN_USERNAME'),
-                    'MAGENTO_ADMIN_PASSWORD' => getenv('MAGENTO_ADMIN_PASSWORD'),
+                    'MAGENTO_ADMIN_PASSWORD' => $secret,
                 ];
             throw new FastFailException($message, $context);
         }
@@ -113,14 +122,12 @@ class WebApiAuth
             $errMessage = $e->getMessage();
         }
 
-        $message = 'Cannot retrieve API token with credentials. Please check the following configurations';
+        $message = 'Cannot retrieve API token with credentials.';
         try {
             // No exception will ever throw from here
             $message .= Tfa::isEnabled() ? ' and 2FA settings:' : ':' . PHP_EOL;
         } catch (TestFrameworkException $e) {
         }
-        $message .= "username: {$login}" . PHP_EOL;
-        $message .= "password: {$password}" . PHP_EOL;
         $message .= $errMessage;
         $context = ['url' => $authUrl];
         throw new FastFailException($message, $context);

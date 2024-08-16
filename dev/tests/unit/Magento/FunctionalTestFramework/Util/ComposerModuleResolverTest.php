@@ -98,7 +98,7 @@ class ComposerModuleResolverTest extends MagentoTestCase
      *
      * @return array
      */
-    public function findComposerJsonFilesAtDepthDataProvider()
+    public static function findComposerJsonFilesAtDepthDataProvider()
     {
         $baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Composer' . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'dir1' . DIRECTORY_SEPARATOR . 'dir2';
@@ -138,7 +138,7 @@ class ComposerModuleResolverTest extends MagentoTestCase
      *
      * @return array
      */
-    public function findAllComposerJsonFilesDataProvider()
+    public static function findAllComposerJsonFilesDataProvider()
     {
         $baseDir = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Composer' . DIRECTORY_SEPARATOR . '_files'
             . DIRECTORY_SEPARATOR . 'dir1' . DIRECTORY_SEPARATOR . 'dir2';

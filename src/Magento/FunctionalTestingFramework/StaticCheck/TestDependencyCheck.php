@@ -24,8 +24,11 @@ class TestDependencyCheck implements StaticCheckInterface
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
 
-    const ERROR_LOG_FILENAME = 'mftf-dependency-checks';
+    const ERROR_LOG_FILENAME = 'mftf-dependency-checks-errors';
     const ERROR_LOG_MESSAGE = 'MFTF File Dependency Check';
+    const WARNING_LOG_FILENAME = 'mftf-dependency-checks-warnings';
+
+    const ALLOW_LIST_FILENAME = 'test-dependency-allowlist';
 
     /**
      * Array of FullModuleName => [dependencies], including flattened dependency tree
@@ -52,6 +55,17 @@ class TestDependencyCheck implements StaticCheckInterface
     private $errors = [];
 
     /**
+     * Array containing all warnings found after running the execute() function.
+     * @var array
+     */
+    private $warnings = [];
+    /**
+     * Array containing warnings found while iterating through files
+     * @var array
+     */
+    private $tempWarnings = [];
+
+    /**
      * String representing the output summary found after running the execute() function.
      * @var string
      */
@@ -76,6 +90,11 @@ class TestDependencyCheck implements StaticCheckInterface
     private $testDependencyUtil;
 
     /**
+     * @var array $allowFailureEntities
+     */
+    private $allowFailureEntities = [];
+
+    /**
      * Checks test dependencies, determined by references in tests versus the dependencies listed in the Magento module
      *
      * @param InputInterface $input
@@ -93,6 +112,18 @@ class TestDependencyCheck implements StaticCheckInterface
                 "TEST DEPENDENCY CHECK ABORTED: MFTF must be attached or pointing to Magento codebase."
             );
         }
+
+        // Build array of entities found in allow-list files
+        // Expect one entity per file line, no commas or anything else
+        foreach ($allModules as $modulePath) {
+            if (file_exists($modulePath . DIRECTORY_SEPARATOR . self::ALLOW_LIST_FILENAME)) {
+                $contents = file_get_contents($modulePath . DIRECTORY_SEPARATOR . self::ALLOW_LIST_FILENAME);
+                foreach (explode("\n", $contents) as $entity) {
+                    $this->allowFailureEntities[$entity] = true;
+                }
+            }
+        }
+
         $registrar = new \Magento\Framework\Component\ComponentRegistrar();
         $this->moduleNameToPath = $registrar->getPaths(\Magento\Framework\Component\ComponentRegistrar::MODULE);
         $this->moduleNameToComposerName = $this->testDependencyUtil->buildModuleNameToComposerName(
@@ -124,6 +155,13 @@ class TestDependencyCheck implements StaticCheckInterface
             StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::ERROR_LOG_FILENAME . '.txt',
             self::ERROR_LOG_MESSAGE
         );
+        if (!empty($this->warnings) && !empty($this->errors)) {
+            $this->output .= "\n " . $this->scriptUtil->printWarningsToFile(
+                $this->warnings,
+                StaticChecksList::getErrorFilesPath() . DIRECTORY_SEPARATOR . self::WARNING_LOG_FILENAME . '.txt',
+                self::ERROR_LOG_MESSAGE
+            );
+        }
     }
 
     /**
@@ -141,7 +179,7 @@ class TestDependencyCheck implements StaticCheckInterface
      */
     public function getOutput(): string
     {
-        return $this->output;
+        return $this->output??"";
     }
 
     /**
@@ -199,6 +237,7 @@ class TestDependencyCheck implements StaticCheckInterface
             // Find violating references and set error output
             $violatingReferences = $this->findViolatingReferences($moduleName);
             $testErrors = array_merge($testErrors, $this->setErrorOutput($violatingReferences, $filePath));
+            $this->warnings = array_merge($this->warnings, $this->setErrorOutput($this->tempWarnings, $filePath));
         }
         return $testErrors;
     }
@@ -221,6 +260,7 @@ class TestDependencyCheck implements StaticCheckInterface
         );
         $moduleDependencies = $this->flattenedDependencies[$moduleName];
         foreach ($modulesReferencedInTest as $entityName => $files) {
+            $isInAllowList = array_key_exists($entityName, $this->allowFailureEntities);
             $valid = false;
             foreach ($files as $module) {
                 if (array_key_exists($module, $moduleDependencies) || $module === $currentModule) {
@@ -229,6 +269,10 @@ class TestDependencyCheck implements StaticCheckInterface
                 }
             }
             if (!$valid) {
+                if ($isInAllowList) {
+                    $this->tempWarnings[$entityName] = $files;
+                    continue;
+                }
                 $violatingReferences[$entityName] = $files;
             }
         }

@@ -1,0 +1,39 @@
+<?php
+namespace Magento\AcceptanceTest\_default\Backend;
+
+use Magento\FunctionalTestingFramework\AcceptanceTester;
+use \Codeception\Util\Locator;
+use Yandex\Allure\Adapter\Annotation\Features;
+use Yandex\Allure\Adapter\Annotation\Stories;
+use Yandex\Allure\Adapter\Annotation\Title;
+use Yandex\Allure\Adapter\Annotation\Description;
+use Yandex\Allure\Adapter\Annotation\Parameter;
+use Yandex\Allure\Adapter\Annotation\Severity;
+use Yandex\Allure\Adapter\Model\SeverityLevel;
+use Yandex\Allure\Adapter\Annotation\TestCaseId;
+
+/**
+ * @Title("[NO TESTCASEID]: skippedTest")
+ * @Description("<h3>Test files</h3>verification/TestModule/Test/SkippedTest/SkippedTestWithIssueMustGetSkippedWithoutErrorExitCode.xml<br>")
+ */
+class SkippedTestWithIssueMustGetSkippedWithoutErrorExitCodeCest
+{
+	/**
+	 * @var bool
+	 */
+	private $isSuccess = false;
+
+	/**
+	 * @Stories({"skipped"})
+	 * @Severity(level = SeverityLevel::MINOR)
+	 * @Features({"TestModule"})
+	 * @param AcceptanceTester $I
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function SkippedTestWithIssueMustGetSkippedWithoutErrorExitCode(AcceptanceTester $I, \Codeception\Scenario $scenario)
+	{
+		unlink(__FILE__);
+		$scenario->skip("This test is skipped due to the following issues:\nSkippedValue");
+	}
+}

@@ -42,6 +42,12 @@ use Codeception\Event\TestEvent;
 class MagentoAllureAdapter extends AllureCodeception
 {
     const STEP_PASSED = "passed";
+
+    /**
+     * @var array
+     */
+    private $options = [];
+
     /**
      * Test files cache.
      *
@@ -184,7 +190,6 @@ class MagentoAllureAdapter extends AllureCodeception
         // Strip control characters so that report generation does not fail
         $stepName = preg_replace('/[[:cntrl:]]/', '', $stepName);
 
-        $this->emptyStep = false;
         $this->getLifecycle()->fire(new StepStartedEvent($stepName));
     }
 

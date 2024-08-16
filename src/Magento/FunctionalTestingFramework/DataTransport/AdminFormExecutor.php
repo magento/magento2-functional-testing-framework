@@ -6,6 +6,7 @@
 
 namespace Magento\FunctionalTestingFramework\DataTransport;
 
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlInterface;
 use Magento\FunctionalTestingFramework\DataTransport\Protocol\CurlTransport;
@@ -73,9 +74,11 @@ class AdminFormExecutor implements CurlInterface
 
         // Authenticate admin user
         $authUrl = MftfGlobals::getBackendBaseUrl() . 'admin/auth/login/';
+        $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
+        $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
         $data = [
             'login[username]' => getenv('MAGENTO_ADMIN_USERNAME'),
-            'login[password]' => getenv('MAGENTO_ADMIN_PASSWORD'),
+            'login[password]' => $secret,
             'form_key' => $this->formKey,
         ];
         $this->transport->write($authUrl, $data, CurlInterface::POST);

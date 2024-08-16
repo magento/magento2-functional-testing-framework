@@ -159,7 +159,7 @@ class ModulePathExtractorTest extends MagentoTestCase
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($objectManagerMockInstance);
+        $objectManagerProperty->setValue(null, $objectManagerMockInstance);
 
         $resolver = ModuleResolver::getInstance();
         $property = new ReflectionProperty(ModuleResolver::class, 'enabledModuleNameAndPaths');

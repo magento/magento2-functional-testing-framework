@@ -131,7 +131,7 @@ class RunManifestCommand extends Command
                 . " run functional --verbose --steps " . $manifestLine;
 
             // run the codecept command in a sub process
-            $process = new Process($codeceptionCommand);
+            $process = Process::fromShellCommandline($codeceptionCommand);
             $process->setWorkingDirectory(TESTS_BP);
             $process->setIdleTimeout(600);
             $process->setTimeout(0);

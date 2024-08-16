@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 namespace Magento\FunctionalTestingFramework\Allure;
 
-use Magento\FunctionalTestingFramework\Allure\Event\AddUniqueAttachmentEvent;
-use Magento\FunctionalTestingFramework\ObjectManagerFactory;
-use Yandex\Allure\Adapter\Allure;
-use Yandex\Allure\Adapter\AllureException;
+use Qameta\Allure\Allure;
+use Qameta\Allure\Io\DataSourceInterface;
 
 class AllureHelper
 {
@@ -21,19 +19,21 @@ class AllureHelper
      * @param string $caption
      *
      * @return void
-     * @throws AllureException
      */
     public static function addAttachmentToCurrentStep($data, $caption): void
     {
-        /** @var AddUniqueAttachmentEvent $event */
-        $event = ObjectManagerFactory::getObjectManager()->create(
-            AddUniqueAttachmentEvent::class,
-            [
-                'filePathOrContents' => $data,
-                'caption' => $caption
-            ]
-        );
-        Allure::lifecycle()->fire($event);
+        if (!is_string($data)) {
+            try {
+                $data = serialize($data);
+            } catch (\Exception $exception) {
+                throw  new \Exception($data->getMessage());
+            }
+        }
+        if (@file_exists($data) && is_file($data)) {
+            Allure::attachmentFile($caption, $data);
+        } else {
+            Allure::attachment($caption, $data);
+        }
     }
 
     /**
@@ -47,22 +47,35 @@ class AllureHelper
      */
     public static function addAttachmentToLastStep($data, $caption): void
     {
-        $rootStep = Allure::lifecycle()->getStepStorage()->getLast();
-        $trueLastStep = array_last($rootStep->getSteps());
-
-        if ($trueLastStep === null) {
-            // Nothing to attach to; do not fire off allure event
-            return;
+        if (!is_string($data)) {
+            $data = serialize($data);
         }
+        if (@file_exists($data) && is_file($data)) {
+            Allure::attachmentFile($caption, $data);
+        } else {
+            Allure::attachment($caption, $data);
+        }
+    }
 
-        /** @var AddUniqueAttachmentEvent $attachmentEvent */
-        $attachmentEvent = ObjectManagerFactory::getObjectManager()->create(
-            AddUniqueAttachmentEvent::class,
-            [
-                'filePathOrContents' => $data,
-                'caption' => $caption
-            ]
-        );
-        $attachmentEvent->process($trueLastStep);
+    /**
+     * @param DataSourceInterface $dataSource
+     * @param string              $name
+     * @param string|null         $type
+     * @param string|null         $fileExtension
+     * @return void
+     */
+    public static function doAddAttachment(
+        DataSourceInterface $dataSource,
+        string $name,
+        ?string $type = null,
+        ?string $fileExtension = null,
+    ): void {
+        $attachment = Allure::getConfig()
+            ->getResultFactory()
+            ->createAttachment()
+            ->setName($name)
+            ->setType($type)
+            ->setFileExtension($fileExtension);
+        Allure::getLifecycle()->addAttachment($attachment, $dataSource);
     }
 }

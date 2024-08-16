@@ -1,5 +1,239 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+4.8.0
+---------
+### Enhancements
+* Bumped phpunit/phpunit to ^10.0
+* Bumped allure-framework/allure-phpunit to ^3
+* Bumped codeception/module-webdriver ^4.0
+
+### Fixes
+* Fixed Class "Magento\FunctionalTestingFramework\StaticCheck\ActionGroupArgumentsCheck" not found on running vendor/bin/mftf build:project --upgrade.
+
+4.7.2
+---------
+### Enhancements
+* Fail static test when introduced filename does not equal the MFTF object name 
+  contained within.
+
+4.7.1
+---------
+### Enhancements
+*  Bumped all symfony dependencies to `^6.0
+*  Removed abandoned package codacy/coverage 
+*  Removed abandoned package sebastian/phpcpd
+*  Bumped monolog/monolog to ^3.0 
+*  Bumped nikic/php-parser to ^5.0
+
+4.7.0
+---------
+### Enhancements
+*  Bumped all symfony dependencies to `^6.0
+*  Unit Test for PTS enabled doesn't apply filter fix
+
+4.6.1
+---------
+### Enhancements
+* Supported setting custom timeout value for `magentoCLI` command via an environment variable `MAGENTO_CLI_WAIT_TIMEOUT`.
+
+4.6.0
+---------
+### Enhancements
+* Added Support for PHP 8.3 and enabled PR checks for PHP 8.3.
+* Bumped `symfony/console` dependency to `^6.0`.
+* Bumped `laminas/laminas-diactoros` dependency to `^3.0`.
+* Added no-ansi option to bin/mftf command.
+
+### Fixes
+* Fixed 8.3 deprecation errors.
+* Fixed The build with PTS enabled doesn't apply filter issue.
+* Change MFTF command <magentoCLI> to maintain Magento CLI output.
+
+4.5.0
+---------
+### Enhancements
+* Increase browser resolution to 1920x1080.
+* Add metadata to ACQE Repositories.
+* Add magento admin password to credentials example.
+
+### Fixes
+* Fixed test failure while running any test suite with an argument.
+
+4.4.2
+---------
+### Fixes
+* Fixed PHP 8.2 deprecation warnings.
+
+4.4.1
+---------
+* Same as previous release
+
+4.4.0
+---------
+### Enhancements
+* Bumped `doctrine/annotations` dependency to `^2.0`.
+* Bumped `squizlabs/php_codesniffer` dependency to `^3.7`.
+* Bumped `php-webdriver/webdriver` dependency to `^1.14`.
+* Bumped `symfony/string` dependency to `^6.3`.
+* Bumped `symfony/dotenv` dependency to `^6.3`.
+* Bumped `symfony/finder` dependency to `^6.3`.
+* Bumped `symfony/http-foundation` dependency to `^6.3`.
+* Bumped `symfony/mime` dependency to `^6.3`.
+* Enhanced MFTF Modularity Test with "allow failure list".
+
+4.3.4
+---------
+### Fixes
+* Resolving an issue when test is marked as failed due to Suite after section failure
+
+4.3.3
+---------
+### Enhancements
+* Enhance the details in the testgroupmembership.txt file.
+
+### Fixes
+* Fixed MFTF helpers & actionGroups allow duplicate argument names to be passed.
+
+4.3.2
+---------
+### Enhancements
+* 'bootstrap' argument added to indicate that no additional background processes will be run and the jobs complete in the foreground process.
+
+### Fixes
+* Fixed serialization of weakmap exception thrown for every internal exception after codeception upgrade.
+* Fixed suites no longer separated by MFTF Suite.
+
+4.3.1
+---------
+### Fixes
+* Fixed cannot bind closure to scope of internal class Exception.
+* Fixed broken Mftf doctor command.
+
+4.3.0
+---------
+### Enhancements
+* Bumped `allure-framework/allure-codeception` dependency to `^2.1`.
+* Bumped `codeception/codeception` to `^5.0` and upgraded its dependent packages.
+* Replaced Yandex methods with Qameta related methods.
+* Created methods for modifying step name and for formatting allure.
+
+### Fixes
+* Fixed all issues and exceptions thrown after codeception upgrade.
+* Removed dependency of MagentoAllureAdapter in codeception.yml file.
+
+4.2.1
+---------
+### Fixes
+
+* Updated constraint for php-webdriver to restrict pulling versions above 1.14.0
+
+4.2.0
+---------
+### Fixes
+
+* Bumped `allure-framework/allure-codeception` dependency to `^1.5` to fix downstream dependency issues in Magento.
+
+
+4.1.0
+---------
+### Enhancements
+
+* Dropped Support for PHP 8.0 and disabled PR checks for PHP 8.0
+* Allow MFTF generate minimum possible groups runnable by codeception
+
+### Fixes
+
+* Fixed Allure report not generating issue
+* MFTF displays an appropriate message for unable to connect to Selenium server
+
+4.0.1
+---------
+### Fixes
+
+* Fixed HTML files and images not attached to allure report issue
+
+4.0.0
+---------
+### Enhancements
+
+* Added Supported for PHP 8.2 and enabled PR checks for PHP 8.2
+* Dropped Support for PHP 7.4 and disabled PR checks for PHP 7.4
+* Upgraded allure-framework/allure-phpunit to its latest version
+
+### Fixes
+
+* MFTF deprecation errors fixes
+* Composer downgraded from 2.4 to 2.2 due to lamina issue
+
+3.12.0
+---------
+
+### Fixes
+* Removed obsolete docs/directories
+
+3.11.1
+---------
+
+### Fixes
+
+* Removed environment variable MAGENTO_ADMIN_PASSWORD
+* Fixed WaitForElementClickable action cannot be used more than once
+
+3.11.0
+---------
+### Enhancements
+* Composer updated to 2.4.2 version
+* Static check for duplicate step keys in action group
+
+
+### Fixes
+
+* Fixed incorrect MFTF test dependencies path
+* Removed PHP 7.3 build check from MFTF PR build as PHP 7.3 is no longer supported
+* Fixed fatal error when running generate:tests --config parallel -g
+
+
+3.10.3
+---------
+
+### Fixes
+
+* Chrome settings for potential cost reductions
+
+3.10.2
+---------
+
+### Fixes
+
+* Fixed admin credentials being output to console in WebAPIAuth
+* Fixed links in docs
+
+
+3.10.1
+---------
+
+### Fixes
+
+* Fixed allure reports not generating for composer builds.
+* Fixed all MFTF scheduled build not generating allure report.
+
+3.10.0
+---------
+
+### Enhancements
+* Updated symfony/console and symfony/process constraints to support latest Symfony LTS (5.4v)
+* Updated Symfony related code to support latest Symfony LTS (5.4v).
+* Implement rapid times X clicks on UI element in MFTF
+* Log MFTF test dependencies
+* Unused entity static check
+* Updated docs for new location of password
+* Remove any remaining usages of Travis CI from MFTF Repo
+* Unit tests for GenerateTestFailedCommandTest and RunTestFailedCommandTest
+
+### Fixes
+* Hashicorp Vault PHP lib being instantiated with wrong params
+
 3.9.0
 ---------
 

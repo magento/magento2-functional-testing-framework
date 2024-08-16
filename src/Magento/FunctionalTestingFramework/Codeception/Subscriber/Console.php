@@ -70,9 +70,11 @@ class Console extends \Codeception\Subscriber\Console
      * @return void
      * @throws \Exception
      */
-    public function startTest(TestEvent $e)
+    public function startTest(TestEvent $e): void
     {
-        $test = $e->getTest()->getTestClass();
+        $test = $e->getTest();
+        $testReflection = new \ReflectionClass($test);
+
         try {
             $testReflection = new \ReflectionClass($test);
             $isDeprecated = preg_match_all(self::DEPRECATED_NOTICE, $testReflection->getDocComment(), $match);
@@ -99,7 +101,7 @@ class Console extends \Codeception\Subscriber\Console
      * @param StepEvent $e
      * @return void
      */
-    public function beforeStep(StepEvent $e)
+    public function beforeStep(StepEvent $e): void
     {
         if ($this->silent or !$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
@@ -162,7 +164,7 @@ class Console extends \Codeception\Subscriber\Console
             return; // don't print empty comments
         }
 
-        $stepKey = $this->retrieveStepKey($step->getLine());
+        $stepKey = $this->retrieveStepKey($step);
 
         $isActionGroup = (strpos($step->__toString(), ActionGroupObject::ACTION_GROUP_CONTEXT_START) !== false);
         if ($isActionGroup) {
@@ -220,13 +222,14 @@ class Console extends \Codeception\Subscriber\Console
     /**
      * Reading stepKey from file.
      *
-     * @param string $stepLine
+     * @param Step $step
      * @return string|null
      */
-    private function retrieveStepKey($stepLine)
+    private function retrieveStepKey(Step $step)
     {
         $stepKey = null;
-        list($filePath, $stepLine) = explode(":", $stepLine);
+        $stepLine = $step->getLineNumber();
+        $filePath = $step->getFilePath();
         $stepLine = $stepLine - 1;
 
         if (!array_key_exists($filePath, $this->testFiles)) {

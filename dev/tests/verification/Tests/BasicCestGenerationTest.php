@@ -59,4 +59,17 @@ class BasicCestGenerationTest extends MftfTestCase
     {
         $this->generateAndCompareTest('XmlCommentedTest');
     }
+
+    /**
+     * Tests magentoCLI and magentoCLISecret commands with env 'MAGENTO_CLI_WAIT_TIMEOUT' set
+     *
+     * @throws \Exception
+     * @throws \Magento\FunctionalTestingFramework\Exceptions\TestReferenceException
+     */
+    public function testMagentoCli()
+    {
+        putenv("MAGENTO_CLI_WAIT_TIMEOUT=45");
+        $this->generateAndCompareTest('MagentoCliTest');
+        putenv("MAGENTO_CLI_WAIT_TIMEOUT");
+    }
 }

@@ -18,6 +18,8 @@ use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
 
 class SetupEnvCommand extends Command
 {
+    private const SUCCESS_EXIT_CODE = 0;
+
     /**
      * Env processor manages .env files.
      *
@@ -47,10 +49,10 @@ class SetupEnvCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return void
+     * @return integer
      * @throws \Symfony\Component\Console\Exception\LogicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $config = $this->envProcessor->getEnv();
         $userEnv = [];
@@ -62,5 +64,7 @@ class SetupEnvCommand extends Command
         }
         $this->envProcessor->putEnvFile($userEnv);
         $output->writeln(".env configuration successfully applied.");
+
+        return self::SUCCESS_EXIT_CODE;
     }
 }

@@ -34,7 +34,7 @@ class AwsSecretsManagerStorageTest extends MagentoTestCase
 
         $mockClient = $this->getMockBuilder(SecretsManagerClient::class)
             ->disableOriginalConstructor()
-            ->setMethods(['__call'])
+            ->onlyMethods(['__call'])
             ->getMock();
 
         $mockClient->expects($this->once())

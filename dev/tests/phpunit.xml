@@ -5,28 +5,28 @@
   * See COPYING.txt for license details.
   */
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" convertNoticesToExceptions="false"
-         bootstrap="_bootstrap.php" backupGlobals="false">
-    <coverage processUncoveredFiles="false">
-        <include>
-            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/DataGenerator</directory>
-            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Page</directory>
-            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Suite</directory>
-            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Test</directory>
-            <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Util</directory>
-        </include>
-        <report>
-            <clover outputFile="build/logs/clover.xml"/>
-        </report>
-    </coverage>
-    <testsuites>
-        <testsuite name="verification">
-            <directory>verification</directory>
-        </testsuite>
-        <testsuite name="unit">
-            <directory>unit</directory>
-        </testsuite>
-    </testsuites>
-    <logging/>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd" bootstrap="_bootstrap.php" backupGlobals="false" cacheDirectory=".phpunit.cache">
+  <coverage>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="verification">
+      <directory>verification</directory>
+    </testsuite>
+    <testsuite name="unit">
+      <directory>unit</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
+  <source>
+    <include>
+      <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/DataGenerator</directory>
+      <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Page</directory>
+      <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Suite</directory>
+      <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Test</directory>
+      <directory suffix=".php">../../src/Magento/FunctionalTestingFramework/Util</directory>
+    </include>
+  </source>
 </phpunit>

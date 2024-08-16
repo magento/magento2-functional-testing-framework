@@ -37,7 +37,7 @@ class ParallelGroupSorter
     public function getTestsGroupedBySize($suiteConfiguration, $testNameToSize, $time)
     {
         // we must have the lines argument in order to create the test groups
-        if ($time === 0) {
+        if ($time == 0) {
             throw new FastFailException(
                 "Please provide the argument '--time' to the robo command in order to".
                 " generate grouped tests manifests for a parallel execution"
@@ -86,27 +86,38 @@ class ParallelGroupSorter
      */
     public function getTestsGroupedByFixedGroupCount($suiteConfiguration, $testNameToSize, $groupTotal)
     {
-        $suiteNameToTestSize = $this->getSuiteNameToTestSize($suiteConfiguration);
-
-        $minRequiredGroupCount = count($suiteNameToTestSize);
-        if (!empty($testNameToSize)) {
-            $minRequiredGroupCount += 1;
-        }
-        if ($groupTotal < $minRequiredGroupCount) {
-            throw new FastFailException(
-                "Invalid parameter 'groupTotal': must be equal or greater than {$minRequiredGroupCount}"
-            );
-        }
-
         if (empty($suiteConfiguration)) {
             return $this->convertArrayIndexStartingAtOne($this->splitTestsIntoGroups($testNameToSize, $groupTotal));
         }
 
+        $suiteNameToTestSize = $this->getSuiteNameToTestSize($suiteConfiguration);
+
         // Calculate suite group totals
         $suiteNameToGroupCount = $this->getSuiteGroupCounts($suiteNameToTestSize, $testNameToSize, $groupTotal);
 
-        // Calculate test group total
-        $testGroupTotal = $groupTotal - array_sum($suiteNameToGroupCount);
+        $suitesGroupTotal = array_sum($suiteNameToGroupCount);
+
+        // Calculate minimum required groups
+        $minSuiteGroupTotal = count($suiteNameToTestSize);
+        $minTestGroupTotal = empty($testNameToSize) ? 0 : 1;
+        $minRequiredGroupTotal = $minSuiteGroupTotal + $minTestGroupTotal;
+
+        if ($groupTotal < $minRequiredGroupTotal) {
+            throw new FastFailException(
+                "Invalid parameter 'groupTotal': must be equal or greater than {$minRequiredGroupTotal}"
+            );
+        } elseif ($groupTotal < $suitesGroupTotal + $minTestGroupTotal) {
+            // Split in savvy mode when $groupTotal requested is very small
+            $testGroupTotal = $minTestGroupTotal;
+            // Reduce suite group total
+            $suiteNameToGroupCount = $this->reduceSuiteGroupTotal(
+                $suiteNameToGroupCount,
+                $groupTotal - $minTestGroupTotal
+            );
+        } else {
+            // Calculate test group total
+            $testGroupTotal = $groupTotal - $suitesGroupTotal;
+        }
 
         // Split tests and suites
         $testGroups = $this->splitTestsIntoGroups($testNameToSize, $testGroupTotal);
@@ -128,6 +139,10 @@ class ParallelGroupSorter
      */
     private function getSuiteGroupCounts($suiteNameToTestSize, $testNameToSize, $groupTotal)
     {
+        if (empty($suiteNameToTestSize)) {
+            return [];
+        }
+
         // Calculate the minimum possible group time
         $suiteNameToSize = $this->getSuiteToSize($suiteNameToTestSize);
         $minGroupTime = ceil((array_sum($testNameToSize) + array_sum($suiteNameToSize)) / $groupTotal);
@@ -136,19 +151,19 @@ class ParallelGroupSorter
         $maxSuiteTime = max($suiteNameToSize);
 
         // Calculate 2 possible suite group times
-        $ceilSuiteGroupNumber = ceil($maxSuiteTime / $minGroupTime);
+        $ceilSuiteGroupNumber = (int)ceil($maxSuiteTime / $minGroupTime);
         $ceilSuiteGroupTime = max(ceil($maxSuiteTime / $ceilSuiteGroupNumber), $minGroupTime);
-        $floorSuiteGroupNumber = floor($maxSuiteTime / $minGroupTime);
-        if ($floorSuiteGroupNumber !== 0) {
+        $floorSuiteGroupNumber = (int)floor($maxSuiteTime / $minGroupTime);
+        if ($floorSuiteGroupNumber != 0) {
             $floorSuiteGroupTime = max(ceil($maxSuiteTime / $floorSuiteGroupNumber), $minGroupTime);
         }
 
         // Calculate test group time for ceiling
         $ceilSuiteNameToGroupCount = $this->getSuiteGroupCountFromGroupTime($suiteNameToTestSize, $ceilSuiteGroupTime);
         $ceilSuiteGroupTotal = array_sum($ceilSuiteNameToGroupCount);
-        $ceilTestGroupTotal = (int) $groupTotal - (int) $ceilSuiteGroupTotal;
+        $ceilTestGroupTotal = $groupTotal - $ceilSuiteGroupTotal;
 
-        if ($ceilTestGroupTotal === 0) {
+        if ($ceilTestGroupTotal == 0) {
             $ceilTestGroupTime = 0;
         } else {
             $ceilTestGroupTime = ceil(array_sum($testNameToSize) / $ceilTestGroupTotal);
@@ -157,7 +172,7 @@ class ParallelGroupSorter
         // Set suite group total to ceiling
         $suiteNameToGroupCount = $ceilSuiteNameToGroupCount;
 
-        if (isset($floorSuiteGroupTime) && $ceilSuiteGroupTime !== $floorSuiteGroupTime) {
+        if (isset($floorSuiteGroupTime) && $ceilSuiteGroupTime != $floorSuiteGroupTime) {
             // Calculate test group time for floor
             $floorSuiteNameToGroupCount = $this->getSuiteGroupCountFromGroupTime(
                 $suiteNameToTestSize,
@@ -165,7 +180,7 @@ class ParallelGroupSorter
             );
             $floorSuiteGroupTotal = array_sum($floorSuiteNameToGroupCount);
             $floorTestGroupTotal = $groupTotal - $floorSuiteGroupTotal;
-            if ($floorTestGroupTotal === 0) {
+            if ($floorTestGroupTotal == 0) {
                 $floorTestGroupTime = 0;
             } else {
                 $floorTestGroupTime = ceil(array_sum($testNameToSize) / $floorTestGroupTotal);
@@ -177,6 +192,39 @@ class ParallelGroupSorter
             if ($ceilDiff > $floorDiff) {
                 // Adjust suite group total to floor
                 $suiteNameToGroupCount = $floorSuiteNameToGroupCount;
+            }
+        }
+
+        return $suiteNameToGroupCount;
+    }
+
+    /**
+     * Reduce total suite groups to a given $total.
+     * This method will reduce 1 from a suite that's greater than 1 repeatedly until sum of all groups reaches $total.
+     *
+     * @param array   $suiteNameToGroupCount
+     * @param integer $total
+     * @return array
+     * @throws FastFailException
+     */
+    private function reduceSuiteGroupTotal($suiteNameToGroupCount, $total)
+    {
+        if (count($suiteNameToGroupCount) > $total) {
+            throw new FastFailException(
+                "Invalid parameter 'total': must be equal or greater than {count($suiteNameToGroupCount)}"
+            );
+        }
+
+        $done = false;
+        while (!$done) {
+            foreach ($suiteNameToGroupCount as $suite => $count) {
+                if (array_sum($suiteNameToGroupCount) == $total) {
+                    $done = true;
+                    break;
+                }
+                if ($count > 1) {
+                    $suiteNameToGroupCount[$suite] -= 1;
+                }
             }
         }
 
@@ -199,7 +247,7 @@ class ParallelGroupSorter
             if ($suiteTime <= $time) {
                 $suiteNameToGroupCount[$suiteName] = 1;
             } else {
-                $suiteNameToGroupCount[$suiteName] = min(ceil($suiteTime/$time), $maxCount);
+                $suiteNameToGroupCount[$suiteName] = min((int)ceil($suiteTime/$time), $maxCount);
             }
         }
         return $suiteNameToGroupCount;
@@ -214,6 +262,10 @@ class ParallelGroupSorter
      */
     private function splitTestsIntoGroups($tests, $groupCnt)
     {
+        if (empty($tests)) {
+            return [];
+        }
+
         // Reverse sort the test array by size
         uasort($tests, function ($a, $b) {
             return $a >= $b ? -1 : 1;
@@ -243,7 +295,7 @@ class ParallelGroupSorter
         $groups = [];
         foreach ($suiteNameToTestSize as $suiteName => $suiteTests) {
             $suiteCnt = $suiteNameToGroupCount[$suiteName];
-            if ($suiteCnt === 1) {
+            if ($suiteCnt == 1) {
                 $groups[][$suiteName] = array_sum($suiteTests);
                 $this->addSuiteToConfig($suiteName, null, $suiteTests);
             } elseif ($suiteCnt > 1) {
@@ -435,8 +487,8 @@ class ParallelGroupSorter
             }
 
             $group = $this->createTestGroup($maxTime, $test, $size, $availableTests);
-            $splitSuites["{$suiteName}_${splitCount}_G"] = $group;
-            $this->addSuiteToConfig($suiteName, "{$suiteName}_${splitCount}_G", $group);
+            $splitSuites["{$suiteName}_{$splitCount}_G"] = $group;
+            $this->addSuiteToConfig($suiteName, "{$suiteName}_{$splitCount}_G", $group);
 
             $availableTests = array_diff_key($availableTests, $group);
             $splitCount++;

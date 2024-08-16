@@ -247,6 +247,73 @@ class TestGenerator
             $this->createCestFile($testPhpFile[1], $testPhpFile[0]);
         }
     }
+    
+    /**
+     * Throw exception if duplicate arguments found
+     * @param TestObject $testObject
+     * @return void
+     * @throws TestFrameworkException
+     */
+    public function throwExceptionIfDuplicateArgumentsFound($testObject): void
+    {
+        if (!($testObject instanceof TestObject)) {
+            return;
+        }
+        $fileName = $testObject->getFilename();
+        if (!empty($fileName) && file_exists($fileName)) {
+            return;
+        }
+        $fileContents = file_get_contents($fileName);
+        $parsedSteps = $testObject->getUnresolvedSteps();
+        foreach ($parsedSteps as $parsedStep) {
+            if ($parsedStep->getType() !== 'actionGroup' && $parsedStep->getType() !== 'helper') {
+                continue;
+            }
+            $attributesActions = $parsedStep->getCustomActionAttributes();
+            if (!key_exists('arguments', $attributesActions)) {
+                continue;
+            }
+            $arguments = $attributesActions['arguments'];
+            $stepKey = $parsedStep->getStepKey();
+
+            $fileToArr = explode("\n", $fileContents);
+            $actionGroupStart = false;
+            $argumentArray = [];
+            foreach ($fileToArr as $fileVal) {
+                $fileVal = trim($fileVal);
+                if ((str_contains($fileVal, '<actionGroup') || str_contains($fileVal, '<helper')) &&
+                    str_contains($fileVal, $stepKey)) {
+                    $actionGroupStart = true;
+                    continue;
+                }
+                if (str_contains($fileVal, '</actionGroup') || str_contains($fileVal, '</helper')) {
+                    foreach ($arguments as $argumentName => $argumentValue) {
+                        $argumentCounter = 0;
+                        foreach ($argumentArray as $rawArgument) {
+                            if (str_contains($rawArgument, '<argument') &&
+                                str_contains($rawArgument, 'name="'.$argumentName.'"')) {
+                                $argumentCounter++;
+                            }
+                            if ($argumentCounter > 1) {
+                                $err[] = sprintf(
+                                    'Duplicate argument(%s) for stepKey: %s in test file: %s',
+                                    $argumentName,
+                                    $stepKey,
+                                    $testObject->getFileName()
+                                );
+                                throw new TestFrameworkException(implode(PHP_EOL, $err));
+                            }
+                        }
+                        $actionGroupStart = false;
+                        $argumentArray = [];
+                    }
+                }
+                if ($actionGroupStart) {
+                    $argumentArray[] = $fileVal;
+                }
+            }
+        }
+    }
 
     /**
      * Assemble the entire PHP string for a single Test based on a Test Object.
@@ -259,6 +326,10 @@ class TestGenerator
      */
     public function assembleTestPhp($testObject)
     {
+        if (!empty($testObject->getFilename()) && file_exists($testObject->getFilename())) {
+            $fileContents = file_get_contents($testObject->getFilename());
+            $this->throwExceptionIfDuplicateArgumentsFound($fileContents, $testObject->getFilename());
+        }
         $this->customHelpers = [];
         $usePhp = $this->generateUseStatementsPhp();
 
@@ -342,7 +413,6 @@ class TestGenerator
         foreach ($filters as $filter) {
             $filter->filter($testObjects);
         }
-
         foreach ($testObjects as $test) {
             try {
                 // Reset flag for new test
@@ -564,11 +634,13 @@ class TestGenerator
     private function generateClassAnnotations($annotationType, $annotationName, $testObject)
     {
         $annotationToAppend = null;
-        $requiredCredentialsMessage = $this->requiredCredentials($testObject);
-        $credMsg = "\n\n"."This test uses the following credentials:"."\n";
-        if (!empty($requiredCredentialsMessage) && !empty($annotationName['main'])) {
-            $annotationName = ['main'=>$annotationName['main'].', '.$credMsg.''.$requiredCredentialsMessage,
-                'test_files'=> "\n".$annotationName['test_files'], 'deprecated'=>$annotationName['deprecated']];
+        if (!$testObject->isSkipped() && !empty($annotationName['main'])) {
+            $requiredCredentialsMessage = $this->requiredCredentials($testObject);
+            $credMsg = "\n\n"."This test uses the following credentials:"."\n";
+            $annotationName = (!empty($requiredCredentialsMessage)) ?
+                ['main'=>$annotationName['main'].', '.$credMsg.''.$requiredCredentialsMessage,
+                'test_files'=> "\n".$annotationName['test_files'], 'deprecated'=>$annotationName['deprecated']]
+                : $annotationName;
         }
         switch ($annotationType) {
             case "title":
@@ -770,7 +842,7 @@ class TestGenerator
             }
 
             if (in_array($actionObject->getType(), ActionObject::COMMAND_ACTION_ATTRIBUTES)) {
-                $time = $time ?? ActionObject::DEFAULT_COMMAND_WAIT_TIMEOUT;
+                $time = $time ?? ActionObject::getDefaultMagentoCLIWaitTimeout();
             } else {
                 $time = $time ?? ActionObject::getDefaultWaitTimeout();
             }
@@ -1503,7 +1575,7 @@ class TestGenerator
                         $this->getUniqueIdForInput($actionObject->getCustomActionAttributes()['unique'], $input)
                         : $input;
                     $argRef .= str_replace(ucfirst($fieldKey), "", $stepKey) .
-                        "Fields['{$fieldKey}'] = ${input};";
+                        "Fields['{$fieldKey}'] = {$input};";
                     $testSteps .= $argRef;
                     break;
                 case "generateDate":

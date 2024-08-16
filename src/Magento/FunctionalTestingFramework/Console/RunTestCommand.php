@@ -46,8 +46,7 @@ class RunTestCommand extends BaseGenerateCommand
                 'xml',
                 InputOption::VALUE_NONE,
                 "creates xml report for executed test"
-            )
-            ->addArgument(
+            )->addArgument(
                 'name',
                 InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
                 "name of tests to generate and execute"
@@ -128,7 +127,7 @@ class RunTestCommand extends BaseGenerateCommand
                 '--debug' => $debug,
                 '--allow-skipped' => $allowSkipped,
                 '-v' => $verbose,
-              ''
+                ''
             ];
             $command->run(new ArrayInput($args), $output);
 
@@ -165,9 +164,8 @@ class RunTestCommand extends BaseGenerateCommand
      */
     private function runTests(array $tests, OutputInterface $output, InputInterface $input)
     {
-        $xml = ($input->getOption('xml'))
-            ? '--xml'
-            : "";
+        $xml = ($input->getOption('xml')) ? '--xml' : "";
+        $noAnsi = ($input->getOption('no-ansi')) ? '--no-ansi' : "";
         if ($this->pauseEnabled()) {
             $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL;
         } else {
@@ -196,7 +194,7 @@ class RunTestCommand extends BaseGenerateCommand
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
             } else {
                 $fullCommand = $codeceptionCommand . $testsDirectory . $testName . ' --verbose --steps '.$xml;
-                $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
+                $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output, $noAnsi));
             }
             if (!empty($xml)) {
                 $this->movingXMLFileFromSourceToDestination($xml, $testName, $output);
@@ -217,9 +215,8 @@ class RunTestCommand extends BaseGenerateCommand
      */
     private function runTestsInSuite(array $suitesConfig, OutputInterface $output, InputInterface $input)
     {
-        $xml = ($input->getOption('xml'))
-            ? '--xml'
-            : "";
+        $xml = ($input->getOption('xml')) ? '--xml' : "";
+        $noAnsi = ($input->getOption('no-ansi')) ? '--no-ansi' : "";
         if ($this->pauseEnabled()) {
             $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug '.$xml;
         } else {
@@ -240,7 +237,7 @@ class RunTestCommand extends BaseGenerateCommand
                 }
                 $this->returnCode = max($this->returnCode, $this->codeceptRunTest($fullCommand, $output));
             } else {
-                $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output));
+                $this->returnCode = max($this->returnCode, $this->executeTestCommand($fullCommand, $output, $noAnsi));
             }
             if (!empty($xml)) {
                 $this->movingXMLFileFromSourceToDestination($xml, $suite, $output);
@@ -259,15 +256,31 @@ class RunTestCommand extends BaseGenerateCommand
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    private function executeTestCommand(string $command, OutputInterface $output)
+    private function executeTestCommand(string $command, OutputInterface $output, $noAnsi)
     {
-        $process = new Process($command);
+        $process = Process::fromShellCommandline($command);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
 
-        return $process->run(function ($type, $buffer) use ($output) {
+        return $process->run(function ($type, $buffer) use ($output, $noAnsi) {
+            $buffer = $this->disableAnsiColorCodes($buffer, $noAnsi);
             $output->write($buffer);
         });
+    }
+
+    /**
+     * @param string $buffer
+     * @param string $noAnsi
+     * @return string
+     */
+    private function disableAnsiColorCodes($buffer, $noAnsi) :string
+    {
+        if (empty($noAnsi)) {
+            return $buffer;
+        }
+        $pattern = "/\x1B\[([0-9]{1,2}(;[0-9]{1,2})*)?[m|K]/";
+        // Use preg_replace to remove ANSI escape codes from the  string
+        return preg_replace($pattern, '', $buffer);
     }
 }

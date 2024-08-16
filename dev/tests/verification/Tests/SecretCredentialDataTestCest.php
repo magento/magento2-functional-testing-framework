@@ -4,20 +4,9 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magento\AcceptanceTest\_default\Backend;
+namespace Magento\FunctionalTestingFramework\Tests\Verification;
 
 use Magento\FunctionalTestingFramework\AcceptanceTester;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use Magento\FunctionalTestingFramework\DataGenerator\Handlers\PersistedObjectHandler;
-use \Codeception\Util\Locator;
-use Yandex\Allure\Adapter\Annotation\Features;
-use Yandex\Allure\Adapter\Annotation\Stories;
-use Yandex\Allure\Adapter\Annotation\Title;
-use Yandex\Allure\Adapter\Annotation\Description;
-use Yandex\Allure\Adapter\Annotation\Parameter;
-use Yandex\Allure\Adapter\Annotation\Severity;
-use Yandex\Allure\Adapter\Model\SeverityLevel;
-use Yandex\Allure\Adapter\Annotation\TestCaseId;
 
 /**
  */
@@ -61,14 +50,14 @@ class SecretCredentialDataTestCest
 
         $I->fillField("#username", "Hardcoded"); // stepKey: fillFieldUsingHardCodedData1
         $I->fillSecretField("#username", $I->getSecret("carriers_dhl_id_eu"));
-            // stepKey: fillFieldUsingSecretCredData1
+        // stepKey: fillFieldUsingSecretCredData1
         $magentoCliUsingHardcodedData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled 0");
-            // stepKey: magentoCliUsingHardcodedData1
+        // stepKey: magentoCliUsingHardcodedData1
         $I->comment($magentoCliUsingHardcodedData1);
 
         $magentoCliUsingSecretCredData1 = $I->magentoCLI("config:set cms/wysiwyg/enabled " .
             $I->getSecret("payment_authorizenet_login"));
-            // stepKey: magentoCliUsingSecretCredData1
+        // stepKey: magentoCliUsingSecretCredData1
         $I->comment($magentoCliUsingSecretCredData1);
     }
 }

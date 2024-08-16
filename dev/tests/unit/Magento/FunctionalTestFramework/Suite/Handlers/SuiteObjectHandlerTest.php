@@ -90,12 +90,12 @@ class SuiteObjectHandlerTest extends MagentoTestCase
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
 
         // clear suite object handler value to inject parsed content
         $property = new ReflectionProperty(SuiteObjectHandler::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
 
         $mockDataParser = $this->createMock(TestDataParser::class);
         $mockDataParser
@@ -128,6 +128,6 @@ class SuiteObjectHandlerTest extends MagentoTestCase
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue($instance);
+        $property->setValue(null, $instance);
     }
 }

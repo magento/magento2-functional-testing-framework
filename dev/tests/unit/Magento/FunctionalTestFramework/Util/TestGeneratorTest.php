@@ -24,6 +24,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
+use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 
 class TestGeneratorTest extends MagentoTestCase
 {
@@ -36,11 +37,11 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
 
         $property = new ReflectionProperty(ModuleResolver::class, 'instance');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
     }
 
     /**
@@ -205,7 +206,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $property->setAccessible(true);
-        $property->setValue($mockConfig);
+        $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -250,7 +251,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $property->setAccessible(true);
-        $property->setValue($mockConfig);
+        $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -289,7 +290,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($cestFileCreatorUtil);
+        $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $testGeneratorObject->createAllTestFiles();
@@ -297,6 +298,104 @@ class TestGeneratorTest extends MagentoTestCase
         // Ensure Test1 was Generated but not Test 2
         $this->assertArrayHasKey('test1Cest', $generatedTests);
         $this->assertArrayNotHasKey('test2Cest', $generatedTests);
+    }
+
+    /**
+     * Test for exception thrown when duplicate arguments found
+     *
+     * @return void
+     * @throws TestFrameworkException
+     */
+    public function testIfExceptionThrownWhenDuplicateArgumentsFound()
+    {
+        $fileContents = '<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+              <actionGroup name="ActionGroupReturningValueActionGroup">
+                  <arguments>
+                      <argument name="count" type="string"/>
+                      <argument name="count" type="string"/>
+                  </arguments>
+                  <grabMultiple selector="selector" stepKey="grabProducts1"/>
+                  <assertCount stepKey="assertCount">
+                      <expectedResult type="int">{{count}}</expectedResult>
+                      <actualResult type="variable">grabProducts1</actualResult>
+                  </assertCount>
+                  <return value="{$grabProducts1}" stepKey="returnProducts1"/>
+              </actionGroup>
+          </actionGroups>';
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+          'userInput' => $actionInput
+        ]);
+        $annotation1 = ['group' => ['someGroupValue']];
+
+        $test1 = new TestObject(
+            'test1',
+            ['fakeAction' => $actionObject],
+            $annotation1,
+            [],
+            'filename'
+        );
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+
+        $test2 = new TestObject(
+            'test2',
+            ['fakeAction' => $actionObject],
+            $annotation2,
+            [],
+            'filename'
+        );
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
+        $result = $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($testGeneratorObject);
+        $this->assertEquals($result, "");
+    }
+
+    /**
+     * Test for exception not thrown when duplicate arguments not found
+     *
+     * @return void
+     */
+    public function testIfExceptionNotThrownWhenDuplicateArgumentsNotFound()
+    {
+        $fileContents = '<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+                <actionGroup name="ActionGroupReturningValueActionGroup">
+                    <arguments>
+                        <argument name="count" type="string"/>
+                    </arguments>
+                    <grabMultiple selector="selector" stepKey="grabProducts1"/>
+                    <assertCount stepKey="assertCount">
+                        <expectedResult type="int">{{count}}</expectedResult>
+                        <actualResult type="variable">grabProducts1</actualResult>
+                    </assertCount>
+                    <return value="{$grabProducts1}" stepKey="returnProducts1"/>
+                </actionGroup>
+            </actionGroups>';
+        $actionInput = 'fakeInput';
+        $actionObject = new ActionObject('fakeAction', 'comment', [
+          'userInput' => $actionInput
+        ]);
+        $annotation1 = ['group' => ['someGroupValue']];
+
+        $test1 = new TestObject(
+            'test1',
+            ['fakeAction' => $actionObject],
+            $annotation1,
+            [],
+            'filename'
+        );
+        $annotation2 = ['group' => ['someOtherGroupValue']];
+
+        $test2 = new TestObject(
+            'test2',
+            ['fakeAction' => $actionObject],
+            $annotation2,
+            [],
+            'filename'
+        );
+        $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
+        $result = $testGeneratorObject->throwExceptionIfDuplicateArgumentsFound($testGeneratorObject);
+        $this->assertEquals($result, "");
     }
 
     /**
@@ -315,7 +414,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $property->setAccessible(true);
-        $property->setValue($mockConfig);
+        $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -354,7 +453,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($cestFileCreatorUtil);
+        $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $testGeneratorObject->createAllTestFiles();
@@ -380,7 +479,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $property->setAccessible(true);
-        $property->setValue($mockConfig);
+        $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
         $actionObject = new ActionObject('fakeAction', 'comment', [
@@ -419,7 +518,7 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
         $property->setAccessible(true);
-        $property->setValue($cestFileCreatorUtil);
+        $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
         $testGeneratorObject->createAllTestFiles();
@@ -438,15 +537,15 @@ class TestGeneratorTest extends MagentoTestCase
 
         $cestFileCreatorUtilInstance = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
         $cestFileCreatorUtilInstance->setAccessible(true);
-        $cestFileCreatorUtilInstance->setValue(null);
+        $cestFileCreatorUtilInstance->setValue(null, null);
 
         $mftfAppConfigInstance = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
         $mftfAppConfigInstance->setAccessible(true);
-        $mftfAppConfigInstance->setValue(null);
+        $mftfAppConfigInstance->setValue(null, null);
 
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
     }
 
     /**
@@ -462,6 +561,6 @@ class TestGeneratorTest extends MagentoTestCase
 
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
         $property->setAccessible(true);
-        $property->setValue($testObjectHandler);
+        $property->setValue(null, $testObjectHandler);
     }
 }

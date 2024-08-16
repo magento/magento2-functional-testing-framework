@@ -37,7 +37,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
     const PARALLEL_DEFAULT_TIME = 10;
     const EXTENDS_REGEX_PATTERN = '/extends=["\']([^\'"]*)/';
     const ACTIONGROUP_REGEX_PATTERN = '/ref=["\']([^\'"]*)/';
-    const TEST_DEPENDENCY_FILE_LOCATION = 'dev/tests/_output/test-dependencies.json';
+    const TEST_DEPENDENCY_FILE_LOCATION_STANDALONE = 'dev/tests/_output/test-dependencies.json';
+    const TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED = 'dev/tests/acceptance/tests/_output/test-dependencies.json';
 
     /**
      * @var ScriptUtil
@@ -233,6 +234,8 @@ class GenerateTestsCommand extends BaseGenerateCommand
             SuiteGenerator::getInstance()->generateAllSuites($testManifest);
 
             $testManifest->generate();
+
+            SuiteGenerator::getInstance()->generateTestgroupmembership($testManifest);
         } catch (\Exception $e) {
             if (!empty(GenerationErrorHandler::getInstance()->getAllErrors())) {
                 GenerationErrorHandler::getInstance()->printErrorSummary();
@@ -249,9 +252,13 @@ class GenerateTestsCommand extends BaseGenerateCommand
         // check test dependencies log command
         if (!empty($log)) {
             if ($log === "testEntityJson") {
-                $this->getTestEntityJson($tests);
+                $this->getTestEntityJson($filterList ??[], $tests);
+                $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
+                if (isset($_ENV['MAGENTO_BP'])) {
+                    $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
+                }
                 $output->writeln(
-                    "Test dependencies file created, Located in: " . self::TEST_DEPENDENCY_FILE_LOCATION
+                    "Test dependencies file created, Located in: " . $testDependencyFileLocation
                 );
             } else {
                 $output->writeln(
@@ -388,21 +395,22 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws TestFrameworkException
      * @throws XmlException|FastFailException
      */
-    private function getTestEntityJson(array $tests = [])
+    private function getTestEntityJson(array $filterList, array $tests = [])
     {
-        $testDependencies = $this->getTestDependencies($tests);
+        $testDependencies = $this->getTestDependencies($filterList, $tests);
         $this->array2Json($testDependencies);
     }
 
     /**
      * Function responsible for getting test dependencies in array
+     * @param array $filterList
      * @param array $tests
      * @return array
      * @throws FastFailException
      * @throws TestFrameworkException
      * @throws XmlException
      */
-    public function getTestDependencies(array $tests = []): array
+    public function getTestDependencies(array $filterList, array $tests = []): array
     {
         $this->scriptUtil = new ScriptUtil();
         $this->testDependencyUtil = new TestDependencyUtil();
@@ -435,7 +443,11 @@ class GenerateTestsCommand extends BaseGenerateCommand
         }
 
         list($testDependencies, $extendedTestMapping) = $this->findTestDependentModule($testXmlFiles);
-        return $this->testDependencyUtil->mergeDependenciesForExtendingTests($testDependencies, $extendedTestMapping);
+        return $this->testDependencyUtil->mergeDependenciesForExtendingTests(
+            $testDependencies,
+            $filterList,
+            $extendedTestMapping
+        );
     }
 
     /**
@@ -555,7 +567,15 @@ class GenerateTestsCommand extends BaseGenerateCommand
      */
     private function array2Json(array $array)
     {
-        $file = fopen(self::TEST_DEPENDENCY_FILE_LOCATION, 'w');
+        $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_EMBEDDED;
+        if (isset($_ENV['MAGENTO_BP'])) {
+            $testDependencyFileLocation = self::TEST_DEPENDENCY_FILE_LOCATION_STANDALONE;
+        }
+        $testDependencyFileLocationDir = dirname($testDependencyFileLocation);
+        if (!is_dir($testDependencyFileLocationDir)) {
+            mkdir($testDependencyFileLocationDir, 0777, true);
+        }
+        $file = fopen($testDependencyFileLocation, 'w');
         $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         fwrite($file, $json);
         fclose($file);

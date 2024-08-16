@@ -7,14 +7,9 @@ declare(strict_types = 1);
 
 namespace Magento\FunctionalTestingFramework\Console;
 
-use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
-use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
-use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
-use Symfony\Component\Console\Input\InputOption;
 
 class RunTestFailedCommand extends BaseGenerateCommand
 {
@@ -78,7 +73,7 @@ class RunTestFailedCommand extends BaseGenerateCommand
                 $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
                 $codeceptionCommand .= $testManifestList[$i];
 
-                $process = new Process($codeceptionCommand);
+                $process = Process::fromShellCommandline($codeceptionCommand);
                 $process->setWorkingDirectory(TESTS_BP);
                 $process->setIdleTimeout(600);
                 $process->setTimeout(0);
