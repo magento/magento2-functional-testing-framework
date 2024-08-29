@@ -1,6 +1,14 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.2
+---------
+### Enhancements
+* Bumped brainmaestro/composer-git-hook  to ^3.0
+* Bumped nikic/php-parser to 5.1.0
+* Bumped monolog/monolog to 3.7.0
+* Bumped guzzlehttp/guzzle to 7.9.2
+
 4.8.1
 ---------
 ### Enhancements
