@@ -10,7 +10,6 @@
     },
     "require": {
         "allure-framework/allure-codeception": "^2.1",
-        "allure-framework/allure-phpunit": "^3",
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
@@ -29,7 +28,7 @@
         "monolog/monolog": "^2.3||^3.0",
         "mustache/mustache": "~2.5",
         "nikic/php-parser": "^4.4||^5.0",
-        "php": ">=8.1",
+        "php": ">8.2",
         "php-webdriver/webdriver": "^1.14.0",
         "spomky-labs/otphp": "^10.0||^11.0",
         "symfony/config": "^6.4",

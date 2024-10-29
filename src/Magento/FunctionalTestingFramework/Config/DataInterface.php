@@ -26,7 +26,7 @@ interface DataInterface
      * @param mixed|null $default
      * @return mixed|null
      */
-    public function get($key = null, $default = null);
+    public function get(mixed $key = null, mixed $default = null);
     // @codingStandardsIgnoreEnd
 
     /**
@@ -35,7 +35,7 @@ interface DataInterface
      * @param string|null $scope
      * @return void
      */
-    public function load($scope = null);
+    public function load(?string $scope = null);
 
     /**
      * Set name of the config file

@@ -31,7 +31,7 @@ class OTP
      * @return string
      * @throws TestFrameworkException
      */
-    public static function getOTP($path = null)
+    public static function getOTP(?string $path = null)
     {
         if ($path === null) {
             $path = self::OTP_SHARED_SECRET_PATH;

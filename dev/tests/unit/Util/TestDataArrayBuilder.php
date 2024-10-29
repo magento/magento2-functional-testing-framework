@@ -107,7 +107,7 @@ class TestDataArrayBuilder
      * @param array $annotations
      * @return $this
      */
-    public function withAnnotations($annotations = null)
+    public function withAnnotations(?array $annotations = null)
     {
         if ($annotations === null) {
             $this->annotations = ['group' => [['value' => 'test']]];
@@ -124,7 +124,7 @@ class TestDataArrayBuilder
      * @param null $beforeHook
      * @return $this
      */
-    public function withBeforeHook($beforeHook = null)
+    public function withBeforeHook(?array $beforeHook = null)
     {
         if ($beforeHook === null) {
             $this->beforeHook = [$this->testActionBeforeName => [
@@ -144,7 +144,7 @@ class TestDataArrayBuilder
      * @param null $afterHook
      * @return $this
      */
-    public function withAfterHook($afterHook = null)
+    public function withAfterHook(?array $afterHook = null)
     {
         if ($afterHook === null) {
             $this->afterHook = [$this->testActionAfterName => [
@@ -165,7 +165,7 @@ class TestDataArrayBuilder
      * @param null $failedHook
      * @return $this
      */
-    public function withFailedHook($failedHook = null)
+    public function withFailedHook(?array $failedHook = null)
     {
         if ($failedHook === null) {
             $this->failedHook = [$this->testActionFailedName => [
@@ -186,7 +186,7 @@ class TestDataArrayBuilder
      * @param array $actions
      * @return $this
      */
-    public function withTestActions($actions = null)
+    public function withTestActions(?array $actions = null)
     {
         if ($actions === null) {
             $this->testActions = [$this->testTestActionName => [
@@ -205,7 +205,7 @@ class TestDataArrayBuilder
      * @param string $filename
      * @return $this
      */
-    public function withFileName($filename = null)
+    public function withFileName(?string $filename = null)
     {
         if ($filename === null) {
             $this->filename =
@@ -223,7 +223,7 @@ class TestDataArrayBuilder
      * @param string $reference
      * @return $this
      */
-    public function withTestReference($reference = null)
+    public function withTestReference(?string $reference = null)
     {
         if ($reference !== null) {
             $this->testReference = $reference;
