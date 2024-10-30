@@ -1,6 +1,16 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.3
+---------
+### Enhancements
+* Bumped aws/aws-sdk-php package to 3.323.4
+* Bumped composer/composer to 2.8.1
+* Bumped laminas/laminas-diactoros to 3.4.1
+* Bumped nikic/php-parser to 5.3.1
+* Bumped squizlabs/php_codesniffer to 3.10.3
+* Remove any unused files remaining after upgrading Codeception.
+
 4.8.2
 ---------
 ### Enhancements
