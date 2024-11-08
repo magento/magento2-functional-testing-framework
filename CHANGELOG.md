@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.12.1
+---------
+
+### Enhancement
+* Remove the symfony process from require-dev in MFTF version used by 2.4.6
+
 3.12.0
 ---------
 
