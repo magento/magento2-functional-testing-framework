@@ -3,6 +3,12 @@ Magento Functional Testing Framework Changelog
 
 4.3.5
 ---------
+### Enhancements
+* Update All dependent symfony packages to >5.4 to overcome security vulnerability in MFTF version used by 2.4.6
+
+
+4.3.5
+---------
 ### Fixes
 * Fixed ANSI Color codes getting appended to output of bin/magento command.
 
