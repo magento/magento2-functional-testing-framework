@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "4.7.2",
+    "version": "4.7.3",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
