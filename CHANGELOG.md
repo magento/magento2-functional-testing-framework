@@ -1,6 +1,18 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.12.4
+---------
+
+### Fixes
+* Same as 3.12.3
+
+3.12.3
+---------
+
+### Fixes
+* Same as 3.12.2
+
 3.12.2
 ---------
 
