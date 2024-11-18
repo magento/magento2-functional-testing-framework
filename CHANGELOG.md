@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.12.2
+---------
+
+### Enhancement
+* Lock php-webdriver ~1.12.0 to overcome webdriver exception
+
+
 3.12.1
 ---------
 
