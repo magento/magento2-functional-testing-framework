@@ -10,6 +10,7 @@ use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
+use Magento\FunctionalTestingFramework\Util\MftfGlobals;
 use Magento\FunctionalTestingFramework\Util\ModuleResolver\ModuleResolverService;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -99,7 +100,7 @@ class ModuleResolver
      *
      * @var string
      */
-    protected $moduleUrl = "rest/V1/modules";
+    protected $moduleUrl = "V1/modules";
 
     /**
      * Url for magento version information.
@@ -184,7 +185,7 @@ class ModuleResolver
 
         $token = ModuleResolverService::getInstance()->getAdminToken();
 
-        $url = UrlFormatter::format(getenv('MAGENTO_BASE_URL')) . $this->moduleUrl;
+        $url = MftfGlobals::getWebApiBaseUrl() . $this->moduleUrl;
 
         $headers = [
             'Authorization: Bearer ' . $token,
