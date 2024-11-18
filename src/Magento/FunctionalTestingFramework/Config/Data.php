@@ -56,7 +56,7 @@ class Data implements \Magento\FunctionalTestingFramework\Config\DataInterface
      * @param null|mixed $default
      * @return array|mixed|null
      */
-    public function get($path = null, $default = null)
+    public function get(mixed $path = null, mixed $default = null)
     {
         if ($path === null) {
             return $this->data;
@@ -94,7 +94,7 @@ class Data implements \Magento\FunctionalTestingFramework\Config\DataInterface
      * @param string|null $scope
      * @return void
      */
-    public function load($scope = null)
+    public function load(?string $scope = null)
     {
         $this->merge(
             $this->reader->read($scope)

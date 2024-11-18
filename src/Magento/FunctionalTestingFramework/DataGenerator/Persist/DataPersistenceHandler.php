@@ -82,7 +82,7 @@ class DataPersistenceHandler
      * @return void
      * @throws TestFrameworkException
      */
-    public function createEntity($storeCode = null)
+    public function createEntity(?string $storeCode = null)
     {
         if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
@@ -136,7 +136,7 @@ class DataPersistenceHandler
      * @return void
      * @throws TestFrameworkException
      */
-    public function getEntity($index = null, $storeCode = null)
+    public function getEntity(?string $index = null, ?string $storeCode = null)
     {
         if (!empty($storeCode)) {
             $this->storeCode = $storeCode;
