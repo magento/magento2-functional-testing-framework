@@ -31,6 +31,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
             try {
                 $process->run();
                 $output = $process->getOutput();
+                echo  $output;
                 if (!$process->isSuccessful()) {
                     $failureOutput = $process->getErrorOutput();
                     if (!empty($failureOutput)) {
@@ -47,6 +48,7 @@ if (!empty($_POST['token']) && !empty($_POST['command'])) {
             }
 
             if (checkForFilePath($output)) {
+                echo __LINE__.$output;
                 $output = "CLI output suppressed, filepath detected in output.";
             }
 
