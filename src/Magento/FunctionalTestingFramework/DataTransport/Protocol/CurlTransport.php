@@ -170,7 +170,6 @@ class CurlTransport implements CurlInterface
     public function read($successRegex = null, $returnRegex = null, $returnIndex = null)
     {
         $response = curl_exec($this->getResource());
-        print_r($response);
         if ($response === false) {
             throw new TestFrameworkException(curl_error($this->getResource()));
         }

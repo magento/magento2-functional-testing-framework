@@ -571,9 +571,6 @@ class MagentoWebDriver extends WebDriver
         );
 
         $executor = new CurlTransport();
-        echo "api url".$apiURL;
-        echo "token ".WebApiAuth::getAdminToken();
-        echo "arguments" .$arguments;
         $executor->write(
             $apiURL,
             [
