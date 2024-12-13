@@ -199,7 +199,7 @@ class MagentoAllureAdapter extends AllureCodeception
      * @throws \Yandex\Allure\Adapter\AllureException
      * @return void
      */
-    public function stepAfter(StepEvent $stepEvent = null)
+    public function stepAfter(?StepEvent $stepEvent = null)
     {
         // Simply return if step is INVISIBLE_STEP_ACTIONS
         if ($this->atInvisibleSteps) {

@@ -76,7 +76,7 @@ class Config implements \Magento\FunctionalTestingFramework\ObjectManager\Config
      * @param RelationsInterface|null  $relations
      * @param DefinitionInterface|null $definitions
      */
-    public function __construct(RelationsInterface $relations = null, DefinitionInterface $definitions = null)
+    public function __construct(?RelationsInterface $relations = null, ?DefinitionInterface $definitions = null)
     {
         $this->relations = $relations ? : new RelationsRuntime();
         $this->definitions = $definitions ? : new DefinitionRuntime();
