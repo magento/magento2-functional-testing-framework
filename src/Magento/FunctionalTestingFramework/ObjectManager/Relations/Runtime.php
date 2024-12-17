@@ -28,7 +28,7 @@ class Runtime implements \Magento\FunctionalTestingFramework\ObjectManager\Relat
      * Runtime constructor.
      * @param \Magento\FunctionalTestingFramework\Code\Reader\ClassReader|null $classReader
      */
-    public function __construct(\Magento\FunctionalTestingFramework\Code\Reader\ClassReader $classReader = null)
+    public function __construct(?\Magento\FunctionalTestingFramework\Code\Reader\ClassReader $classReader = null)
     {
         $this->classReader = $classReader ? : new \Magento\FunctionalTestingFramework\Code\Reader\ClassReader();
     }

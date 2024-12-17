@@ -54,8 +54,8 @@ class Developer implements \Magento\FunctionalTestingFramework\ObjectManager\Fac
      */
     public function __construct(
         \Magento\FunctionalTestingFramework\ObjectManager\ConfigInterface $config,
-        \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager = null,
-        \Magento\FunctionalTestingFramework\ObjectManager\DefinitionInterface $definitions = null,
+        ?\Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager = null,
+        ?\Magento\FunctionalTestingFramework\ObjectManager\DefinitionInterface $definitions = null,
         $globalArguments = []
     ) {
         $this->config = $config;

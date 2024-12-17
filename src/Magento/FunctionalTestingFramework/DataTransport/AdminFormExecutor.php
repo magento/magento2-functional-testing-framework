@@ -157,7 +157,7 @@ class AdminFormExecutor implements CurlInterface
      * @return string|array
      * @throws TestFrameworkException
      */
-    public function read($successRegex = null, $returnRegex = null, $returnIndex = null)
+    public function read(?string $successRegex = null, ?string $returnRegex = null, ?string $returnIndex = null)
     {
         $this->response = $this->transport->read();
         $this->setFormKey();

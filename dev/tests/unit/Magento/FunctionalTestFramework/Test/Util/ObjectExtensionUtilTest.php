@@ -402,7 +402,7 @@ class ObjectExtensionUtilTest extends TestCase
      * @return void
      * @throws Exception
      */
-    private function setMockTestOutput(array $testData = null, array $actionGroupData = null): void
+    private function setMockTestOutput(?array $testData = null, ?array $actionGroupData = null): void
     {
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');

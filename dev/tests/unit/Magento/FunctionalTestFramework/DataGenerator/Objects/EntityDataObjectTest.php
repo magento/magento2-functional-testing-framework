@@ -20,12 +20,12 @@ function function_exists($val)
     return true;
 }
 
-function msq($id = null)
+function msq(?string $id = null)
 {
     return "msqUnique";
 }
 
-function msqs($id = null)
+function msqs(?string $id = null)
 {
     return "msqsUnique";
 }

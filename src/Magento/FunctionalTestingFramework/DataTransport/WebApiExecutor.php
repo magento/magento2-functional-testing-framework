@@ -48,7 +48,7 @@ class WebApiExecutor implements CurlInterface
      * @param string $storeCode
      * @throws FastFailException
      */
-    public function __construct($storeCode = null)
+    public function __construct(?string $storeCode = null)
     {
         $this->storeCode = $storeCode;
         $this->transport = new CurlTransport();
@@ -98,7 +98,7 @@ class WebApiExecutor implements CurlInterface
      * @return string
      * @throws TestFrameworkException
      */
-    public function read($successRegex = null, $returnRegex = null, $returnIndex = null)
+    public function read(?string $successRegex = null, ?string $returnRegex = null, ?string  $returnIndex = null)
     {
         return $this->transport->read();
     }

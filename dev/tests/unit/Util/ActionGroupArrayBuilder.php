@@ -111,7 +111,7 @@ class ActionGroupArrayBuilder
      * @param string $extendedActionGroup
      * @return $this
      */
-    public function withExtendedAction($extendedActionGroup = null)
+    public function withExtendedAction(?string $extendedActionGroup = null)
     {
         $this->extends = $extendedActionGroup;
         return $this;

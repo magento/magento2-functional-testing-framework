@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.0
+---------
+### Enhancements
+* Provided support for PHP 8.4
+* Dropped the support for PHP 8.1
+* Removed unwanted dependent packages
+
 4.8.3
 ---------
 ### Enhancements
