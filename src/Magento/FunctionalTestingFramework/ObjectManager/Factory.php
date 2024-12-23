@@ -31,8 +31,8 @@ class Factory extends \Magento\FunctionalTestingFramework\ObjectManager\Factory\
      */
     public function __construct(
         ConfigInterface $config,
-        \Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager = null,
-        DefinitionInterface $definitions = null,
+        ?\Magento\FunctionalTestingFramework\ObjectManagerInterface $objectManager = null,
+        ?DefinitionInterface $definitions = null,
         $globalArguments = []
     ) {
         parent::__construct($config, $objectManager, $definitions, $globalArguments);

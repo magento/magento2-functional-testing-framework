@@ -27,7 +27,7 @@ class Module implements FileResolverInterface
      * @param ModuleResolver|null $moduleResolver
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function __construct(ModuleResolver $moduleResolver = null)
+    public function __construct(?ModuleResolver $moduleResolver = null)
     {
         $this->moduleResolver = ModuleResolver::getInstance();
     }
