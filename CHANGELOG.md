@@ -1,5 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
+3.13.0
+---------
+
+### Enhancement
+* Provided support for chrome 131
+
 3.12.5
 ---------
 
