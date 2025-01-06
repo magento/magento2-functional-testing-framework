@@ -40,7 +40,7 @@ class Sequence extends Module
     }
 
     /**
-     * @phpcs:ignore
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * after method
      * @return  void
      */
