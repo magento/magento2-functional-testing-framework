@@ -12,6 +12,11 @@ use Codeception\Module;
 use Codeception\Exception\ModuleException;
 use Codeception\TestInterface;
 
+/**
+ * Class Sequence
+ * Implemented here as a replacement for codeception/module-sequence due to PHP 8.4 deprecation errors.
+ * This class can be removed when PHP 8.4 compatibility is updated in codeception/module-sequence.
+ */
 class Sequence extends Module
 {
     /**
