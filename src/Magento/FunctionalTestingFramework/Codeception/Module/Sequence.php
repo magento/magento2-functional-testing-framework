@@ -40,6 +40,7 @@ class Sequence extends Module
     }
 
     /**
+     * @phpcs:ignore
      * after method
      * @return  void
      */
