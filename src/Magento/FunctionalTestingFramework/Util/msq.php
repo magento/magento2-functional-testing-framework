@@ -13,7 +13,7 @@ if (!function_exists('msq')) {
      * @param null $id
      * @return string
      */
-    function msq(?int|string|null $id = null)
+    function msq(?int|string $id = null)
     {
         if ($id and isset(MagentoSequence::$hash[$id])) {
             return MagentoSequence::$hash[$id];
@@ -34,7 +34,7 @@ if (!function_exists('msqs')) {
      * @param null $id
      * @return string
      */
-    function msqs(?int|string|null $id = null)
+    function msqs(?int|string $id = null)
     {
         if ($id and isset(MagentoSequence::$suiteHash[$id])) {
             return MagentoSequence::$suiteHash[$id];
