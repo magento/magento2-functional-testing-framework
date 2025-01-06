@@ -13,30 +13,45 @@ class Sequence extends Module
     /**
      * @var array<int|string,string>
      */
-    public static array $hash = [];
+    public static array $hash = [];// phpcs:ignore
 
     /**
      * @var array<int|string,string>
      */
-    public static array $suiteHash = [];
+    public static array $suiteHash = [];// phpcs:ignore
 
-    public static string $prefix = '';
+    /**
+     * @var string
+     */
+    public static string $prefix = '';// phpcs:ignore
 
     /**
      * @var array<string, string>
      */
-    protected array $config = ['prefix' => '{id}_'];
+    protected array $config = ['prefix' => '{id}_'];// phpcs:ignore
 
+    /**
+     * Initialise method
+     * @return  void
+     */
     public function _initialize(): void
     {
         static::$prefix = $this->config['prefix'];
     }
 
+    /**
+     * after method
+     * @return  void
+     */
     public function _after(TestInterface $test): void
     {
         self::$hash = [];
     }
 
+    /**
+     * after suite method
+     * @return  void
+     */
     public function _afterSuite(): void
     {
         self::$suiteHash = [];
