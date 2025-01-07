@@ -422,7 +422,7 @@ class FunctionCommentSniff extends PEARFunctionCommentSniff
                                   $typeHint,
                                   $param['var'],
                                  );
-                        if(ltrim($typeHint, '?') !== $suggestedTypeHint) {
+                        if ($suggestedTypeHint != "null" && (ltrim($typeHint, '?') !== $suggestedTypeHint)) {
                             $phpcsFile->addError($error, $stackPtr, 'IncorrectTypeHint', $data);
                         }
                     }//end if
