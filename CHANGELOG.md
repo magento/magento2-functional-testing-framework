@@ -7,6 +7,7 @@ Magento Functional Testing Framework Changelog
 * Provided support for PHP 8.4
 * Dropped the support for PHP 8.1
 * Removed unwanted dependent packages
+* Removed the dependency of codeception/module-sequence and implemented internal adjustments to address PHP 8.4 deprecations.
 
 4.8.3
 ---------
