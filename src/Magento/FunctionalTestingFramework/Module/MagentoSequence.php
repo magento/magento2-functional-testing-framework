@@ -7,7 +7,7 @@
 // @codingStandardsIgnoreFile
 namespace Magento\FunctionalTestingFramework\Module;
 
-use Codeception\Module\Sequence;
+use Magento\FunctionalTestingFramework\Codeception\Module\Sequence;
 use Codeception\Exception\ModuleException;
 
 /**
