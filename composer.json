@@ -13,7 +13,6 @@
         "aws/aws-sdk-php": "^3.132",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
-        "codeception/module-sequence": "^3.0",
         "codeception/module-webdriver": "^4.0",
         "composer/composer": "^1.9||^2.0,!=2.2.16",
         "csharpru/vault-php": "^4.2.1",
