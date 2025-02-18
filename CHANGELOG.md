@@ -1,5 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
+
+4.3.11
+---------
+
+### Fixes
+* Allowed additional actions to read from credentials file to fix page builder failures.
+
 4.3.10
 ---------
 
