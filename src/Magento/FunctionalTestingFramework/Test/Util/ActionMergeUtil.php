@@ -26,7 +26,7 @@ class ActionMergeUtil
     const DEFAULT_SKIP_ON_ORDER = 'before';
     const DEFAULT_SKIP_OFF_ORDER = 'after';
     const DEFAULT_WAIT_ORDER = 'after';
-    const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field'];
+    const APPROVED_ACTIONS = ['fillField', 'magentoCLI', 'field', 'waitForElement', 'seeInField'];
     const SECRET_MAPPING = ['fillField' => 'fillSecretField', 'magentoCLI' => 'magentoCLISecret'];
     const CREDS_REGEX = "/{{_CREDS\.([\w|\/]+)}}/";
 
