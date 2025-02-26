@@ -170,6 +170,7 @@ class BasicFunctionalTestCest
 		$I->seeElementInDOM(".functionalTestSelector"); // stepKey: seeElementInDOMKey1
 		$I->seeInCurrentUrl("/functionalUrl"); // stepKey: seeInCurrentUrlKey1
 		$I->seeInField(".functionalTestSelector", "someInput"); // stepKey: seeInFieldKey1
+		$I->seeInSecretField(".functionalTestSelector", $I->getSecret("someKey")); // stepKey: seeInFieldKey2
 		$I->seeInPageSource("Home Page"); // stepKey: seeInPageSourceKey1
 		$I->seeInPageSource("<h1 class=\"page-title\">"); // stepKey: seeInPageSourceKey2
 		$I->seeInPopup("someInput"); // stepKey: seeInPopupKey1
