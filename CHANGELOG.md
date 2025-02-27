@@ -4,6 +4,7 @@ Magento Functional Testing Framework Changelog
 5.0.3
 ---------
 ### Fixes
+* Allowed additional actions to read from credentials file to fix page builder failures.
 * Added support for chrome 131
 
 5.0.2
@@ -68,16 +69,16 @@ Magento Functional Testing Framework Changelog
 4.7.2
 ---------
 ### Enhancements
-* Fail static test when introduced filename does not equal the MFTF object name 
+* Fail static test when introduced filename does not equal the MFTF object name
   contained within.
 
 4.7.1
 ---------
 ### Enhancements
 *  Bumped all symfony dependencies to `^6.0
-*  Removed abandoned package codacy/coverage 
+*  Removed abandoned package codacy/coverage
 *  Removed abandoned package sebastian/phpcpd
-*  Bumped monolog/monolog to ^3.0 
+*  Bumped monolog/monolog to ^3.0
 *  Bumped nikic/php-parser to ^5.0
 
 4.7.0
