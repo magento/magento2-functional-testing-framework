@@ -46,7 +46,7 @@ class OperationDataArrayResolver
      *
      * @param array $dependentEntities
      */
-    public function __construct($dependentEntities = null)
+    public function __construct(?array $dependentEntities = null)
     {
         if ($dependentEntities !== null) {
             foreach ($dependentEntities as $entity) {

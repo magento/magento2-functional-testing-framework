@@ -70,7 +70,7 @@ class FilePathFormatterTest extends MagentoTestCase
      *
      * @return array
      */
-    public function formatDataProvider(): array
+    public static function formatDataProvider(): array
     {
         $path1 = rtrim(TESTS_BP, '/');
         $path2 = $path1 . DIRECTORY_SEPARATOR;
@@ -92,7 +92,7 @@ class FilePathFormatterTest extends MagentoTestCase
      *
      * @return array
      */
-    public function formatExceptionDataProvider(): array
+    public static function formatExceptionDataProvider(): array
     {
         return [
             ['abc', null],

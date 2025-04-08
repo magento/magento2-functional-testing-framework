@@ -124,7 +124,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
      * @param string|null $scope
      * @return array
      */
-    public function read($scope = null)
+    public function read(?string $scope = null)
     {
         $scope = $scope ?: $this->defaultScope;
         $fileList = $this->fileResolver->get($this->fileName, $scope);
@@ -228,7 +228,7 @@ class Filesystem implements \Magento\FunctionalTestingFramework\Config\ReaderInt
      * @throws \Exception
      * @return void
      */
-    protected function validateSchema($configMerger, $filename = null)
+    protected function validateSchema($configMerger, ?string $filename = null)
     {
         if ($this->validationState->isValidationRequired()) {
             $errors = [];

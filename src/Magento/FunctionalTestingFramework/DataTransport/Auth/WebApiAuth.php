@@ -56,7 +56,7 @@ class WebApiAuth
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public static function getAdminToken($username = null, $password = null)
+    public static function getAdminToken(?string $username = null, ?string $password = null)
     {
         $login = $username ?? getenv('MAGENTO_ADMIN_USERNAME');
         try {

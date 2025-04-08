@@ -16,8 +16,6 @@ echo ""
 echo "==============================="
 echo "      COPY PASTE DETECTOR"
 echo "==============================="
-vendor/bin/phpcpd ./src
-echo ""
 
 echo "==============================="
 echo "       MESS DETECTOR"

@@ -1,6 +1,58 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+4.8.2
+---------
+### Enhancements
+* Bumped brainmaestro/composer-git-hook  to ^3.0
+* Bumped nikic/php-parser to 5.1.0
+* Bumped monolog/monolog to 3.7.0
+* Bumped guzzlehttp/guzzle to 7.9.2
+
+4.8.1
+---------
+### Enhancements
+* Bumped allure-codeception to ^2.4
+* Bumped squizlabs/php_codesniffer to 3.10.1
+* Bumped composer/composer to 2.7.7
+* Bumped monolog/monolog to 3.6.0
+* Bumped spomky-labs/otphp to 11.3.0
+* Bumped aws-sdk-php to 3.314.1
+
+### Fixes
+* Unneeded reports are shown when MFTF Static tests fail.
+
+4.8.0
+---------
+### Enhancements
+* Bumped phpunit/phpunit to ^10.0
+* Bumped allure-framework/allure-phpunit to ^3
+* Bumped codeception/module-webdriver ^4.0
+
+### Fixes
+* Fixed Class "Magento\FunctionalTestingFramework\StaticCheck\ActionGroupArgumentsCheck" not found on running vendor/bin/mftf build:project --upgrade.
+
+4.7.2
+---------
+### Enhancements
+* Fail static test when introduced filename does not equal the MFTF object name 
+  contained within.
+
+4.7.1
+---------
+### Enhancements
+*  Bumped all symfony dependencies to `^6.0
+*  Removed abandoned package codacy/coverage 
+*  Removed abandoned package sebastian/phpcpd
+*  Bumped monolog/monolog to ^3.0 
+*  Bumped nikic/php-parser to ^5.0
+
+4.7.0
+---------
+### Enhancements
+*  Bumped all symfony dependencies to `^6.0
+*  Unit Test for PTS enabled doesn't apply filter fix
+
 4.6.1
 ---------
 ### Enhancements
