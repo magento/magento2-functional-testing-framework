@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.4
+---------
+### Enhancements 
+* components upgrade
+
 5.0.3
 ---------
 ### Fixes
