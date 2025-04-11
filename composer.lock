@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "75c6a0be05e7ff8d5e76f91b53a74a0c",
+
     "packages": [
         {
             "name": "allure-framework/allure-codeception",

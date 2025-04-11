@@ -1,6 +1,40 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.3
+---------
+### Fixes
+* Allowed additional actions to read from credentials file to fix page builder failures.
+* Added support for chrome 131
+
+5.0.2
+---------
+### Fixes
+* Removed support for chrome 131
+
+5.0.1
+---------
+### Enhancement
+* Provided support for chrome 131
+
+5.0.0
+---------
+### Enhancements
+* Provided support for PHP 8.4
+* Dropped the support for PHP 8.1
+* Removed unwanted dependent packages
+* Removed the dependency of codeception/module-sequence and implemented internal adjustments to address PHP 8.4 deprecations.
+
+4.8.3
+---------
+### Enhancements
+* Bumped aws/aws-sdk-php package to 3.323.4
+* Bumped composer/composer to 2.8.1
+* Bumped laminas/laminas-diactoros to 3.4.1
+* Bumped nikic/php-parser to 5.3.1
+* Bumped squizlabs/php_codesniffer to 3.10.3
+* Remove any unused files remaining after upgrading Codeception.
+
 4.8.2
 ---------
 ### Enhancements
@@ -35,16 +69,16 @@ Magento Functional Testing Framework Changelog
 4.7.2
 ---------
 ### Enhancements
-* Fail static test when introduced filename does not equal the MFTF object name 
+* Fail static test when introduced filename does not equal the MFTF object name
   contained within.
 
 4.7.1
 ---------
 ### Enhancements
 *  Bumped all symfony dependencies to `^6.0
-*  Removed abandoned package codacy/coverage 
+*  Removed abandoned package codacy/coverage
 *  Removed abandoned package sebastian/phpcpd
-*  Bumped monolog/monolog to ^3.0 
+*  Bumped monolog/monolog to ^3.0
 *  Bumped nikic/php-parser to ^5.0
 
 4.7.0
