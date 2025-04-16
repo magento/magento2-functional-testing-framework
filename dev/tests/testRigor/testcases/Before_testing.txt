@@ -1,0 +1,1 @@
+validate that page contains "Default welcome msg!"

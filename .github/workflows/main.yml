@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.2', '8.3', '8.4']
+        php-versions: ["8.2", "8.3", "8.4"]
     steps:
       - uses: actions/checkout@v2
 
@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
-      
+
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -39,14 +39,14 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit --configuration dev/tests/phpunit.xml --testsuite unit --coverage-clover clover.xml
 
-#      - name: Monitor coverage
-#        if: github.event_name == 'pull_request'
-#        uses: slavcodev/coverage-monitor-action@1.2.0
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          clover_file: "clover.xml"
-#          threshold_alert: 10
-#          threshold_warning: 20
+  #      - name: Monitor coverage
+  #        if: github.event_name == 'pull_request'
+  #        uses: slavcodev/coverage-monitor-action@1.2.0
+  #        with:
+  #          github_token: ${{ secrets.GITHUB_TOKEN }}
+  #          clover_file: "clover.xml"
+  #          threshold_alert: 10
+  #          threshold_warning: 20
 
   verification-tests:
     name: Verification Tests
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.2', '8.3', '8.4']
+        php-versions: ["8.2", "8.3", "8.4"]
     steps:
       - uses: actions/checkout@v2
 
@@ -72,7 +72,7 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
-      
+
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.2', '8.3', '8.4']
+        php-versions: ["8.2", "8.3", "8.4"]
     steps:
       - uses: actions/checkout@v2
 
@@ -104,7 +104,7 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
-      
+
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -118,7 +118,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.2', '8.3', '8.4']
+        php-versions: ["8.2", "8.3", "8.4"]
 
     services:
       chrome:
@@ -126,7 +126,7 @@ jobs:
         ports:
           - 4444:4444
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@master
@@ -136,13 +136,13 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
-      
+
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -150,4 +150,81 @@ jobs:
       - name: Run tests
         run: bin/functional
 
+  testrigor-tests:
+    name: testRigor Tests
+    runs-on: ubuntu-latest
 
+    env:
+      # testRigor variables
+      MAGENTO_TEST_SUITE_ID: ${{vars.MAGENTO_TEST_SUITE_ID}}
+      MAGENTO_AUTH_TOKEN: ${{secrets.MAGENTO_AUTH_TOKEN}}
+
+      # MFTF Magento connection variables
+      MAGENTO_BASE_URL: ${{vars.MAGENTO_BASE_URL}}
+      MAGENTO_BACKEND_NAME: ${{vars.MAGENTO_BACKEND_NAME}}
+      MAGENTO_ADMIN_USERNAME: ${{vars.MAGENTO_ADMIN_USERNAME}}
+      MAGENTO_ADMIN_PASSWORD: ${{secrets.MAGENTO_ADMIN_PASSWORD}}
+
+      # MFTF configuration
+      SELENIUM_CLOSE_ALL_SESSIONS: true
+      BROWSER: chrome
+      WINDOW_WIDTH: 1920
+      WINDOW_HEIGHT: 1080
+      WAIT_TIMEOUT: 60
+      MAGENTO_CLI_WAIT_TIMEOUT: 60
+      TEST_ENV: ci
+      HEADLESS: true
+
+    services:
+      chrome:
+        image: selenium/standalone-chrome:3.141.59-zirconium
+        ports:
+          - 4444:4444
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: "8.2"
+          extensions: curl, dom, intl, json, openssl, zip
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Verify Magento connection
+        run: |
+          echo "Testing connection to $MAGENTO_BASE_URL"
+          curl -f -s -o /dev/null $MAGENTO_BASE_URL || echo "Warning: Cannot connect to Magento"
+
+      - name: Build MFTF project
+        run: php bin/mftf build:project
+
+      - name: Verify MFTF configuration
+        run: php bin/mftf doctor || true
+
+      - name: Run testRigor tests
+        run: |
+          echo "Running MFTF testRigor tests..."
+          php bin/mftf run:testrigor
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mftf-test-artifacts
+          path: |
+            dev/tests/acceptance/_output/
+            var/log/
+          retention-days: 7

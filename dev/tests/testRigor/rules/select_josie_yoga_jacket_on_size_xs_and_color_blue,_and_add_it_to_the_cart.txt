@@ -1,0 +1,4 @@
+click "Josie Yoga Jacket"
+click "XS"
+click "Blue"
+click "Add to Cart"

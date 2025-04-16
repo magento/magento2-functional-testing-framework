@@ -1,0 +1,6 @@
+click "Women"
+click "Bras & Tanks"
+check if page contains "Tank" above "$" and roughly below "Shopping Options"
+scroll down until page contains "Page 2"
+click "Page 2"
+check if page contains "Bra" above "$" and roughly below "Shopping Options"

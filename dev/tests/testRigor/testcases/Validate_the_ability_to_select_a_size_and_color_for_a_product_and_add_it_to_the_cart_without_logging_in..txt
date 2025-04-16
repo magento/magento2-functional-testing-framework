@@ -1,0 +1,8 @@
+hover over "Women"
+click "Tops"
+click "Breathe-Easy Tank"
+click "XS"
+click "Yellow"
+click "Add to Cart"
+click button "shopping cart"
+validate that page contains "Breathe-Easy tank" roughly below "Item"

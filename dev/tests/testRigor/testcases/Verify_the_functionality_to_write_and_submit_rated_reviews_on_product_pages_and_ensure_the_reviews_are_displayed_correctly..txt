@@ -1,0 +1,9 @@
+search for "Bag"
+click "Bag" roughly below "Items"
+click "Add your review"
+validate "You're reviewing:" is visible
+validate "Submit Review" is visible
+click "4 stars" using ai
+fill out form
+click "Submit Review"
+validate that page contains "You submitted your review for moderation."

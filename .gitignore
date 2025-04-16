@@ -2,6 +2,9 @@
 composer.phar
 vendor/*
 .env
+node_modules/
+package-lock.json
+.mftf-tools/
 _generated
 AcceptanceTester.php
 cghooks.lock
