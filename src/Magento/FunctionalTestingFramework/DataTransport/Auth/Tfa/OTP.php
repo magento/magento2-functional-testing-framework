@@ -9,6 +9,7 @@ namespace Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use OTPHP\TOTP;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
+use DateTimeImmutable;
 
 /**
  * Class OTP
@@ -57,7 +58,14 @@ class OTP
                 throw new TestFrameworkException('Unable to get OTP' . PHP_EOL . $e->getMessage());
             }
 
-            self::$totps[$path] = TOTP::create($secret);
+            self::$totps[$path] = TOTP::create(
+              $secret,
+              TOTP::DEFAULT_PERIOD,
+              TOTP::DEFAULT_DIGEST,
+              TOTP::DEFAULT_DIGITS,
+              TOTP::DEFAULT_EPOCH,
+              new DateTimeImmutable()
+            );
             self::$totps[$path]->setIssuer('MFTF');
             self::$totps[$path]->setLabel('MFTF Testing');
         }
