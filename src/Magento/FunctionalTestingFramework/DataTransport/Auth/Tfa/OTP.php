@@ -59,12 +59,12 @@ class OTP
             }
 
             self::$totps[$path] = TOTP::create(
-              $secret,
-              TOTP::DEFAULT_PERIOD,
-              TOTP::DEFAULT_DIGEST,
-              TOTP::DEFAULT_DIGITS,
-              TOTP::DEFAULT_EPOCH,
-              new DateTimeImmutable()
+                $secret,
+                TOTP::DEFAULT_PERIOD,
+                TOTP::DEFAULT_DIGEST,
+                TOTP::DEFAULT_DIGITS,
+                TOTP::DEFAULT_EPOCH,
+                new DateTimeImmutable()
             );
             self::$totps[$path]->setIssuer('MFTF');
             self::$totps[$path]->setLabel('MFTF Testing');
