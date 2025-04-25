@@ -9,7 +9,6 @@ namespace Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use OTPHP\TOTP;
 use Magento\FunctionalTestingFramework\DataGenerator\Handlers\CredentialStore;
-use DateTimeImmutable;
 
 /**
  * Class OTP
@@ -64,7 +63,7 @@ class OTP
                 TOTP::DEFAULT_DIGEST,
                 TOTP::DEFAULT_DIGITS,
                 TOTP::DEFAULT_EPOCH,
-                new DateTimeImmutable()
+                new Clock()
             );
             self::$totps[$path]->setIssuer('MFTF');
             self::$totps[$path]->setLabel('MFTF Testing');
