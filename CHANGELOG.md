@@ -1,6 +1,17 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.4
+---------
+### Enhancements
+* Bumped aws/aws-sdk-php package to 3.342.28
+* Bumped composer/composer to 2.8.8
+* Bumped codeception/codeception to 5.2.1
+* Bumped codeception/module-webdriver to 4.0.3
+* Bumped guzzlehttp/guzzle to 7.9.3
+* Bumped monolog/monolog to 3.9.0
+* Updated cache package version to @v4
+
 5.0.3
 ---------
 ### Fixes
