@@ -404,10 +404,6 @@ class TestContextExtension extends BaseExtension
             $stepAction = $e->getStep()->getHumanizedActionWithoutArguments();
         }
         $stepArgs = $e->getStep()->getArgumentsAsString($argumentsLength);
-        /*if (!trim($stepAction)) {
-            $stepAction = $e->getStep()->getMetaStep()->getHumanizedActionWithoutArguments();
-            $stepArgs = $e->getStep()->getMetaStep()->getArgumentsAsString($argumentsLength);
-        }*/
         $stepName = '';
 
         if (isset($stepName)) {
