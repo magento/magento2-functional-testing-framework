@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.13.4
+---------
+### Fixes
+* Locked behat/gherkin to <=4.12.0
+
 3.13.3
 ---------
 ### Fixes
