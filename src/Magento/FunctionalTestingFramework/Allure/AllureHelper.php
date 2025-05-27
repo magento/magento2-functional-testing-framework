@@ -24,6 +24,7 @@ class AllureHelper
     {
         if (!is_string($data)) {
             try {
+                // phpcs:ignore Magento2.Security.InsecureFunction
                 $data = serialize($data);
             } catch (\Exception $exception) {
                 throw  new \Exception($data->getMessage());
@@ -48,6 +49,7 @@ class AllureHelper
     public static function addAttachmentToLastStep($data, $caption): void
     {
         if (!is_string($data)) {
+            // phpcs:ignore Magento2.Security.InsecureFunction
             $data = serialize($data);
         }
         if (@file_exists($data) && is_file($data)) {
