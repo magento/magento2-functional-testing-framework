@@ -251,6 +251,7 @@ class VaultStorage extends BaseStorage
      */
     private function execVaultTokenHelper($cmd)
     {
+        // phpcs:ignore Magento2.Security.InsecureFunction
         exec($cmd, $out, $status);
         if ($status === 0 && isset($out[0]) && !empty($out[0])) {
             return $out[0];

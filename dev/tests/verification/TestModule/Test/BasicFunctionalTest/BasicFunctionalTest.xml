@@ -108,6 +108,7 @@
         <seeElementInDOM selector=".functionalTestSelector" stepKey="seeElementInDOMKey1"/>
         <seeInCurrentUrl url="/functionalUrl" stepKey="seeInCurrentUrlKey1"/>
         <seeInField selector=".functionalTestSelector" userInput="someInput" stepKey="seeInFieldKey1" />
+        <seeInField selector=".functionalTestSelector" userInput="{{_CREDS.someKey}}" stepKey="seeInFieldKey2" />
         <seeInPageSource html="Home Page" stepKey="seeInPageSourceKey1"/>
         <seeInPageSource html="&#60;h1 class&#61;&#34;page-title&#34;&#62;" stepKey="seeInPageSourceKey2"/>
         <seeInPopup userInput="someInput" stepKey="seeInPopupKey1"/>
