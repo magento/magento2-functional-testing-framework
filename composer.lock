@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7556e816d320192bd4d43e1710d665d8",
+    "content-hash": "321fa6ea41d9fbba05f0597ee9cb7f7f",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -1855,7 +1855,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.2.0"
+                "source": "https://github.com/guzzle/promises/tree/2.0.4"
             },
             "funding": [
                 {
