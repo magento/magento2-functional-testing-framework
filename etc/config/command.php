@@ -96,7 +96,6 @@ function escapeCommand($command)
  */
 function validateCommand($magentoBinary, $command)
 {
-    // phpcs:ignore Magento2.Security.InsecureFunction
     exec($magentoBinary . ' list', $commandList);
     // Trim list of commands after first whitespace
     $commandList = array_map("trimAfterWhitespace", $commandList);
