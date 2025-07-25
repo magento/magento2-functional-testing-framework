@@ -1,28 +1,38 @@
 #!/bin/bash
 
-# Copyright © Magento, Inc. All rights reserved.
-# See COPYING.txt for license details.
+# Copyright 2017 Adobe
+# All Rights Reserved.
 
 
 FILE_EXTENSIONS='.php\|.xml\|.xsd'
 BLOCKLIST='bin/blocklist.txt'
 RESULT=''
 
+CURRENT_YEAR=$(date +"%Y")
+
 # Iterate through the list of tracked files
 # that have the expected extensions
 # that are not ignored
-for i in `git ls-tree --full-tree -r --name-only HEAD | grep $FILE_EXTENSIONS | grep -v -f $BLOCKLIST`
-do
-    if echo `cat $i` | grep -q -v "Copyright © Magento, Inc. All rights reserved."; then
-        # Copyright is missing
-        RESULT+="$i\n"
+for i in $(git ls-tree --full-tree -r --name-only HEAD | grep $FILE_EXTENSIONS | grep -v -f $BLOCKLIST); do
+    CONTENT=$(cat "$i")
+
+    # Extract year from copyright line
+    if echo "$CONTENT" | grep -qE "Copyright [0-9]{4} Adobe"; then
+        YEAR=$(echo "$CONTENT" | grep -oE "Copyright [0-9]{4} Adobe" | grep -oE "[0-9]{4}")
+
+        if [[ $YEAR -ge 2010 && $YEAR -le $CURRENT_YEAR ]]; then
+            continue  # Valid copyright
+        else
+            RESULT+="$i (Invalid year: $YEAR)\n"
+        fi
+    else
+        RESULT+="$i (Missing copyright)\n"
     fi
 done
 
 if [[ ! -z $RESULT ]]; then
-    printf "\nTHE FOLLOWING FILES ARE MISSING THE MAGENTO COPYRIGHT:\n\n"
-    printf "    Copyright © Magento, Inc. All rights reserved.\n"
-    printf "    See COPYING.txt for license details.\n\n"
+    printf "\nTHE FOLLOWING FILES HAVE COPYRIGHT ISSUES:\n\n"
+    printf "Expected format: Copyright <year> Adobe (year between 2010 and $CURRENT_YEAR)\n\n"
     printf "$RESULT\n"
     exit 1
 fi
