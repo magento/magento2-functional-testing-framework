@@ -139,7 +139,7 @@ class GenerateTestsCommand extends BaseGenerateCommand
      * @throws FastFailException
      * @throws XmlException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->setIOStyle($input, $output);
         $tests = $input->getArgument('name');

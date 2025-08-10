@@ -62,7 +62,7 @@ class DoctorCommand extends Command
      * @throws TestFrameworkException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output):int
     {
         // For output style
         $this->ioStyle = new SymfonyStyle($input, $output);
