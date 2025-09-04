@@ -399,8 +399,7 @@ class TestContextExtension extends BaseExtension
             }
         }
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
-        if (strpos($stepAction, ActionGroupObject::ACTION_GROUP_CONTEXT_START) === false
-        ) {
+        if (strpos($stepAction, ActionGroupObject::ACTION_GROUP_CONTEXT_START) === false) {
             $stepAction = $e->getStep()->getHumanizedActionWithoutArguments();
         }
         $stepArgs = $e->getStep()->getArgumentsAsString($argumentsLength);
