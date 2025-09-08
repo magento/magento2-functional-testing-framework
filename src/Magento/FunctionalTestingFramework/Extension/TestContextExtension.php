@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
 
 namespace Magento\FunctionalTestingFramework\Extension;
@@ -383,7 +383,6 @@ class TestContextExtension extends BaseExtension
         //Hard set to 200; we don't expose this config in MFTF
         $argumentsLength = 200;
         $stepKey = null;
-
         if (!($e->getStep() instanceof Comment)) {
             $stepKey = $this->retrieveStepKeyForAllure($e->getStep(), $e->getTest()->getMetadata()->getFilename());
             $isActionGroup = (
@@ -400,16 +399,10 @@ class TestContextExtension extends BaseExtension
             }
         }
         // DO NOT alter action if actionGroup is starting, need the exact actionGroup name for good logging
-        if (strpos($stepAction, ActionGroupObject::ACTION_GROUP_CONTEXT_START) === false
-            && !($e->getStep() instanceof Comment)
-        ) {
+        if (strpos($stepAction, ActionGroupObject::ACTION_GROUP_CONTEXT_START) === false) {
             $stepAction = $e->getStep()->getHumanizedActionWithoutArguments();
         }
         $stepArgs = $e->getStep()->getArgumentsAsString($argumentsLength);
-        if (!trim($stepAction)) {
-            $stepAction = $e->getStep()->getMetaStep()->getHumanizedActionWithoutArguments();
-            $stepArgs = $e->getStep()->getMetaStep()->getArgumentsAsString($argumentsLength);
-        }
         $stepName = '';
 
         if (isset($stepName)) {

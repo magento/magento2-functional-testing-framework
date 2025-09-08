@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.6
+---------
+### Fixes
+* Updated copyright check to use the new Adobe copyright.
+* Resolved errors caused by whitespace-only comments.
+* Addressed deprecation warnings from spomky-labs/otphp.
+
 5.0.5
 ---------
 ### Enhancements

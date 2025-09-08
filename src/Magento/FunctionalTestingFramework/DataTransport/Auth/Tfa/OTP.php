@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2020 Adobe
+ * All Rights Reserved.
  */
 
 namespace Magento\FunctionalTestingFramework\DataTransport\Auth\Tfa;
@@ -57,7 +57,14 @@ class OTP
                 throw new TestFrameworkException('Unable to get OTP' . PHP_EOL . $e->getMessage());
             }
 
-            self::$totps[$path] = TOTP::create($secret);
+            self::$totps[$path] = TOTP::create(
+                $secret,
+                TOTP::DEFAULT_PERIOD,
+                TOTP::DEFAULT_DIGEST,
+                TOTP::DEFAULT_DIGITS,
+                TOTP::DEFAULT_EPOCH,
+                new Clock()
+            );
             self::$totps[$path]->setIssuer('MFTF');
             self::$totps[$path]->setLabel('MFTF Testing');
         }
