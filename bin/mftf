@@ -25,7 +25,6 @@ try {
     exit(1);
 }
 
-
 try {
     $version = json_decode(file_get_contents(FW_BP . DIRECTORY_SEPARATOR . 'composer.json'), true);
     $version = $version['version'];

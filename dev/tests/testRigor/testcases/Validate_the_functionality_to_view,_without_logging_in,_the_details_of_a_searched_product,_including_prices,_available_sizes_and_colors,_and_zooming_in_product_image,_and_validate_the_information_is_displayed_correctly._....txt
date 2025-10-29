@@ -1,0 +1,9 @@
+search for "yoga pants"
+select an item from the search results
+check if page contains "Qty"
+check if page contains "Size"
+check if page contains "Color"
+check if page contains "$"
+click "product media"
+check that "zoom-in" is visible
+check that "zoom-out" is visible

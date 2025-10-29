@@ -1,0 +1,6 @@
+click "New Luma Yoga Collection Get fit and look fab in new seasonal styles Shop New Yoga"
+click "Ida Workout Parachute Pant"
+click "28"
+click "Blue"
+click "Add to Cart"
+check if page contains "Add to Cart"

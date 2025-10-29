@@ -1,0 +1,2 @@
+search for jacket
+validate that page contains "jacket"

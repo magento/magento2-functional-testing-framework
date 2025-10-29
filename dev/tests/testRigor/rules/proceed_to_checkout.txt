@@ -1,0 +1,10 @@
+click "Proceed to Checkout"
+wait 1 sec until page contains "Shipping Address"
+fill out required fields of form "Shipping Address" with generated values
+select "Alabama" from "State/Province"
+generate from template "#####", then enter into field "Zip/Postal code"
+generate from template "#########", then enter into field "Phone Number"
+click "$" roughly below "Shipping methods"
+validate that page contains button "Next"
+click "Next"
+click "Place Order"

@@ -1,0 +1,8 @@
+create an account
+open url saved value "homePrefix"
+add any item to the cart
+scroll up until page contains "shopping cart"
+click button "shopping cart"
+proceed to checkout
+validate that page contains "Thank you for your purchase!"
+validate that page has regex "Your order number is: [0-9]{9}"

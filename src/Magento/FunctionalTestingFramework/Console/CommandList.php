@@ -41,6 +41,7 @@ class CommandList implements CommandListInterface
             'run:group' => new RunTestGroupCommand(),
             'run:manifest' => new RunManifestCommand(),
             'run:test' => new RunTestCommand(),
+            'run:testrigor' => new RunTestRigorCommand(),
             'setup:env' => new SetupEnvCommand(),
             'static-checks' => new StaticChecksCommand(),
             'upgrade:tests' => new UpgradeTestsCommand(),

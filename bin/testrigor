@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "==============================="
+echo "   EXECUTE testRigor Tests    "
+echo "==============================="
+
+echo "Building MFTF project..."
+bin/mftf build:project
+
+echo "$MAGENTO_BASE_URL"
+
+echo "Running testRigor tests..."
+chmod +x ./dev/tests/testRigor/testrigor && ./dev/tests/testRigor/testrigor

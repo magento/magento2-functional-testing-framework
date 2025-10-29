@@ -1,0 +1,9 @@
+create an account
+search for Water bottle
+click link "water bottle"
+validate that page contains "$" roughly above "Add to Cart"
+click "Add to wish list" roughly below "Add to cart"
+validate that page contains "Added"
+click string with parameters "${firstName} ${lastName}" on the right of string with parameters "Welcome, ${firstName} ${lastName}"
+click "My Wish List"
+validate that page contains "Water bottle" roughly below "My Wish List"
