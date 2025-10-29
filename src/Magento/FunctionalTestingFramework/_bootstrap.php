@@ -1,9 +1,10 @@
 <?php
 // @codingStandardsIgnoreFile
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright 2018 Adobe
+ * All Rights Reserved.
  */
+
 
 // define framework basepath for schema pathing
 use Symfony\Component\Dotenv\Exception\PathException;
