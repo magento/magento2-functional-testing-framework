@@ -24,6 +24,7 @@
     </rule>
     <rule ref="Magento.Commenting.VariableComment"/>
 
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
 
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>

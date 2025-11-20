@@ -42,7 +42,7 @@
         "php-coveralls/php-coveralls": "^1.0||^2.2",
         "phpmd/phpmd": "^2.8.0",
         "phpunit/phpunit": "^10.0",
-        "squizlabs/php_codesniffer": "~3.10.1||^4.0.0"
+        "squizlabs/php_codesniffer": "~3.11.0"
     },
     "suggest": {
         "hoa/console": "Enables <pause /> action and interactive console functionality"
