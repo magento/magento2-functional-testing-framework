@@ -1,6 +1,27 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.1.0
+---------
+### Enhancements
+* Bumped aws/aws-sdk-php package to 3.362.1
+* Bumped codeception/module-asserts to 3.2.1
+* Bumped composer/composer to 2.9.2
+* Bumped guzzlehttp/guzzle to 7.10.0
+* Bumped laminas/laminas-diactoros to 3.8.0
+* Bumped mustache/mustache to 3.0.0
+* Bumped nikic/php-parser to 5.6.2
+* Bumped symfony/console to 7.3.6
+* Bumped symfony/string to 7.3.4
+* Bumped symfony/dotenv to 7.3.2
+* Bumped symfony/finder to 7.3.5
+* Bumped symfony/http-foundation to 7.3.7
+* Bumped symfony/mime to 7.3.4
+* Bumped symfony/process to 7.3.4
+* Bumped squizlabs/php_codesniffer to 4.0.12025
+* Bumped php-coveralls/php-coveralls to 2.9.0
+* Added support for symfony ^7.0
+
 5.0.6
 ---------
 ### Fixes
