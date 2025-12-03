@@ -39,11 +39,11 @@ class ModuleResolverTest extends MagentoTestCase
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();
         
         $moduleResolverServiceInstance = new ReflectionProperty(ModuleResolverService::class, 'INSTANCE');
-        $moduleResolverServiceInstance->setAccessible(true);
+//        $moduleResolverServiceInstance->setAccessible(true);
         $moduleResolverServiceInstance->setValue(null, null);
 
         $mftfAppConfigInstance = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $mftfAppConfigInstance->setAccessible(true);
+//        $mftfAppConfigInstance->setAccessible(true);
         $mftfAppConfigInstance->setValue(null, null);
     }
 
@@ -151,7 +151,7 @@ class ModuleResolverTest extends MagentoTestCase
     {
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(ModuleResolver::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, null);
 
         $this->mockForceGenerate(false);
@@ -901,15 +901,15 @@ class ModuleResolverTest extends MagentoTestCase
         $mockBlockList = []
     ): void {
         $property = new ReflectionProperty(ModuleResolver::class, 'enabledModulePaths');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue($instance, $mockPaths);
 
         $property = new ReflectionProperty(ModuleResolver::class, 'enabledModules');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue($instance, $mockModules);
 
         $property = new ReflectionProperty(ModuleResolver::class, 'moduleBlocklist');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue($instance, $mockBlockList);
     }
 
@@ -923,7 +923,7 @@ class ModuleResolverTest extends MagentoTestCase
     private function setMockResolverCreatorProperties(?MockObject $moduleResolverService): void
     {
         $property = new ReflectionProperty(ModuleResolverService::class, 'INSTANCE');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $moduleResolverService);
     }
 
@@ -942,7 +942,7 @@ class ModuleResolverTest extends MagentoTestCase
             ->willReturn($forceGenerate);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockConfig);
     }
 

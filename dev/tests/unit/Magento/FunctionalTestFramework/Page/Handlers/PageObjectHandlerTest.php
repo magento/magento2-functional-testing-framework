@@ -134,7 +134,7 @@ class PageObjectHandlerTest extends MagentoTestCase
     private function mockPageObjectHandlerWithData(array $mockData): void
     {
         $pageObjectHandlerProperty = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
-        $pageObjectHandlerProperty->setAccessible(true);
+//        $pageObjectHandlerProperty->setAccessible(true);
         $pageObjectHandlerProperty->setValue(null, null);
 
         $mockSectionParser =  $this->createMock(PageParser::class);
@@ -165,7 +165,7 @@ class PageObjectHandlerTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockObjectManagerInstance);
     }
 
@@ -177,11 +177,11 @@ class PageObjectHandlerTest extends MagentoTestCase
         parent::tearDownAfterClass();
 
         $pageObjectHandlerProperty = new ReflectionProperty(PageObjectHandler::class, 'INSTANCE');
-        $pageObjectHandlerProperty->setAccessible(true);
+//        $pageObjectHandlerProperty->setAccessible(true);
         $pageObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
+//        $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue(null, null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();

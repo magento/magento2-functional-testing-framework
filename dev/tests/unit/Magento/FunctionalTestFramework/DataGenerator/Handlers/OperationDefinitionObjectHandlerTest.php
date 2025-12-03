@@ -506,7 +506,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
             OperationDefinitionObjectHandler::class,
             'INSTANCE'
         );
-        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+//        $operationDefinitionObjectHandlerProperty->setAccessible(true);
         $operationDefinitionObjectHandlerProperty->setValue(null, null);
 
         $mockOperationParser = $this->createMock(OperationDefinitionParser::class);
@@ -537,7 +537,7 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockObjectManagerInstance);
     }
 
@@ -552,11 +552,11 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
             OperationDefinitionObjectHandler::class,
             'INSTANCE'
         );
-        $operationDefinitionObjectHandlerProperty->setAccessible(true);
+//        $operationDefinitionObjectHandlerProperty->setAccessible(true);
         $operationDefinitionObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
+//        $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue(null, null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();

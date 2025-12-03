@@ -65,7 +65,7 @@ class TestLoggingUtil extends TestCase
             ->willReturn($testLogger);
 
         $property = new ReflectionProperty(LoggingUtil::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockLoggingUtil);
     }
 

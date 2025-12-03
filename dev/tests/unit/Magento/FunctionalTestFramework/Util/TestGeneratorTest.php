@@ -37,11 +37,11 @@ class TestGeneratorTest extends MagentoTestCase
         parent::setUpBeforeClass();
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, null);
 
         $property = new ReflectionProperty(ModuleResolver::class, 'instance');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, null);
     }
 
@@ -206,7 +206,7 @@ class TestGeneratorTest extends MagentoTestCase
             ->willReturn(true);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
@@ -251,7 +251,7 @@ class TestGeneratorTest extends MagentoTestCase
             ->willReturn($fileList);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
@@ -290,7 +290,7 @@ class TestGeneratorTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
@@ -414,7 +414,7 @@ class TestGeneratorTest extends MagentoTestCase
             ->willReturn($fileList);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
@@ -453,7 +453,7 @@ class TestGeneratorTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
@@ -479,7 +479,7 @@ class TestGeneratorTest extends MagentoTestCase
             ->willReturn($fileList);
 
         $property = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
@@ -518,7 +518,7 @@ class TestGeneratorTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $cestFileCreatorUtil);
 
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $test1, 'test2' => $test2]);
@@ -537,15 +537,15 @@ class TestGeneratorTest extends MagentoTestCase
         parent::tearDownAfterClass();
 
         $cestFileCreatorUtilInstance = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
-        $cestFileCreatorUtilInstance->setAccessible(true);
+//        $cestFileCreatorUtilInstance->setAccessible(true);
         $cestFileCreatorUtilInstance->setValue(null, null);
 
         $mftfAppConfigInstance = new ReflectionProperty(MftfApplicationConfig::class, 'MFTF_APPLICATION_CONTEXT');
-        $mftfAppConfigInstance->setAccessible(true);
+//        $mftfAppConfigInstance->setAccessible(true);
         $mftfAppConfigInstance->setValue(null, null);
 
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, null);
     }
 
@@ -556,12 +556,12 @@ class TestGeneratorTest extends MagentoTestCase
     {
         $testObjectHandlerClass = new ReflectionClass(TestObjectHandler::class);
         $testObjectHandlerConstructor = $testObjectHandlerClass->getConstructor();
-        $testObjectHandlerConstructor->setAccessible(true);
+//        $testObjectHandlerConstructor->setAccessible(true);
         $testObjectHandler = $testObjectHandlerClass->newInstanceWithoutConstructor();
         $testObjectHandlerConstructor->invoke($testObjectHandler);
 
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-        $property->setAccessible(true);
+//        $property->setAccessible(true);
         $property->setValue(null, $testObjectHandler);
     }
 }
