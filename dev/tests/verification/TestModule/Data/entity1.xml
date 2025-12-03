@@ -11,4 +11,3 @@
     <entity name="entity1" deprecated="Entity one">
     </entity>
 </entities>
-<!--@Ignore(Unused_Entity_Check)-->

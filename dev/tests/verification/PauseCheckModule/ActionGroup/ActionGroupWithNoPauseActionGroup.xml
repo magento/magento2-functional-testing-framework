@@ -13,4 +13,3 @@
         <fillField selector="#baz" userInput="baz" stepKey="fillField3"/>
     </actionGroup>
 </actionGroups>
-<!--@Ignore(Unused_Entity_Check)-->

@@ -220,4 +220,3 @@
         <waitForText stepKey="waittext12"/>
     </actionGroup>
 </actionGroups>
-<!--@Ignore(Unused_Entity_Check)-->

@@ -11,4 +11,3 @@
         <createData entity="NotExtendParentData" stepKey="createData"/>
     </actionGroup>
 </actionGroups>
-<!--@Ignore(Unused_Entity_Check)-->

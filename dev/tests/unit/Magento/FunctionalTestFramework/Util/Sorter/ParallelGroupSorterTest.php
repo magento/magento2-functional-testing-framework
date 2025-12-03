@@ -496,7 +496,6 @@ class ParallelGroupSorterTest extends MagentoTestCase
     public static function tearDownAfterClass(): void
     {
         $instanceProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-//        $instanceProperty->setAccessible(true);
         $instanceProperty->setValue(null, null);
     }
 
@@ -528,7 +527,6 @@ class ParallelGroupSorterTest extends MagentoTestCase
             ->willReturn($mockTest1);
 
         $instanceProperty = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-//        $instanceProperty->setAccessible(true);
         $instanceProperty->setValue($mockHandler, $mockHandler);
     }
 }
