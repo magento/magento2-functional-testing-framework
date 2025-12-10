@@ -30,10 +30,14 @@ use tests\unit\Util\MagentoTestCase;
  */
 class DeprecatedEntityUsageCheckTest extends MagentoTestCase
 {
-    /** @var DeprecatedEntityUsageCheck */
+    /**
+     * @var DeprecatedEntityUsageCheck
+     */
     private $staticCheck;
 
-    /** @var ReflectionClass*/
+    /**
+     * @var ReflectionClass
+     */
     private $staticCheckClass;
 
     /**
@@ -310,19 +314,19 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $mockObjectManagerInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockOperationParser
-                    ) {
-                        if ($class === OperationDefinitionParser::class) {
-                            return $mockOperationParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockOperationParser
+                ) {
+                    if ($class === OperationDefinitionParser::class) {
+                        return $mockOperationParser;
                     }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

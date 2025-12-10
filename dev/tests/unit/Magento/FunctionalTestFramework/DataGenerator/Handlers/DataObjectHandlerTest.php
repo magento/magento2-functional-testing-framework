@@ -337,19 +337,19 @@ class DataObjectHandlerTest extends MagentoTestCase
         $mockObjectManagerInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockDataProfileSchemaParser
-                    ) {
-                        if ($class === DataProfileSchemaParser::class) {
-                            return $mockDataProfileSchemaParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockDataProfileSchemaParser
+                ) {
+                    if ($class === DataProfileSchemaParser::class) {
+                        return $mockDataProfileSchemaParser;
                     }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

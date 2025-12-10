@@ -59,6 +59,9 @@ class TestLoggingUtil
         $testLogger->pushHandler($this->testLogHandler);
 
         $mockLoggingUtil = new class($testLogger) extends LoggingUtil {
+            /**
+             * @var MftfLogger
+             */
             private $testLogger;
             
             public function __construct($testLogger)
@@ -93,7 +96,7 @@ class TestLoggingUtil
      *
      * @param string $type
      * @param string $message
-     * @param array $context
+     * @param array  $context
      *
      * @return void
      */
@@ -111,7 +114,7 @@ class TestLoggingUtil
      *
      * @param string $type
      * @param string $regex
-     * @param array $context
+     * @param array  $context
      *
      * @return void
      */

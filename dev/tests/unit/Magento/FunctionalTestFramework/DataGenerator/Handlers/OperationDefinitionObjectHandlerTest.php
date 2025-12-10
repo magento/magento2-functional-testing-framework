@@ -196,7 +196,6 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
          *                  key id, value integer
          *                  key name, value string, required TRUE
          *                  key active, value boolean
-         *
          */
         $mockData = [
             OperationDefinitionObjectHandler::ENTITY_OPERATION_ROOT_TAG => [
@@ -519,19 +518,19 @@ class OperationDefinitionObjectHandlerTest extends MagentoTestCase
         $mockObjectManagerInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockOperationParser
-                    ) {
-                        if ($class === OperationDefinitionParser::class) {
-                            return $mockOperationParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockOperationParser
+                ) {
+                    if ($class === OperationDefinitionParser::class) {
+                        return $mockOperationParser;
                     }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

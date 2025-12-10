@@ -70,11 +70,15 @@ class ActionObjectTest extends MagentoTestCase
     public function testResolveElementInSelector(): void
     {
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'fillField', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'fillField',
+            [
             'selector' => '{{SectionObject.elementObject}}',
             'userInput' => 'Hello world',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
         $this->mockSectionHandlerWithElement($elementObject);
 
@@ -99,11 +103,15 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveSelectorWithOneStringLiteral(): void
     {
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => "{{SectionObject.elementObject('stringliteral')}}",
             'userInput' => 'Input',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
         $this->mockSectionHandlerWithElement($elementObject);
 
@@ -128,11 +136,15 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveSelectorWithOneDataReference(): void
     {
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => "{{SectionObject.elementObject(dataObject.key)}}",
             'userInput' => 'Input',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
@@ -163,11 +175,15 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveSelectorWithOnePersistedReference(): void
     {
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => '{{SectionObject.elementObject($data.key$)}}',
             'userInput' => 'Input',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
@@ -194,10 +210,14 @@ class ActionObjectTest extends MagentoTestCase
      */
     public function testResolveSelectorWithManyParams(): void
     {
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => "{{SectionObject.elementObject('stringLiteral', data.key, \$data.key\$)}}",
             'userInput' => 'Input'
-        ]);
+            ]
+        );
 
         // Mock SectionHandler
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}[{{var2}},{{var3}}]', null, '42', true);
@@ -229,9 +249,13 @@ class ActionObjectTest extends MagentoTestCase
     public function testTimeoutFromElement(): void
     {
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'click', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'click',
+            [
             'selector' => '{{SectionObject.elementObject}}'
-        ]);
+            ]
+        );
         $elementObject = new ElementObject('elementObject', 'button', '#replacementSelector', null, '42', false);
         $this->mockSectionHandlerWithElement($elementObject);
 
@@ -251,9 +275,13 @@ class ActionObjectTest extends MagentoTestCase
     public function testResolveUrl(): void
     {
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'amOnPage', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'amOnPage',
+            [
             'url' => '{{PageObject.url}}'
-        ]);
+            ]
+        );
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
 
         $instance = $this->createMock(PageObjectHandler::class);
@@ -286,9 +314,13 @@ class ActionObjectTest extends MagentoTestCase
         $this->expectException(TestReferenceException::class);
 
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'amOnPage', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'amOnPage',
+            [
             'url' => '{{PageObject}}'
-        ]);
+            ]
+        );
         $pageObject = new PageObject('PageObject', '/replacement/url.html', 'Test', [], false, "test");
         $pageObjectList = ["PageObject" => $pageObject];
 
@@ -338,14 +370,25 @@ class ActionObjectTest extends MagentoTestCase
     public function testResolveDataInUserInput(): void
     {
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'fillField', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'fillField',
+            [
             'selector' => '#selector',
             'userInput' => '{{EntityDataObject.key}}',
             'requiredCredentials' => ''
-        ]);
-        $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
+            ]
+        );
+        $entityDataObject = new EntityDataObject(
+            'EntityDataObject',
+            'test',
+            [
             'key' => 'replacementData'
-        ], [], '', '');
+            ],
+            [],
+            '',
+            ''
+        );
         $this->mockDataHandlerWithData($entityDataObject);
 
         // Call the method under test
@@ -370,23 +413,34 @@ class ActionObjectTest extends MagentoTestCase
     public function testResolveArrayData(): void
     {
         // Set up mocks
-        $actionObject = new ActionObject('merge123', 'fillField', [
+        $actionObject = new ActionObject(
+            'merge123',
+            'fillField',
+            [
             'selector' => '#selector',
             'userInput' => '{{EntityDataObject.values}}',
             'requiredCredentials' => ''
-        ]);
-        $entityDataObject = new EntityDataObject('EntityDataObject', 'test', [
+            ]
+        );
+        $entityDataObject = new EntityDataObject(
+            'EntityDataObject',
+            'test',
+            [
             'values' => [
                 'value1',
                 'value2',
                 '"My" Value'
             ]
-        ], [], '', '');
+            ],
+            [],
+            '',
+            ''
+        );
         $this->mockDataHandlerWithData($entityDataObject);
 
         // Call the method under test
         $actionObject->resolveReferences();
-       //Verify
+        //Verify
         $expected = [
             'selector' => '#selector',
             'userInput' => '["value1","value2","\"My\" Value"]',
@@ -406,11 +460,15 @@ class ActionObjectTest extends MagentoTestCase
     {
         $this->expectException(TestReferenceException::class);
 
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => "{{SectionObject.elementObject('arg1')}}",
             'userInput' => 'Input',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}} {{var2}}', null, '42', true);
         $this->mockSectionHandlerWithElement($elementObject);
 
@@ -429,11 +487,15 @@ class ActionObjectTest extends MagentoTestCase
     {
         $this->expectException(TestReferenceException::class);
 
-        $actionObject = new ActionObject('key123', 'fillField', [
+        $actionObject = new ActionObject(
+            'key123',
+            'fillField',
+            [
             'selector' => "{{SectionObject.elementObject('arg1', 'arg2', 'arg3')}}",
             'userInput' => 'Input',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
         $elementObject = new ElementObject('elementObject', 'button', '#{{var1}}', null, '42', true);
         $this->mockSectionHandlerWithElement($elementObject);
 
@@ -452,10 +514,14 @@ class ActionObjectTest extends MagentoTestCase
     {
         $this->expectException(TestReferenceException::class);
 
-        $actionObject = new ActionObject('key123', 'generateDate', [
+        $actionObject = new ActionObject(
+            'key123',
+            'generateDate',
+            [
             'timezone' => "INVALID_TIMEZONE",
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
 
         // Call the method under test
         $actionObject->resolveReferences();

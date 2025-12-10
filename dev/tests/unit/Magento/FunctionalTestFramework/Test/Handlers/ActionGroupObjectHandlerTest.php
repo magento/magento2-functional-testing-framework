@@ -113,19 +113,19 @@ class ActionGroupObjectHandlerTest extends MagentoTestCase
         $mockObjectManagerInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockOperationParser
-                    ) {
-                        if ($class === ActionGroupDataParser::class) {
-                            return $mockOperationParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockOperationParser
+                ) {
+                    if ($class === ActionGroupDataParser::class) {
+                        return $mockOperationParser;
                     }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

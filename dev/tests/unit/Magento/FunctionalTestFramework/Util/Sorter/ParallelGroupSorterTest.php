@@ -503,7 +503,7 @@ class ParallelGroupSorterTest extends MagentoTestCase
     /**
      * Mock test object and test object handler.
      *
-     * @param int $numberOfCalls
+     * @param int   $numberOfCalls
      * @param array $actionCount
      *
      * @return void

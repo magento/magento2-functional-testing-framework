@@ -392,27 +392,27 @@ class SuiteGeneratorTest extends MagentoTestCase
         $objectManagerMockInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $mockDataParser,
-                        $mockSuiteDataParser,
-                        $mockGroupClass,
-                        $objectManager
-                    ) {
-                        if ($class === TestDataParser::class) {
-                            return $mockDataParser;
-                        }
-                        if ($class === SuiteDataParser::class) {
-                            return $mockSuiteDataParser;
-                        }
-                        if ($class === GroupClassGenerator::class) {
-                            return $mockGroupClass;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $mockDataParser,
+                    $mockSuiteDataParser,
+                    $mockGroupClass,
+                    $objectManager
+                ) {
+                    if ($class === TestDataParser::class) {
+                        return $mockDataParser;
                     }
+                    if ($class === SuiteDataParser::class) {
+                        return $mockSuiteDataParser;
+                    }
+                    if ($class === GroupClassGenerator::class) {
+                        return $mockGroupClass;
+                    }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

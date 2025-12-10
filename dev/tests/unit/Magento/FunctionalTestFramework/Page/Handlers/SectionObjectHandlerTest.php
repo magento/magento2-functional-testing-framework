@@ -132,19 +132,19 @@ class SectionObjectHandlerTest extends MagentoTestCase
         $mockObjectManagerInstance
             ->method('get')
             ->willReturnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockSectionParser
-                    ) {
-                        if ($class === SectionParser::class) {
-                            return $mockSectionParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockSectionParser
+                ) {
+                    if ($class === SectionParser::class) {
+                        return $mockSectionParser;
                     }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

@@ -92,7 +92,7 @@ class TestDataArrayBuilder
     private $testReference = null;
 
     /**
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function withName($name)
@@ -104,7 +104,7 @@ class TestDataArrayBuilder
     /**
      * Add annotations passed in by arg (or default if no arg)
      *
-     * @param array $annotations
+     * @param  array $annotations
      * @return $this
      */
     public function withAnnotations(?array $annotations = null)
@@ -121,7 +121,7 @@ class TestDataArrayBuilder
     /**
      * Add a before hook passed in by arg (or default if no arg)
      *
-     * @param null $beforeHook
+     * @param  null $beforeHook
      * @return $this
      */
     public function withBeforeHook(?array $beforeHook = null)
@@ -141,7 +141,7 @@ class TestDataArrayBuilder
     /**
      * Add an after hook passed in by arg (or default if no arg)
      *
-     * @param null $afterHook
+     * @param  null $afterHook
      * @return $this
      */
     public function withAfterHook(?array $afterHook = null)
@@ -162,7 +162,7 @@ class TestDataArrayBuilder
     /**
      * Add a failed hook passed in by arg (or default if no arg)
      *
-     * @param null $failedHook
+     * @param  null $failedHook
      * @return $this
      */
     public function withFailedHook(?array $failedHook = null)
@@ -183,7 +183,7 @@ class TestDataArrayBuilder
     /**
      * Add test actions passed in by arg (or default if no arg)
      *
-     * @param array $actions
+     * @param  array $actions
      * @return $this
      */
     public function withTestActions(?array $actions = null)
@@ -202,7 +202,8 @@ class TestDataArrayBuilder
 
     /**
      * Add file name passe in by arg (or default if no arg)
-     * @param string $filename
+     *
+     * @param  string $filename
      * @return $this
      */
     public function withFileName(?string $filename = null)
@@ -220,7 +221,7 @@ class TestDataArrayBuilder
     /**
      * Add test reference passed in by arg (or default if no arg)
      *
-     * @param string $reference
+     * @param  string $reference
      * @return $this
      */
     public function withTestReference(?string $reference = null)

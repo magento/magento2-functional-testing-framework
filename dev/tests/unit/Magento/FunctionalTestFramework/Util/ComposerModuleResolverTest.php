@@ -60,9 +60,9 @@ class ComposerModuleResolverTest extends MagentoTestCase
     /**
      * Test findComposerJsonFilesAtDepth()
      *
-     * @param string $dir
-     * @param integer $depth
-     * @param array $expected
+     * @param  string  $dir
+     * @param  integer $depth
+     * @param  array   $expected
      * @throws \ReflectionException
      */
     #[DataProvider('findComposerJsonFilesAtDepthDataProvider')]
@@ -79,8 +79,8 @@ class ComposerModuleResolverTest extends MagentoTestCase
     /**
      * Test findAllComposerJsonFiles()
      *
-     * @param string $dir
-     * @param array $expected
+     * @param  string $dir
+     * @param  array  $expected
      * @throws \ReflectionException
      */
     #[DataProvider('findAllComposerJsonFilesDataProvider')]

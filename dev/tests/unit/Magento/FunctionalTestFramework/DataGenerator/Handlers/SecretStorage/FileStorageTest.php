@@ -18,6 +18,7 @@ class FileStorageTest extends MagentoTestCase
 {
     /**
      * Test basic encryption/decryption functionality in FileStorage class.
+     *
      * @throws TestFrameworkException|ReflectionException
      */
     public function testBasicEncryptDecrypt(): void
@@ -52,6 +53,7 @@ class FileStorageTest extends MagentoTestCase
 
     /**
      * Test empty value encryption/decryption functionality in FileStorage class.
+     *
      * @return void
      * @throws TestFrameworkException|ReflectionException
      */

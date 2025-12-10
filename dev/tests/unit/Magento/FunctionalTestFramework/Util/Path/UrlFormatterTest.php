@@ -18,9 +18,9 @@ class UrlFormatterTest extends MagentoTestCase
     /**
      * Test url format.
      *
-     * @param string $path
+     * @param string    $path
      * @param bool|null $withTrailingSeparator
-     * @param string $expectedPath
+     * @param string    $expectedPath
      *
      * @return void
      */
@@ -37,7 +37,7 @@ class UrlFormatterTest extends MagentoTestCase
     /**
      * Test url format with exception.
      *
-     * @param string $path
+     * @param string    $path
      * @param bool|null $withTrailingSeparator
      *
      * @return void

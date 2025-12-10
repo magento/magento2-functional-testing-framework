@@ -15,10 +15,14 @@ use tests\unit\Util\MagentoTestCase;
 
 class AnnotationsCheckTest extends MagentoTestCase
 {
-    /** @var  AnnotationsCheck */
+    /**
+     * @var AnnotationsCheck
+     */
     private $staticCheck;
 
-    /** @var ReflectionClass */
+    /**
+     * @var ReflectionClass
+     */
     private $staticCheckClass;
 
     public function setUp(): void

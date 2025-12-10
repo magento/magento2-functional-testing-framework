@@ -381,7 +381,7 @@ class TestObjectHandlerTest extends MagentoTestCase
     /**
      * Mock test object handler.
      *
-     * @param array $data
+     * @param array      $data
      * @param array|null $paths
      *
      * @return void
@@ -416,27 +416,27 @@ class TestObjectHandlerTest extends MagentoTestCase
         $objectManagerMockInstance
             ->method('create')
             ->willReturnCallback(
-                    function (
-                        $class,
-                        $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockDataParser,
-                        $mockConfig,
-                        $mockResolver
-                    ) {
-                        if ($class === TestDataParser::class) {
-                            return $mockDataParser;
-                        }
-                        if ($class === MftfApplicationConfig::class) {
-                            return $mockConfig;
-                        }
-                        if ($class === ModuleResolver::class) {
-                            return $mockResolver;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+                function (
+                    $class,
+                    $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockDataParser,
+                    $mockConfig,
+                    $mockResolver
+                ) {
+                    if ($class === TestDataParser::class) {
+                        return $mockDataParser;
                     }
+                    if ($class === MftfApplicationConfig::class) {
+                        return $mockConfig;
+                    }
+                    if ($class === ModuleResolver::class) {
+                        return $mockResolver;
+                    }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

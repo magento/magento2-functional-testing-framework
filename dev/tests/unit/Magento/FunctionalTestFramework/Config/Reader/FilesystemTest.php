@@ -46,8 +46,8 @@ class FilesystemTest extends TestCase
     /**
      * Retrieve mocked file iterator
      *
-     * @param string $fileName
-     * @param string $content
+     * @param  string $fileName
+     * @param  string $content
      * @return File|MockObject
      * @throws \Exception
      */
@@ -65,14 +65,18 @@ class FilesystemTest extends TestCase
             ->willReturn(1);
 
         $file->method('next')
-            ->willReturnCallback(function () use ($iterator): void {
-                $iterator->next();
-            });
+            ->willReturnCallback(
+                function () use ($iterator): void {
+                    $iterator->next();
+                }
+            );
 
         $file->method('valid')
-            ->willReturnCallback(function () use ($iterator): bool {
-                return $iterator->valid();
-            });
+            ->willReturnCallback(
+                function () use ($iterator): bool {
+                    return $iterator->valid();
+                }
+            );
 
         return $file;
     }
@@ -80,7 +84,7 @@ class FilesystemTest extends TestCase
     /**
      * Get real instance of Filesystem class with mocked dependencies
      *
-     * @param File $fileIterator
+     * @param  File $fileIterator
      * @return Filesystem
      */
     public function getFilesystem(File $fileIterator): Filesystem

@@ -13,7 +13,9 @@ use tests\unit\Util\TestLoggingUtil;
 
 class ActionObjectExtractorTest extends MagentoTestCase
 {
-    /** @var  ActionObjectExtractor */
+    /**
+     * @var ActionObjectExtractor
+     */
     private $testActionObjectExtractor;
 
     /**
@@ -33,7 +35,9 @@ class ActionObjectExtractorTest extends MagentoTestCase
         $actionObjects = $this->testActionObjectExtractor->extractActions($this->createBasicActionObjectArray());
         $this->assertCount(1, $actionObjects);
 
-        /** @var ActionObject $firstElement */
+        /**
+ * @var ActionObject $firstElement
+*/
         $firstElement = array_values($actionObjects)[0];
         $this->assertEquals('testAction1', $firstElement->getStepKey());
         $this->assertCount(1, $firstElement->getCustomActionAttributes());
@@ -102,9 +106,9 @@ class ActionObjectExtractorTest extends MagentoTestCase
     /**
      * Utility function to return mock parser output for testing extraction into ActionObjects.
      *
-     * @param string $stepKey
-     * @param string $before
-     * @param string $after
+     * @param  string $stepKey
+     * @param  string $before
+     * @param  string $after
      * @return array
      */
     private function createBasicActionObjectArray($stepKey = 'testAction1', $before = null, $after = null)

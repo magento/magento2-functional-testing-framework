@@ -71,7 +71,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which sets the name of the mock suite array
      *
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function withName($name)
@@ -83,7 +83,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of test names and formats them as included raw suite data
      *
-     * @param array $tests
+     * @param  array $tests
      * @return $this
      */
     public function includeTests($tests)
@@ -95,7 +95,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of test names and formats them as excluded raw suite data
      *
-     * @param array $tests
+     * @param  array $tests
      * @return $this
      */
     public function excludeTests($tests)
@@ -107,7 +107,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of group names and formats them as included raw suite data
      *
-     * @param array $groups
+     * @param  array $groups
      * @return $this
      */
     public function includeGroups($groups)
@@ -119,7 +119,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of group names and formats them as excluded raw suite data
      *
-     * @param array $groups
+     * @param  array $groups
      * @return $this
      */
     public function excludeGroups($groups)
@@ -131,7 +131,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of module names and formats them as included raw suite data
      *
-     * @param array $modules
+     * @param  array $modules
      * @return $this
      */
     public function includeModules($modules)
@@ -143,7 +143,7 @@ class SuiteDataArrayBuilder
     /**
      * Function which takes an array of group names and formats them as excluded raw suite data
      *
-     * @param array $modules
+     * @param  array $modules
      * @return $this
      */
     public function excludeModules($modules)
@@ -156,9 +156,9 @@ class SuiteDataArrayBuilder
      * Function which takes an array of current include/exclude contents, a type (group, module, or test) and contents
      * to be appended to the array and returns a propelry formatted array representative of parsed suite data.
      *
-     * @param array $currentContents
-     * @param string $type
-     * @param array $contents
+     * @param  array  $currentContents
+     * @param  string $type
+     * @param  array  $contents
      * @return array
      */
     private function appendEntriesToSuiteContents($currentContents, $type, $contents)
@@ -177,7 +177,7 @@ class SuiteDataArrayBuilder
     /**
      * Add an after hook passed in by arg (or default if no arg)
      *
-     * @param null $afterHook
+     * @param  null $afterHook
      * @return $this
      */
     public function withAfterHook(?array $afterHook = null)
@@ -198,7 +198,7 @@ class SuiteDataArrayBuilder
     /**
      * Add a before hook passed in by arg (or default if no arg)
      *
-     * @param null $beforeHook
+     * @param  null $beforeHook
      * @return $this
      */
     public function withBeforeHook(?array $beforeHook = null)

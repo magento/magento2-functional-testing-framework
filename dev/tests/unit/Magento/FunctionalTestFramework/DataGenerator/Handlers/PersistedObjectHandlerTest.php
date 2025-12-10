@@ -528,7 +528,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * Create mock curl handler.
      *
      * @param string $response
-     * @param array $parserOutput
+     * @param array  $parserOutput
      *
      * @return void
      */

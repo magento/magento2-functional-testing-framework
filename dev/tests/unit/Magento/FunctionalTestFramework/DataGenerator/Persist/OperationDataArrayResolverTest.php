@@ -133,11 +133,13 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withName('createChildType')
             ->withOperation('create')
             ->withType('childType')
-            ->withMetadata([
+            ->withMetadata(
+                [
                 'city' => 'string',
                 'state' => 'string',
                 'zip' => 'integer'
-            ])->build();
+                ]
+            )->build();
 
         // mock meta data object handler
         $this->mockOperationDefinitionObjectHandler($childOperationDefinition);
@@ -348,11 +350,13 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withName('createChildType')
             ->withOperation('create')
             ->withType('childType')
-            ->withMetadata([
+            ->withMetadata(
+                [
                 'city' => 'string',
                 'state' => 'string',
                 'zip' => 'integer'
-            ])->build();
+                ]
+            )->build();
 
         // mock meta data object handler
         $this->mockOperationDefinitionObjectHandler($childOperationDefinition);
@@ -401,20 +405,24 @@ class OperationDataArrayResolverTest extends MagentoTestCase
             ->withName('createchildType1')
             ->withOperation('create')
             ->withType('childType1')
-            ->withMetadata([
+            ->withMetadata(
+                [
                 'city' => 'string',
                 'zip' => 'integer'
-            ])->build();
+                ]
+            )->build();
 
         $child2OperationDefinition = $operationDefinitionBuilder
             ->withName('createchildType2')
             ->withOperation('create')
             ->withType('childType2')
-            ->withMetadata([
+            ->withMetadata(
+                [
                 'city' => 'string',
                 'zip' => 'integer',
                 'state' => 'string'
-            ])->build();
+                ]
+            )->build();
 
         $operationObjectCallback = function ($name) use ($child1OperationDefinition, $child2OperationDefinition) {
             switch ($name) {

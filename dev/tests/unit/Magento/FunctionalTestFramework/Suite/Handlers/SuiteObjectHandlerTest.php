@@ -112,17 +112,17 @@ class SuiteObjectHandlerTest extends MagentoTestCase
         $instance
             ->method('create')
             ->willReturnCallback(
-                    function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
-                        if ($clazz === TestDataParser::class) {
-                            return $mockDataParser;
-                        }
-
-                        if ($clazz === SuiteDataParser::class) {
-                            return $mockSuiteDataParser;
-                        }
-
-                        return null;
+                function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
+                    if ($clazz === TestDataParser::class) {
+                        return $mockDataParser;
                     }
+
+                    if ($clazz === SuiteDataParser::class) {
+                        return $mockSuiteDataParser;
+                    }
+
+                    return null;
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

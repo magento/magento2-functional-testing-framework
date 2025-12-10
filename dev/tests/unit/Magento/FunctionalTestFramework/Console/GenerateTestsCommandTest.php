@@ -14,9 +14,9 @@ use Magento\FunctionalTestingFramework\Console\GenerateTestsCommand;
 class GenerateTestsCommandTest extends TestCase
 {
     /**
-     * @param mixed $time
-     * @param mixed $groups
-     * @param mixed $expected
+     * @param  mixed $time
+     * @param  mixed $groups
+     * @param  mixed $expected
      * @return void
      * @throws \ReflectionException
      */
