@@ -309,8 +309,7 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
         $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
         $mockObjectManagerInstance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function (
                         string $class,
                         array $arguments = []
@@ -324,7 +323,6 @@ class DeprecatedEntityUsageCheckTest extends MagentoTestCase
 
                         return $objectManager->create($class, $arguments);
                     }
-                )
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

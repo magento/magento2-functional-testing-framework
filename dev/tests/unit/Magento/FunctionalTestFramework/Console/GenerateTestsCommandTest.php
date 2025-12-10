@@ -7,6 +7,7 @@
 namespace tests\unit\Magento\FunctionalTestFramework\Console;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Magento\FunctionalTestingFramework\Exceptions\FastFailException;
 use Magento\FunctionalTestingFramework\Console\GenerateTestsCommand;
 
@@ -17,9 +18,9 @@ class GenerateTestsCommandTest extends TestCase
      * @param mixed $groups
      * @param mixed $expected
      * @return void
-     * @dataProvider configParallelOptions
      * @throws \ReflectionException
      */
+    #[DataProvider('configParallelOptions')]
     public function testParseConfigParallelOptions($time, $groups, $expected): void
     {
         $command = new GenerateTestsCommand();

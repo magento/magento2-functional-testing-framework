@@ -415,8 +415,7 @@ class TestObjectHandlerTest extends MagentoTestCase
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function (
                         $class,
                         $arguments = []
@@ -438,7 +437,6 @@ class TestObjectHandlerTest extends MagentoTestCase
 
                         return $objectManager->create($class, $arguments);
                     }
-                )
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

@@ -111,8 +111,7 @@ class SuiteObjectHandlerTest extends MagentoTestCase
         $instance = $this->createMock(ObjectManager::class);
         $instance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($clazz) use ($mockDataParser, $mockSuiteDataParser) {
                         if ($clazz === TestDataParser::class) {
                             return $mockDataParser;
@@ -124,7 +123,6 @@ class SuiteObjectHandlerTest extends MagentoTestCase
 
                         return null;
                     }
-                )
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

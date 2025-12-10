@@ -146,8 +146,7 @@ class ModulePathExtractorTest extends MagentoTestCase
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($class) use ($mockResolver) {
                         if ($class === ModuleResolver::class) {
                             return $mockResolver;
@@ -155,7 +154,6 @@ class ModulePathExtractorTest extends MagentoTestCase
 
                         return null;
                     }
-                )
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

@@ -428,8 +428,7 @@ class ObjectExtensionUtilTest extends TestCase
         $instance = $this->createMock(ObjectManager::class);
         $instance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($className) use ($mockDataParser, $mockActionGroupParser) {
                         if ($className === TestDataParser::class) {
                             return $mockDataParser;
@@ -441,7 +440,6 @@ class ObjectExtensionUtilTest extends TestCase
 
                         return null;
                     }
-                )
             );
         // clear object manager value to inject expected instance
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

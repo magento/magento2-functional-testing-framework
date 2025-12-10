@@ -119,8 +119,7 @@ class ModuleResolverTest extends MagentoTestCase
         $moduleResolverService = $this->createPartialMock(ModuleResolverService::class, ['globRelevantPaths']);
         $moduleResolverService
             ->method('globRelevantPaths')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($codePath, $pattern) use ($modulePath) {
                         if ($codePath === $modulePath && $pattern === '') {
                             $this->fail(sprintf(
@@ -131,7 +130,6 @@ class ModuleResolverTest extends MagentoTestCase
 
                         return [];
                     }
-                )
             );
         $this->setMockResolverCreatorProperties($moduleResolverService);
         $resolver = ModuleResolver::getInstance();
@@ -175,8 +173,7 @@ class ModuleResolverTest extends MagentoTestCase
         $moduleResolverService = $this->createPartialMock(ModuleResolverService::class, ['globRelevantPaths']);
         $moduleResolverService
             ->method('globRelevantPaths')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($codePath, $pattern) use (&$invokedWithParams, $expectedParams) {
                         foreach ($expectedParams as $key => $parameter) {
                             list($expectedCodePath, $expectedPattern) = $parameter;
@@ -195,7 +192,6 @@ class ModuleResolverTest extends MagentoTestCase
                             $codePath . ';' . $pattern
                         ));
                     }
-                )
             );
 
         $this->setMockResolverCreatorProperties($moduleResolverService);
@@ -293,8 +289,7 @@ class ModuleResolverTest extends MagentoTestCase
         );
         $moduleResolverService
             ->method('getComposerJsonTestModulePaths')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($codePaths) use ($expectedSearchPaths) {
                         if ($codePaths === $expectedSearchPaths) {
                             return [];
@@ -305,7 +300,6 @@ class ModuleResolverTest extends MagentoTestCase
                             $codePaths
                         ));
                     }
-                )
             );
 
         $this->setMockResolverCreatorProperties($moduleResolverService);
@@ -378,8 +372,7 @@ class ModuleResolverTest extends MagentoTestCase
         );
         $moduleResolverService
             ->method('getComposerInstalledTestModulePaths')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function ($composerFile) use ($expectedSearchPath) {
                         if ($composerFile === $expectedSearchPath) {
                             return [];
@@ -390,7 +383,6 @@ class ModuleResolverTest extends MagentoTestCase
                             $composerFile
                         ));
                     }
-                )
             );
 
         $this->setMockResolverCreatorProperties($moduleResolverService);
@@ -827,12 +819,10 @@ class ModuleResolverTest extends MagentoTestCase
         $moduleResolverService = $this->createMock(ModuleResolverService::class);
         $moduleResolverService
             ->method('getAdminToken')
-            ->with(
-                $this->returnCallback(
-                    function () {
-                        $this->fail('Not expected to call method \'getAdminToken()\'.');
-                    }
-                )
+            ->willReturnCallback(
+                function () {
+                    $this->fail('Not expected to call method \'getAdminToken()\'.');
+                }
             );
 
         $this->setMockResolverCreatorProperties($moduleResolverService);

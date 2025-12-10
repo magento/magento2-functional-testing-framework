@@ -358,15 +358,15 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         $mockSuiteGeneratorService
             ->method('clearPreviousSessionConfigEntries')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $mockSuiteGeneratorService
             ->method('appendEntriesToConfig')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $mockSuiteGeneratorService
             ->method('generateRelevantGroupTests')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $suiteGeneratorServiceProperty = new ReflectionProperty(SuiteGeneratorService::class, 'INSTANCE');
         $suiteGeneratorServiceProperty->setAccessible(true);
@@ -391,8 +391,7 @@ class SuiteGeneratorTest extends MagentoTestCase
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance
             ->method('create')
-            ->will(
-                $this->returnCallback(
+            ->willReturnCallback(
                     function (
                         string $class,
                         array $arguments = []
@@ -414,7 +413,6 @@ class SuiteGeneratorTest extends MagentoTestCase
 
                         return $objectManager->create($class, $arguments);
                     }
-                )
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

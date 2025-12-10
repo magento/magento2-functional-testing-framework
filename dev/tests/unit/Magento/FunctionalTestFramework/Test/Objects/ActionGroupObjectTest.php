@@ -448,7 +448,7 @@ class ActionGroupObjectTest extends MagentoTestCase
         if (is_callable($return)) {
             $instance
                 ->method('getObject')
-                ->will($this->returnCallback($return));
+                ->willReturnCallback($return);
         } else {
             $instance
                 ->method('getObject')
