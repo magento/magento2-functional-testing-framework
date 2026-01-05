@@ -57,7 +57,6 @@ class AnnotationsCheckTest extends MagentoTestCase
         $test->expects($this->once())->method('getAnnotations')->willReturn($annotations);
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
-        $validateRequiredAnnotations->setAccessible(true);
 
         $validateRequiredAnnotations->invoke($this->staticCheck, $test);
         $this->assertEquals($expected, $this->staticCheck->getErrors());
@@ -99,7 +98,6 @@ class AnnotationsCheckTest extends MagentoTestCase
         $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
-        $validateRequiredAnnotations->setAccessible(true);
 
         $validateRequiredAnnotations->invoke($this->staticCheck, $test);
         $this->assertEquals($expected, $this->staticCheck->getErrors());
@@ -136,7 +134,6 @@ class AnnotationsCheckTest extends MagentoTestCase
         $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
-        $validateRequiredAnnotations->setAccessible(true);
 
         $validateRequiredAnnotations->invoke($this->staticCheck, $test);
         $this->assertEquals($expected, $this->staticCheck->getErrors());
@@ -177,7 +174,6 @@ class AnnotationsCheckTest extends MagentoTestCase
         $test->expects($this->once())->method('getName')->willReturn('AnnotationsCheckTest');
 
         $validateRequiredAnnotations = $this->staticCheckClass->getMethod('validateRequiredAnnotations');
-        $validateRequiredAnnotations->setAccessible(true);
 
         $validateRequiredAnnotations->invoke($this->staticCheck, $test);
         $this->assertEquals($expected, $this->staticCheck->getErrors());

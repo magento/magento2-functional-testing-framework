@@ -25,7 +25,6 @@ class GenerateTestsCommandTest extends TestCase
         $command = new GenerateTestsCommand();
         $class = new \ReflectionClass($command);
         $method = $class->getMethod('parseConfigParallelOptions');
-        $method->setAccessible(true);
 
         if (is_array($expected)) {
             $actual = $method->invokeArgs($command, [$time, $groups]);
