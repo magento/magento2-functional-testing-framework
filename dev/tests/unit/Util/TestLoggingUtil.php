@@ -76,7 +76,6 @@ class TestLoggingUtil
         };
 
         $property = new ReflectionProperty(LoggingUtil::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, $mockLoggingUtil);
     }
 

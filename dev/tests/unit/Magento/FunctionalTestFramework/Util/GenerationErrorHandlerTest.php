@@ -244,7 +244,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
         $handler->reset();
 
         $property = new ReflectionProperty(GenerationErrorHandler::class, 'errors');
-        $property->setAccessible(true);
         $property->setValue($handler, $errors);
 
         // Assert getAllErrorMessages
@@ -341,7 +340,6 @@ class GenerationErrorHandlerTest extends MagentoTestCase
     public function tearDown(): void
     {
         $property = new ReflectionProperty(GenerationErrorHandler::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, null);
     }
 }

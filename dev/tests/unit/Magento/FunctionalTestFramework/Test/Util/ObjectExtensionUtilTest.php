@@ -409,12 +409,10 @@ class ObjectExtensionUtilTest extends TestCase
     {
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(TestObjectHandler::class, 'testObjectHandler');
-        $property->setAccessible(true);
         $property->setValue(null, null);
 
         // clear test object handler value to inject parsed content
         $property = new ReflectionProperty(ActionGroupObjectHandler::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, null);
 
         $mockDataParser = $this->createMock(TestDataParser::class);
@@ -445,7 +443,6 @@ class ObjectExtensionUtilTest extends TestCase
             );
         // clear object manager value to inject expected instance
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, $instance);
     }
 }

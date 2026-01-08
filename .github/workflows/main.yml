@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.3', '8.4']
+        php-versions: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@v2
 
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.3', '8.4']
+        php-versions: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@v2
 
@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.3', '8.4']
+        php-versions: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@v2
 
@@ -118,8 +118,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.3', '8.4']
-
+        php-versions: ['8.3', '8.4', '8.5']
     services:
       chrome:
         image: selenium/standalone-chrome:3.141.59-zirconium
@@ -133,6 +132,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: curl, dom, intl, json, openssl
+          ini-values: register_argc_argv=On
 
       - name: Cache Composer packages
         id: composer-cache

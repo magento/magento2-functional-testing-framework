@@ -324,7 +324,6 @@ class DataObjectHandlerTest extends MagentoTestCase
     private function mockDataObjectHandlerWithData(array $mockData): void
     {
         $dataObjectHandlerProperty = new ReflectionProperty(DataObjectHandler::class, "INSTANCE");
-        $dataObjectHandlerProperty->setAccessible(true);
         $dataObjectHandlerProperty->setValue(null, null);
 
         $mockDataProfileSchemaParser =  $this->createMock(DataProfileSchemaParser::class);
@@ -353,7 +352,6 @@ class DataObjectHandlerTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, $mockObjectManagerInstance);
     }
 
@@ -365,11 +363,9 @@ class DataObjectHandlerTest extends MagentoTestCase
         parent::tearDownAfterClass();
 
         $dataObjectHandlerProperty = new ReflectionProperty(DataObjectHandler::class, "INSTANCE");
-        $dataObjectHandlerProperty->setAccessible(true);
         $dataObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue(null, null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();

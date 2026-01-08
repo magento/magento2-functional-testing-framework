@@ -367,13 +367,13 @@ class OperationDataArrayResolver
             case 'string':
                 break;
             case 'integer':
-                $newVal = (integer)$value;
+                $newVal = (int)$value;
                 break;
             case 'boolean':
                 if (strtolower($newVal) === 'false') {
                     return false;
                 }
-                $newVal = (boolean)$value;
+                $newVal = (bool)$value;
                 break;
             case 'number':
                 $newVal = (float)$value;
