@@ -229,7 +229,6 @@ class ActionGroupObjectTest extends MagentoTestCase
             ->willReturn($section);
         // bypass the private constructor
         $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
         $property->setValue(null, $sectionInstance);
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
@@ -283,7 +282,6 @@ class ActionGroupObjectTest extends MagentoTestCase
             ->willReturn($section);
         // bypass the private constructor
         $property = new ReflectionProperty(SectionObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
         $property->setValue(null, $sectionInstance);
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
@@ -456,7 +454,6 @@ class ActionGroupObjectTest extends MagentoTestCase
         }
         // bypass the private constructor
         $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
         $property->setValue(null, $instance);
     }
 

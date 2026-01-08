@@ -123,7 +123,6 @@ class ActionMergeUtilTest extends MagentoTestCase
             ->method('getObject')
             ->willReturn($mockDataObject);
         $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
         $property->setValue($mockDOHInstance, $mockDOHInstance);
 
         // Create test object and action object
