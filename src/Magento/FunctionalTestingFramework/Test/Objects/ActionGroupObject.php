@@ -399,7 +399,7 @@ class ActionGroupObject
         if ($isInnerArgument) {
             return preg_replace("/(?<![\w]){$variableName}(?![(\w])/", $argumentValue, $attributeValue);
         } else {
-            return str_replace("{{{$variableName}}}", $argumentValue, $attributeValue);
+            return str_replace("{{{$variableName}}}", $argumentValue ?? "", $attributeValue ?? "");
         }
     }
 

@@ -492,7 +492,6 @@ class SuiteGenerationTest extends MftfTestCase
         );
 
         $property = new \ReflectionProperty(DirSetupUtil::class, "DIR_CONTEXT");
-        $property->setAccessible(true);
         $property->setValue(null, []);
     }
 

@@ -119,7 +119,6 @@ class SectionObjectHandlerTest extends MagentoTestCase
     private function mockSectionObjectHandlerWithData(array $mockData): void
     {
         $sectionObjectHandlerProperty = new ReflectionProperty(SectionObjectHandler::class, "INSTANCE");
-        $sectionObjectHandlerProperty->setAccessible(true);
         $sectionObjectHandlerProperty->setValue(null, null);
 
         $mockSectionParser = $this->createMock(SectionParser::class);
@@ -150,7 +149,6 @@ class SectionObjectHandlerTest extends MagentoTestCase
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, $mockObjectManagerInstance);
     }
 
@@ -162,11 +160,9 @@ class SectionObjectHandlerTest extends MagentoTestCase
         parent::tearDownAfterClass();
 
         $sectionObjectHandlerProperty = new ReflectionProperty(SectionObjectHandler::class, "INSTANCE");
-        $sectionObjectHandlerProperty->setAccessible(true);
         $sectionObjectHandlerProperty->setValue(null, null);
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
-        $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue(null, null);
 
         TestLoggingUtil::getInstance()->clearMockLoggingUtil();

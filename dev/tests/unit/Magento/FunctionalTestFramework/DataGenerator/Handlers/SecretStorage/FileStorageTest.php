@@ -31,12 +31,10 @@ class FileStorageTest extends MagentoTestCase
 
         // Emulate initialize() function result with the test credentials
         $reflectionMethod = $reflection->getMethod('encryptCredFileContents');
-        $reflectionMethod->setAccessible(true);
         $secretData = $reflectionMethod->invokeArgs($fileStorage, [$cred]);
 
         // Set encrypted test credentials to the private 'secretData' property
         $reflectionProperty = $reflection->getProperty('secretData');
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($fileStorage, $secretData);
 
         $encryptedCred = $fileStorage->getEncryptedValue($testKey);
@@ -67,12 +65,10 @@ class FileStorageTest extends MagentoTestCase
 
         // Emulate initialize() function result with the test credentials
         $reflectionMethod = $reflection->getMethod('encryptCredFileContents');
-        $reflectionMethod->setAccessible(true);
         $secretData = $reflectionMethod->invokeArgs($fileStorage, [$cred]);
 
         // Set encrypted test credentials to the private 'secretData' property
         $reflectionProperty = $reflection->getProperty('secretData');
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($fileStorage, $secretData);
 
         $fileStorage->getEncryptedValue($testKey);

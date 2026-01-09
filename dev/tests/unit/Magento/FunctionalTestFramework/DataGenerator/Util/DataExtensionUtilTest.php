@@ -136,7 +136,6 @@ class DataExtensionUtilTest extends MagentoTestCase
     private function setMockEntities($mockEntityData): void
     {
         $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
-        $property->setAccessible(true);
         $property->setValue(null, null);
 
         $mockDataProfileSchemaParser = $this->createMock(DataProfileSchemaParser::class);
@@ -150,7 +149,6 @@ class DataExtensionUtilTest extends MagentoTestCase
             ->willReturn($mockDataProfileSchemaParser);
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
-        $property->setAccessible(true);
         $property->setValue(null, $mockObjectManager);
     }
 }
