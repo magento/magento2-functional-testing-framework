@@ -37,6 +37,7 @@
         "symfony/process": "^7.4",
         "symfony/string": "^7.4",
         "symfony/finder": "^7.4",
+        "symfony/dotenv": "^7.4",
         "weew/helpers-array": "^1.3"
     },
     "require-dev": {
