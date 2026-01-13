@@ -70,7 +70,6 @@ class ComposerModuleResolverTest extends MagentoTestCase
         $composer = new ComposerModuleResolver();
         $class = new ReflectionClass($composer);
         $method = $class->getMethod('findComposerJsonFilesAtDepth');
-        $method->setAccessible(true);
         $output = $method->invoke($composer, $dir, $depth);
         $this->assertEquals($expected, $output);
     }
@@ -88,7 +87,6 @@ class ComposerModuleResolverTest extends MagentoTestCase
         $composer = new ComposerModuleResolver();
         $class = new ReflectionClass($composer);
         $method = $class->getMethod('findAllComposerJsonFiles');
-        $method->setAccessible(true);
         $output = $method->invoke($composer, $dir);
         $this->assertEquals($expected, $output);
     }
