@@ -1,6 +1,19 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.2.0
+---------
+### Enhancements
+* Provided support for PHP 8.4
+* Bumped symfony/console to 7.4
+* Bumped symfony/intl to 7.4
+* Bumped symfony/string to 7.4
+* Bumped symfony/dotenv to 7.4
+* Bumped symfony/finder to 7.4
+* Bumped symfony/mime to 7.4
+* Bumped symfony/process to 7.4
+* Added support for symfony ^7.4
+
 5.1.0
 ---------
 ### Enhancements
