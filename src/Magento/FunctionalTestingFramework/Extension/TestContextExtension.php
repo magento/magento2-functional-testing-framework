@@ -107,10 +107,6 @@ class TestContextExtension extends BaseExtension
                 CURLOPT_URL => getenv('MAGENTO_BASE_URL') . "/test.php?test=" . $this->currentTest,
             ]);
             curl_exec($cURLConnection);
-            if (version_compare(PHP_VERSION, '8.0') < 0) {
-                // this function no longer has an effect in PHP 8.0, but it's required in earlier versions
-                curl_close($cURLConnection);
-            }
         }
 
         PersistedObjectHandler::getInstance()->clearHookObjects();
