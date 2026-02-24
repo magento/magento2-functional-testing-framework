@@ -53,7 +53,6 @@ class AwsSecretsManagerStorageTest extends MagentoTestCase
         $credentialStorage = new AwsSecretsManagerStorage($testRegion, $testProfile);
         $reflection = new ReflectionClass($credentialStorage);
         $reflection_property = $reflection->getProperty('client');
-        $reflection_property->setAccessible(true);
         $reflection_property->setValue($credentialStorage, $mockClient);
 
         // Test getEncryptedValue()

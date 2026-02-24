@@ -210,7 +210,7 @@ class Converter implements \Magento\FunctionalTestingFramework\Config\ConverterI
             if (preg_match('/^\d+$/', $nodeValue)) {
                 $nodeValue = (int) $nodeValue;
             } else {
-                $nodeValue = (double) $nodeValue;
+                $nodeValue = (float) $nodeValue;
             }
         }
 
