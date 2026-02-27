@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.3.0
+---------
+### Enhancement
+* Added Symfony 6.4 LTS support alongside 7.4
+* Provided support for chrome 143
+
 5.2.0
 ---------
 ### Enhancements
