@@ -71,7 +71,7 @@ class EntityDataObjectBuilder
     /**
      * Sets the name of the EntityDataObject.
      *
-     * @param string $name
+     * @param  string $name
      * @return EntityDataObjectBuilder
      */
     public function withName($name)
@@ -83,7 +83,7 @@ class EntityDataObjectBuilder
     /**
      * Sets the type of the EntityDataObject.
      *
-     * @param string $type
+     * @param  string $type
      * @return EntityDataObjectBuilder
      */
     public function withType($type)
@@ -95,7 +95,7 @@ class EntityDataObjectBuilder
     /**
      * Sets the data fields on the object to the data field array specified in the argument.
      *
-     * @param array $fields
+     * @param  array $fields
      * @return EntityDataObjectBuilder
      */
     public function withDataFields($fields)
@@ -107,7 +107,7 @@ class EntityDataObjectBuilder
     /**
      * Sets the linked entities specified by the user as a param for Entity Data Object creation.
      *
-     * @param array $linkedEntities
+     * @param  array $linkedEntities
      * @return EntityDataObjectBuilder
      */
     public function withLinkedEntities($linkedEntities)

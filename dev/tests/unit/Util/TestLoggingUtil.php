@@ -11,11 +11,11 @@ namespace tests\unit\Util;
 use Magento\FunctionalTestingFramework\Util\Logger\LoggingUtil;
 use Magento\FunctionalTestingFramework\Util\Logger\MftfLogger;
 use Monolog\Handler\TestHandler;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Assert;
 use ReflectionProperty;
 use ReflectionClass;
 
-class TestLoggingUtil extends TestCase
+class TestLoggingUtil
 {
     /**
      * @var TestLoggingUtil
@@ -32,7 +32,6 @@ class TestLoggingUtil extends TestCase
      */
     private function __construct()
     {
-        parent::__construct('', [], '');
     }
 
     /**
@@ -59,10 +58,22 @@ class TestLoggingUtil extends TestCase
         $testLogger = new MftfLogger('testLogger');
         $testLogger->pushHandler($this->testLogHandler);
 
-        $mockLoggingUtil = $this->createMock(LoggingUtil::class);
-        $mockLoggingUtil
-            ->method('getLogger')
-            ->willReturn($testLogger);
+        $mockLoggingUtil = new class($testLogger) extends LoggingUtil {
+            /**
+             * @var MftfLogger
+             */
+            private $testLogger;
+            
+            public function __construct($testLogger)
+            {
+                $this->testLogger = $testLogger;
+            }
+            
+            public function getLogger($className): MftfLogger
+            {
+                return $this->testLogger;
+            }
+        };
 
         $property = new ReflectionProperty(LoggingUtil::class, 'instance');
         $property->setValue(null, $mockLoggingUtil);
@@ -76,7 +87,7 @@ class TestLoggingUtil extends TestCase
     public function validateMockLogEmpty(): void
     {
         $records = $this->testLogHandler->getRecords();
-        $this->assertTrue(empty($records));
+        Assert::assertTrue(empty($records));
     }
 
     /**
@@ -84,7 +95,7 @@ class TestLoggingUtil extends TestCase
      *
      * @param string $type
      * @param string $message
-     * @param array $context
+     * @param array  $context
      *
      * @return void
      */
@@ -92,9 +103,9 @@ class TestLoggingUtil extends TestCase
     {
         $records = $this->testLogHandler->getRecords();
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
-        $this->assertEquals(strtoupper($type), $record['level_name']);
-        $this->assertEquals($message, $record['message']);
-        $this->assertEquals($context, $record['context']);
+        Assert::assertEquals(strtoupper($type), $record['level_name']);
+        Assert::assertEquals($message, $record['message']);
+        Assert::assertEquals($context, $record['context']);
     }
 
     /**
@@ -102,7 +113,7 @@ class TestLoggingUtil extends TestCase
      *
      * @param string $type
      * @param string $regex
-     * @param array $context
+     * @param array  $context
      *
      * @return void
      */
@@ -110,9 +121,9 @@ class TestLoggingUtil extends TestCase
     {
         $records = $this->testLogHandler->getRecords();
         $record = $records[count($records)-1]; // we assume the latest record is what requires validation
-        $this->assertEquals(strtoupper($type), $record['level_name']);
-        $this->assertMatchesRegularExpression($regex, $record['message']);
-        $this->assertEquals($context, $record['context']);
+        Assert::assertEquals(strtoupper($type), $record['level_name']);
+        Assert::assertMatchesRegularExpression($regex, $record['message']);
+        Assert::assertEquals($context, $record['context']);
     }
 
     /**

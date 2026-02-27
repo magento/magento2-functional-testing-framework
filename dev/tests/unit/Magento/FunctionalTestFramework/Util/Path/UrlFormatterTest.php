@@ -10,6 +10,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util\Path;
 
 use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Util\Path\UrlFormatter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use tests\unit\Util\MagentoTestCase;
 
 class UrlFormatterTest extends MagentoTestCase
@@ -17,13 +18,13 @@ class UrlFormatterTest extends MagentoTestCase
     /**
      * Test url format.
      *
-     * @param string $path
+     * @param string    $path
      * @param bool|null $withTrailingSeparator
-     * @param string $expectedPath
+     * @param string    $expectedPath
      *
      * @return void
-     * @dataProvider formatDataProvider
      */
+    #[DataProvider('formatDataProvider')]
     public function testFormat(string $path, ?bool $withTrailingSeparator, string $expectedPath): void
     {
         if ($withTrailingSeparator === null) {
@@ -36,12 +37,12 @@ class UrlFormatterTest extends MagentoTestCase
     /**
      * Test url format with exception.
      *
-     * @param string $path
+     * @param string    $path
      * @param bool|null $withTrailingSeparator
      *
      * @return void
-     * @dataProvider formatExceptionDataProvider
      */
+    #[DataProvider('formatExceptionDataProvider')]
     public function testFormatWithException(string $path, ?bool $withTrailingSeparator): void
     {
         $this->expectException(TestFrameworkException::class);

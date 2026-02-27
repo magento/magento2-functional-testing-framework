@@ -145,22 +145,20 @@ class PageObjectHandlerTest extends MagentoTestCase
         $mockObjectManagerInstance = $this->createMock(ObjectManager::class);
         $mockObjectManagerInstance
             ->method('get')
-            ->will(
-                $this->returnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $objectManager,
-                        $mockSectionParser
-                    ) {
-                        if ($class === PageParser::class) {
-                            return $mockSectionParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+            ->willReturnCallback(
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $objectManager,
+                    $mockSectionParser
+                ) {
+                    if ($class === PageParser::class) {
+                        return $mockSectionParser;
                     }
-                )
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $property = new ReflectionProperty(ObjectManager::class, 'instance');

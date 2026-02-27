@@ -2,7 +2,7 @@
     "name": "magento/magento2-functional-testing-framework",
     "description": "Magento2 Functional Testing Framework",
     "type": "library",
-    "version": "5.3.0",
+    "version": "6.0.0",
     "license": "AGPL-3.0",
     "keywords": ["magento", "automation", "functional", "testing"],
     "config": {
@@ -44,7 +44,7 @@
         "brainmaestro/composer-git-hooks": "^3.0",
         "php-coveralls/php-coveralls": "^1.0||^2.2",
         "phpmd/phpmd": "^2.8.0",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^12.0",
         "squizlabs/php_codesniffer": "~3.11.0"
     },
     "suggest": {

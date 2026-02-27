@@ -37,9 +37,9 @@ class RunTestFailedCommandTest extends BaseGenerateCommandTest
      * Invoking private method to be able to test it.
      * NOTE: Bad practice don't repeat it.
      *
-     * @param $object
-     * @param $methodName
-     * @param array $parameters
+     * @param  $object
+     * @param  $methodName
+     * @param  array $parameters
      * @return mixed
      * @throws \ReflectionException
      */

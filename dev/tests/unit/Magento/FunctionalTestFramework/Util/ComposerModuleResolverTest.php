@@ -8,6 +8,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use ReflectionClass;
 use Magento\FunctionalTestingFramework\Util\ComposerModuleResolver;
+use PHPUnit\Framework\Attributes\DataProvider;
 use tests\unit\Util\MagentoTestCase;
 
 class ComposerModuleResolverTest extends MagentoTestCase
@@ -59,12 +60,12 @@ class ComposerModuleResolverTest extends MagentoTestCase
     /**
      * Test findComposerJsonFilesAtDepth()
      *
-     * @dataProvider findComposerJsonFilesAtDepthDataProvider
-     * @param string $dir
-     * @param integer $depth
-     * @param array $expected
+     * @param  string  $dir
+     * @param  integer $depth
+     * @param  array   $expected
      * @throws \ReflectionException
      */
+    #[DataProvider('findComposerJsonFilesAtDepthDataProvider')]
     public function testFindComposerJsonFilesAtDepth($dir, $depth, $expected)
     {
         $composer = new ComposerModuleResolver();
@@ -77,11 +78,11 @@ class ComposerModuleResolverTest extends MagentoTestCase
     /**
      * Test findAllComposerJsonFiles()
      *
-     * @dataProvider findAllComposerJsonFilesDataProvider
-     * @param string $dir
-     * @param array $expected
+     * @param  string $dir
+     * @param  array  $expected
      * @throws \ReflectionException
      */
+    #[DataProvider('findAllComposerJsonFilesDataProvider')]
     public function testFindAllComposerJsonFiles($dir, $expected)
     {
         $composer = new ComposerModuleResolver();

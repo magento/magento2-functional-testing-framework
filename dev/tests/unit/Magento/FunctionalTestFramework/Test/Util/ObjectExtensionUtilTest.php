@@ -369,9 +369,11 @@ class ObjectExtensionUtilTest extends TestCase
         $testDataArrayBuilder = new TestDataArrayBuilder();
         $mockParentTest = $testDataArrayBuilder
             ->withName('baseTest')
-            ->withAnnotations([
+            ->withAnnotations(
+                [
                 'skip' => ['nodeName' => 'skip', 'issueId' => [['nodeName' => 'issueId', 'value' => 'someIssue']]]
-            ])
+                ]
+            )
             ->build();
 
         $testDataArrayBuilder->reset();
@@ -426,20 +428,18 @@ class ObjectExtensionUtilTest extends TestCase
         $instance = $this->createMock(ObjectManager::class);
         $instance
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function ($className) use ($mockDataParser, $mockActionGroupParser) {
-                        if ($className === TestDataParser::class) {
-                            return $mockDataParser;
-                        }
-
-                        if ($className === ActionGroupDataParser::class) {
-                            return $mockActionGroupParser;
-                        }
-
-                        return null;
+            ->willReturnCallback(
+                function ($className) use ($mockDataParser, $mockActionGroupParser) {
+                    if ($className === TestDataParser::class) {
+                        return $mockDataParser;
                     }
-                )
+
+                    if ($className === ActionGroupDataParser::class) {
+                        return $mockActionGroupParser;
+                    }
+
+                    return null;
+                }
             );
         // clear object manager value to inject expected instance
         $property = new ReflectionProperty(ObjectManager::class, 'instance');
