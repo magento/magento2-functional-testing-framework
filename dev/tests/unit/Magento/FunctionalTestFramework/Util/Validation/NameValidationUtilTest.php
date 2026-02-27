@@ -63,7 +63,7 @@ class NameValidationUtilTest extends MagentoTestCase
     /**
      * Method which takes the name of the test expecting an invalid char. Runs the validation method against name.
      *
-     * @param string $testName
+     * @param  string $testName
      * @return void
      */
     private function validateBlocklistedTestName($testName)

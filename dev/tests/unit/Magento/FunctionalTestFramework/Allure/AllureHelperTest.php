@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace tests\unit\Magento\FunctionalTestFramework\Allure;
 
 use Magento\FunctionalTestingFramework\Allure\AllureHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Qameta\Allure\Allure;
 use Qameta\Allure\Io\DataSourceFactory;
@@ -27,9 +28,7 @@ class AllureHelperTest extends TestCase
         Allure::reset();
     }
 
-    /**
-     * @dataProvider providerAttachmentProperties
-     */
+    #[DataProvider('providerAttachmentProperties')]
     public function testDoAddAttachmentMethod(
         string $name,
         $type,
@@ -50,9 +49,7 @@ class AllureHelperTest extends TestCase
         self::assertSame('typeOfTheFile', $attachment->getType());
     }
 
-    /**
-     * @dataProvider providerAttachmentProperties
-     */
+    #[DataProvider('providerAttachmentProperties')]
     public function testAddAttachmentToStep(
         string $name,
         ?string $type,
@@ -69,9 +66,7 @@ class AllureHelperTest extends TestCase
         self::assertSame($fileExtension, $attachment->getFileExtension());
     }
 
-    /**
-     * @dataProvider providerAttachmentProperties
-     */
+    #[DataProvider('providerAttachmentProperties')]
     public function testAddAttachmentFileToStep(
         string $name,
         ?string $type,

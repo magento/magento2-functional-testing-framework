@@ -10,6 +10,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 
 use Exception;
 use Magento\FunctionalTestingFramework\Config\MftfApplicationConfig;
+use Magento\FunctionalTestingFramework\DataGenerator\Handlers\DataObjectHandler;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\Filter\FilterList;
 use Magento\FunctionalTestingFramework\ObjectManager;
@@ -61,6 +62,10 @@ class TestGeneratorTest extends MagentoTestCase
     protected function tearDown(): void
     {
         GenerationErrorHandler::getInstance()->reset();
+        
+        // Reset DataObjectHandler to ensure test isolation
+        $dataObjectHandler = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $dataObjectHandler->setValue(null, null);
     }
 
     /**
@@ -71,9 +76,13 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testEntityException(): void
     {
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => '{{someEntity.entity}}'
-        ]);
+            ]
+        );
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
@@ -96,9 +105,13 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testUniqueIdAppendedToInputStringAsPrefix()
     {
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => '{{someEntity.entity}}'
-        ]);
+            ]
+        );
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
@@ -116,9 +129,20 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testInvalidEntity()
     {
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        // Mock DataObjectHandler to return null for non-existent entity
+        $mockDataObjectHandler = $this->createMock(DataObjectHandler::class);
+        $mockDataObjectHandler->method('getObject')->willReturn(null);
+        
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setValue(null, $mockDataObjectHandler);
+
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => '{{someEntity.entity}}'
-        ]);
+            ]
+        );
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
@@ -134,9 +158,13 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testUniqueIdAppendedToInputStringAsSuffix()
     {
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => '{{someEntity.entity}}'
-        ]);
+            ]
+        );
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
@@ -154,9 +182,13 @@ class TestGeneratorTest extends MagentoTestCase
       */
     public function testFailedRegexForUniqueAttribute()
     {
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => '{{someEntity.entity}}'
-        ]);
+            ]
+        );
 
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], [], [], 'filename');
         $testGeneratorObject = TestGenerator::getInstance('', ['sampleTest' => $testObject]);
@@ -175,9 +207,13 @@ class TestGeneratorTest extends MagentoTestCase
     public function testSkippedNoGeneration(): void
     {
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => $actionInput
-        ]);
+            ]
+        );
 
         $annotations = ['skip' => ['issue']];
         $testObject = new TestObject('sampleTest', ['merge123' => $actionObject], $annotations, [], 'filename');
@@ -197,6 +233,11 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testAllowSkipped(): void
     {
+        // Mock DataObjectHandler to prevent initialization issues
+        $mockDataObjectHandler = $this->createMock(DataObjectHandler::class);
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setValue(null, $mockDataObjectHandler);
+
         // Mock allowSkipped for TestGenerator
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
         $mockConfig
@@ -207,13 +248,21 @@ class TestGeneratorTest extends MagentoTestCase
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => $actionInput
-        ]);
+            ]
+        );
         $beforeActionInput = 'beforeInput';
-        $beforeActionObject = new ActionObject('beforeAction', 'comment', [
+        $beforeActionObject = new ActionObject(
+            'beforeAction',
+            'comment',
+            [
             'userInput' => $beforeActionInput
-        ]);
+            ]
+        );
 
         $annotations = ['skip' => ['issue']];
         $beforeHook = new TestHookObject('before', 'sampleTest', ['beforeAction' => $beforeActionObject]);
@@ -241,6 +290,11 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testSeverityFilter(): void
     {
+        // Mock DataObjectHandler to prevent initialization issues
+        $mockDataObjectHandler = $this->createMock(DataObjectHandler::class);
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setValue(null, $mockDataObjectHandler);
+
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
         $fileList = new FilterList(['severity' => ['CRITICAL']]);
         $mockConfig
@@ -251,9 +305,13 @@ class TestGeneratorTest extends MagentoTestCase
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => $actionInput
-        ]);
+            ]
+        );
 
         $annotation1 = ['severity' => ['CRITICAL']];
         $annotation2 = ['severity' => ['MINOR']];
@@ -277,12 +335,10 @@ class TestGeneratorTest extends MagentoTestCase
         $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
         $cestFileCreatorUtil
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function ($filename) use (&$generatedTests) {
-                        $generatedTests[$filename] = true;
-                    }
-                )
+            ->willReturnCallback(
+                function ($filename) use (&$generatedTests) {
+                    $generatedTests[$filename] = true;
+                }
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
@@ -320,9 +376,13 @@ class TestGeneratorTest extends MagentoTestCase
               </actionGroup>
           </actionGroups>';
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
-          'userInput' => $actionInput
-        ]);
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
+            'userInput' => $actionInput
+            ]
+        );
         $annotation1 = ['group' => ['someGroupValue']];
 
         $test1 = new TestObject(
@@ -368,9 +428,13 @@ class TestGeneratorTest extends MagentoTestCase
                 </actionGroup>
             </actionGroups>';
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
-          'userInput' => $actionInput
-        ]);
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
+            'userInput' => $actionInput
+            ]
+        );
         $annotation1 = ['group' => ['someGroupValue']];
 
         $test1 = new TestObject(
@@ -402,6 +466,11 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testIncludeGroupFilter(): void
     {
+        // Mock DataObjectHandler to prevent initialization issues
+        $mockDataObjectHandler = $this->createMock(DataObjectHandler::class);
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setValue(null, $mockDataObjectHandler);
+
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
         $fileList = new FilterList(['includeGroup' => ['someGroupValue']]);
         $mockConfig
@@ -412,9 +481,13 @@ class TestGeneratorTest extends MagentoTestCase
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => $actionInput
-        ]);
+            ]
+        );
 
         $annotation1 = ['group' => ['someGroupValue']];
         $annotation2 = ['group' => ['someOtherGroupValue']];
@@ -438,12 +511,10 @@ class TestGeneratorTest extends MagentoTestCase
         $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
         $cestFileCreatorUtil
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function ($filename) use (&$generatedTests) {
-                        $generatedTests[$filename] = true;
-                    }
-                )
+            ->willReturnCallback(
+                function ($filename) use (&$generatedTests) {
+                    $generatedTests[$filename] = true;
+                }
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');
@@ -465,6 +536,11 @@ class TestGeneratorTest extends MagentoTestCase
      */
     public function testExcludeGroupFilter(): void
     {
+        // Mock DataObjectHandler to prevent initialization issues
+        $mockDataObjectHandler = $this->createMock(DataObjectHandler::class);
+        $property = new ReflectionProperty(DataObjectHandler::class, 'INSTANCE');
+        $property->setValue(null, $mockDataObjectHandler);
+
         $mockConfig = $this->createMock(MftfApplicationConfig::class);
         $fileList = new FilterList(['excludeGroup' => ['someGroupValue']]);
         $mockConfig
@@ -475,9 +551,13 @@ class TestGeneratorTest extends MagentoTestCase
         $property->setValue(null, $mockConfig);
 
         $actionInput = 'fakeInput';
-        $actionObject = new ActionObject('fakeAction', 'comment', [
+        $actionObject = new ActionObject(
+            'fakeAction',
+            'comment',
+            [
             'userInput' => $actionInput
-        ]);
+            ]
+        );
 
         $annotation1 = ['group' => ['someGroupValue']];
         $annotation2 = ['group' => ['someOtherGroupValue']];
@@ -501,12 +581,10 @@ class TestGeneratorTest extends MagentoTestCase
         $cestFileCreatorUtil = $this->createMock(CestFileCreatorUtil::class);
         $cestFileCreatorUtil
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function ($filename) use (&$generatedTests) {
-                        $generatedTests[$filename] = true;
-                    }
-                )
+            ->willReturnCallback(
+                function ($filename) use (&$generatedTests) {
+                    $generatedTests[$filename] = true;
+                }
             );
 
         $property = new ReflectionProperty(CestFileCreatorUtil::class, 'INSTANCE');

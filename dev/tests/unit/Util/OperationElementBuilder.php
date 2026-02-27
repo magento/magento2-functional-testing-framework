@@ -88,7 +88,7 @@ class OperationElementBuilder
     /**
      * Sets a new element type, overwrites any existing.
      *
-     * @param string $elementType
+     * @param  string $elementType
      * @return OperationElementBuilder
      */
     public function withElementType($elementType)
@@ -100,7 +100,7 @@ class OperationElementBuilder
     /**
      * Set a new set of fields or operation elements
      *
-     * @param array $fields
+     * @param  array $fields
      * @return OperationElementBuilder
      */
     public function withFields($fields)
@@ -112,7 +112,7 @@ class OperationElementBuilder
     /**
      * Sets a key for the operation element. See ref to param key for explanation.
      *
-     * @param string $key
+     * @param  string $key
      * @return OperationElementBuilder
      */
     public function withKey($key)
@@ -124,7 +124,7 @@ class OperationElementBuilder
     /**
      * Sets a type for the operation element. See ref to param type for explanation.
      *
-     * @param string $type
+     * @param  string $type
      * @return OperationElementBuilder
      */
     public function withType($type)
@@ -136,7 +136,7 @@ class OperationElementBuilder
     /**
      * Adds a set of new Operation Elements to the nested metadata.
      *
-     * @param array $elementsToAdd
+     * @param  array $elementsToAdd
      * @return OperationElementBuilder
      */
     public function addElements($elementsToAdd)
@@ -151,7 +151,7 @@ class OperationElementBuilder
     /**
      * Adds a new set of fields (value => type) into an object parameter to be converted to Operation Elements.
      *
-     * @param array $fieldsToAdd
+     * @param  array $fieldsToAdd
      * @return OperationElementBuilder
      */
     public function addFields($fieldsToAdd)
@@ -166,7 +166,7 @@ class OperationElementBuilder
     /**
      * Sets an array nested elements to an object property.
      *
-     * @param array $nestedElements
+     * @param  array $nestedElements
      * @return OperationElementBuilder
      */
     public function withNestedElements($nestedElements)
@@ -178,7 +178,7 @@ class OperationElementBuilder
     /**
      * Takes an array of fields (value => type) and returns an array of Operations Elements of type field.
      *
-     * @param array $fields
+     * @param  array $fields
      * @return array
      */
     public static function buildOperationElementFields($fields)

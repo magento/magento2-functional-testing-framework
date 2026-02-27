@@ -17,6 +17,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Magento\FunctionalTestingFramework\Exceptions\TestReferenceException;
 use Magento\FunctionalTestingFramework\ObjectManager;
 use Magento\FunctionalTestingFramework\ObjectManagerFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use tests\unit\Util\TestLoggingUtil;
@@ -405,11 +406,11 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * @param string $type
      * @param string $scope
      * @param string $stepKey
-     * @dataProvider entityDataProvider
      *
      * @return void
      * @throws TestReferenceException
      */
+    #[DataProvider('entityDataProvider')]
     public function testRetrieveEntityValidField(
         string $name,
         string $key,
@@ -457,11 +458,11 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * @param string $type
      * @param string $scope
      * @param string $stepKey
-     * @dataProvider entityDataProvider
      *
      * @return void
      * @throws TestReferenceException|TestFrameworkException
      */
+    #[DataProvider('entityDataProvider')]
     public function testRetrieveEntityInValidField(
         string $name,
         string $key,
@@ -527,7 +528,7 @@ class PersistedObjectHandlerTest extends MagentoTestCase
      * Create mock curl handler.
      *
      * @param string $response
-     * @param array $parserOutput
+     * @param array  $parserOutput
      *
      * @return void
      */
@@ -556,20 +557,18 @@ class PersistedObjectHandlerTest extends MagentoTestCase
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance->expects($this->any())
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function ($class, $arguments = []) use ($curlHandler, $objectManager, $dataProfileSchemaParser) {
-                        if ($class === CurlHandler::class) {
-                            return $curlHandler;
-                        }
-
-                        if ($class === DataProfileSchemaParser::class) {
-                            return $dataProfileSchemaParser;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+            ->willReturnCallback(
+                function ($class, $arguments = []) use ($curlHandler, $objectManager, $dataProfileSchemaParser) {
+                    if ($class === CurlHandler::class) {
+                        return $curlHandler;
                     }
-                )
+
+                    if ($class === DataProfileSchemaParser::class) {
+                        return $dataProfileSchemaParser;
+                    }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');

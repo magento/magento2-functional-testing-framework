@@ -11,6 +11,7 @@ namespace tests\unit\Magento\FunctionalTestFramework\Util;
 use ReflectionProperty;
 use tests\unit\Util\MagentoTestCase;
 use Magento\FunctionalTestingFramework\Util\GenerationErrorHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class GenerationErrorHandlerTest
@@ -235,8 +236,8 @@ class GenerationErrorHandlerTest extends MagentoTestCase
      * @param array  $errors
      *
      * @return void
-     * @dataProvider getAllErrorMessagesDataProvider
      */
+    #[DataProvider('getAllErrorMessagesDataProvider')]
     public function testGetAllErrorMessages(string $expectedErrMessages, array $errors): void
     {
         $handler = GenerationErrorHandler::getInstance();

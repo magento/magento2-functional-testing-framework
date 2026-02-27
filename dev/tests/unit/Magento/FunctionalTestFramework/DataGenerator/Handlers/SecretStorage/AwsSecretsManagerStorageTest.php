@@ -29,7 +29,9 @@ class AwsSecretsManagerStorageTest extends MagentoTestCase
             'Name' => 'mftf/magento/' . $testShortKey,
             'SecretString' => json_encode([$testShortKey => $testValue])
         ];
-        /** @var Result */
+        /**
+ * @var Result
+*/
         $result = new Result($data);
 
         $mockClient = $this->getMockBuilder(SecretsManagerClient::class)
@@ -39,11 +41,15 @@ class AwsSecretsManagerStorageTest extends MagentoTestCase
 
         $mockClient->expects($this->once())
             ->method('__call')
-            ->willReturnCallback(function ($name, $args) use ($result) {
-                return $result;
-            });
+            ->willReturnCallback(
+                function ($name, $args) use ($result) {
+                    return $result;
+                }
+            );
 
-        /** @var SecretsManagerClient */
+        /**
+ * @var SecretsManagerClient
+*/
         $credentialStorage = new AwsSecretsManagerStorage($testRegion, $testProfile);
         $reflection = new ReflectionClass($credentialStorage);
         $reflection_property = $reflection->getProperty('client');

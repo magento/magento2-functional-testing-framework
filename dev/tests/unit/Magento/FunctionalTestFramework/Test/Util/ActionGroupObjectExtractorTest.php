@@ -12,7 +12,9 @@ use tests\unit\Util\TestLoggingUtil;
 
 class ActionGroupObjectExtractorTest extends MagentoTestCase
 {
-    /** @var  ActionGroupObjectExtractor */
+    /**
+     * @var ActionGroupObjectExtractor
+     */
     private $testActionGroupObjectExtractor;
 
     /**
@@ -59,10 +61,10 @@ class ActionGroupObjectExtractorTest extends MagentoTestCase
     /**
      * Utility function to return mock parser output for testing extraction into ActionObjects.
      *
-     * @param string $stepKey
-     * @param string $actionGroup
-     * @param string $filename
-     * @param string $deprecated
+     * @param  string $stepKey
+     * @param  string $actionGroup
+     * @param  string $filename
+     * @param  string $deprecated
      * @return array
      */
     private function createBasicActionObjectArray(

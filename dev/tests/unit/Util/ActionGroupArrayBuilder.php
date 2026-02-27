@@ -58,7 +58,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group name
      *
-     * @param string $name
+     * @param  string $name
      * @return $this
      */
     public function withName($name)
@@ -70,7 +70,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group annotations
      *
-     * @param array $annotations
+     * @param  array $annotations
      * @return $this
      */
     public function withAnnotations($annotations = [])
@@ -82,7 +82,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group arguments
      *
-     * @param array $args
+     * @param  array $args
      * @return $this
      */
     public function withArguments($args = [])
@@ -94,7 +94,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group actions
      *
-     * @param array $actionObjs
+     * @param  array $actionObjs
      * @return $this
      */
     public function withActionObjects($actionObjs = [])
@@ -108,7 +108,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group extended action group name
      *
-     * @param string $extendedActionGroup
+     * @param  string $extendedActionGroup
      * @return $this
      */
     public function withExtendedAction(?string $extendedActionGroup = null)
@@ -120,7 +120,7 @@ class ActionGroupArrayBuilder
     /**
      * Setter for action group filename
      *
-     * @param string $filename
+     * @param  string $filename
      * @return $this
      */
     public function withFilename($filename = '')

@@ -61,35 +61,41 @@ class ActionGroupObjectTest extends MagentoTestCase
      */
     public function testGetStepsWithCustomArgs(): void
     {
-        $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName === 'data2') {
-                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+        $this->setEntityObjectHandlerReturn(
+            function ($entityName) {
+                if ($entityName === 'data2') {
+                    return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+                }
             }
-        });
+        );
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                [
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    [
                     'userInput' => '{{arg1.field2}}','requiredCredentials' => ''
-                ]
-            )])
-        ->withArguments([new ArgumentObject('arg1', null, 'entity')])
-        ->build();
+                    ]
+                )]
+            )
+            ->withArguments([new ArgumentObject('arg1', null, 'entity')])
+            ->build();
 
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
         $this->assertOnMergeKeyAndActionValue($steps, ['userInput' => 'testValue2','requiredCredentials' => '']);
 
         // entity.field as argument
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{arg1}}',
-                'requiredCredentials' => ''
-                ]
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{arg1}}',
+                    'requiredCredentials' => ''
+                    ]
+                )]
+            )
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
@@ -98,13 +104,15 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // String Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{simple}}',
-                'requiredCredentials' => ''
-                ]
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{simple}}',
+                    'requiredCredentials' => ''
+                    ]
+                )]
+            )
             ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
@@ -121,12 +129,14 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithPersistedArgs(): void
     {
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{arg1.field2}}',
-                'requiredCredentials' => '']
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{arg1.field2}}',
+                    'requiredCredentials' => '']
+                )]
+            )
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
@@ -135,13 +145,15 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // Simple Data
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{simple}}',
-                'requiredCredentials' => ''
-                ]
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{simple}}',
+                    'requiredCredentials' => ''
+                    ]
+                )]
+            )
             ->withArguments([new ArgumentObject('simple', null, 'string')])
             ->build();
 
@@ -157,20 +169,24 @@ class ActionGroupObjectTest extends MagentoTestCase
      */
     public function testGetStepsWithNoFieldArg(): void
     {
-        $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName === 'data2') {
-                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+        $this->setEntityObjectHandlerReturn(
+            function ($entityName) {
+                if ($entityName === 'data2') {
+                    return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+                }
             }
-        });
+        );
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{arg1}}',
-                'requiredCredentials' => ''
-                ]
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{arg1}}',
+                    'requiredCredentials' => ''
+                    ]
+                )]
+            )
             ->withArguments([new ArgumentObject('arg1', null, 'entity')])
             ->build();
 
@@ -186,20 +202,24 @@ class ActionGroupObjectTest extends MagentoTestCase
      */
     public function testGetStepsWithNoArgs(): void
     {
-        $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName === 'data1') {
-                return (new EntityDataObjectBuilder())->withDataFields(['field1' => 'testValue'])->build();
+        $this->setEntityObjectHandlerReturn(
+            function ($entityName) {
+                if ($entityName === 'data1') {
+                    return (new EntityDataObjectBuilder())->withDataFields(['field1' => 'testValue'])->build();
+                }
             }
-        });
+        );
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([new ActionObject(
-                'action1',
-                'testAction',
-                ['userInput' => '{{data1.field1}}',
-                 'requiredCredentials' => ''
-                ]
-            )])
+            ->withActionObjects(
+                [new ActionObject(
+                    'action1',
+                    'testAction',
+                    ['userInput' => '{{data1.field1}}',
+                    'requiredCredentials' => ''
+                    ]
+                )]
+            )
             ->build();
 
         $steps = $actionGroupUnderTest->getSteps(null, self::ACTION_GROUP_MERGE_KEY);
@@ -215,11 +235,13 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithParameterizedArg(): void
     {
         // Mock Entity Object Handler
-        $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName === 'data2') {
-                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+        $this->setEntityObjectHandlerReturn(
+            function ($entityName) {
+                if ($entityName === 'data2') {
+                    return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+                }
             }
-        });
+        );
         // mock the section object handler response
         $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
         $section = new SectionObject("testSection", ["element1" => $element]);
@@ -240,10 +262,13 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // XML Data
         $steps = $actionGroupUnderTest->getSteps(['arg1' => 'data2'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, [
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            [
             'selector' => '.selector testValue2',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
 
         // Persisted Data
         $steps = $actionGroupUnderTest->getSteps(
@@ -267,11 +292,13 @@ class ActionGroupObjectTest extends MagentoTestCase
     public function testGetStepsWithParameterizedSimpleArg(): void
     {
         // Mock Entity Object Handler
-        $this->setEntityObjectHandlerReturn(function ($entityName) {
-            if ($entityName === 'data2') {
-                return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+        $this->setEntityObjectHandlerReturn(
+            function ($entityName) {
+                if ($entityName === 'data2') {
+                    return (new EntityDataObjectBuilder())->withDataFields(['field2' => 'testValue2'])->build();
+                }
             }
-        });
+        );
         // mock the section object handler response
         $element = new ElementObject("element1", "textArea", ".selector {{var1}}", null, null, true);
         $section = new SectionObject("testSection", ["element1" => $element]);
@@ -293,10 +320,13 @@ class ActionGroupObjectTest extends MagentoTestCase
 
         // String Literal
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'stringLiteral'], self::ACTION_GROUP_MERGE_KEY);
-        $this->assertOnMergeKeyAndActionValue($steps, [
+        $this->assertOnMergeKeyAndActionValue(
+            $steps,
+            [
             'selector' => '.selector stringLiteral',
             'requiredCredentials' => ''
-        ]);
+            ]
+        );
 
         // String Literal w/ data-like structure
         $steps = $actionGroupUnderTest->getSteps(['simple' => 'data2.field2'], self::ACTION_GROUP_MERGE_KEY);
@@ -383,7 +413,8 @@ class ActionGroupObjectTest extends MagentoTestCase
         $updateStepKey = "updateDataStepKey";
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([
+            ->withActionObjects(
+                [
                 new ActionObject(
                     $updateStepKey,
                     ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[6],
@@ -394,7 +425,8 @@ class ActionGroupObjectTest extends MagentoTestCase
                     ActionGroupObject::STEPKEY_REPLACEMENT_ENABLED_TYPES[7],
                     ['selector' => 'value']
                 )
-            ])
+                ]
+            )
             ->build();
 
         $result = $actionGroupUnderTest->extractStepKeys();
@@ -418,10 +450,12 @@ class ActionGroupObjectTest extends MagentoTestCase
         $fillFieldAction ="fillField";
 
         $actionGroupUnderTest = (new ActionGroupObjectBuilder())
-            ->withActionObjects([
+            ->withActionObjects(
+                [
                 new ActionObject($clickStepKey, $clickAction, ['selector' => 'value']),
                 new ActionObject($fillFieldStepKey, $fillFieldAction, ['selector' => 'value'])
-            ])
+                ]
+            )
             ->build();
 
         $result = $actionGroupUnderTest->extractStepKeys();
@@ -446,7 +480,7 @@ class ActionGroupObjectTest extends MagentoTestCase
         if (is_callable($return)) {
             $instance
                 ->method('getObject')
-                ->will($this->returnCallback($return));
+                ->willReturnCallback($return);
         } else {
             $instance
                 ->method('getObject')
@@ -461,8 +495,8 @@ class ActionGroupObjectTest extends MagentoTestCase
      * Given a set of steps and an expected custom attribute value, this function performs a set of asserts to validate
      * information such as step key and step attribute value.
      *
-     * @param array $actions
-     * @param array $expectedValue
+     * @param array       $actions
+     * @param array       $expectedValue
      * @param string|null $expectedMergeKey
      *
      * @return void

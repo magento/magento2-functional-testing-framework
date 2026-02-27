@@ -358,15 +358,15 @@ class SuiteGeneratorTest extends MagentoTestCase
 
         $mockSuiteGeneratorService
             ->method('clearPreviousSessionConfigEntries')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $mockSuiteGeneratorService
             ->method('appendEntriesToConfig')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $mockSuiteGeneratorService
             ->method('generateRelevantGroupTests')
-            ->will($this->returnCallback($mockVoidReturnCallback));
+            ->willReturnCallback($mockVoidReturnCallback);
 
         $suiteGeneratorServiceProperty = new ReflectionProperty(SuiteGeneratorService::class, 'INSTANCE');
         $suiteGeneratorServiceProperty->setValue(null, $mockSuiteGeneratorService);
@@ -390,30 +390,28 @@ class SuiteGeneratorTest extends MagentoTestCase
         $objectManagerMockInstance = $this->createMock(ObjectManager::class);
         $objectManagerMockInstance
             ->method('create')
-            ->will(
-                $this->returnCallback(
-                    function (
-                        string $class,
-                        array $arguments = []
-                    ) use (
-                        $mockDataParser,
-                        $mockSuiteDataParser,
-                        $mockGroupClass,
-                        $objectManager
-                    ) {
-                        if ($class === TestDataParser::class) {
-                            return $mockDataParser;
-                        }
-                        if ($class === SuiteDataParser::class) {
-                            return $mockSuiteDataParser;
-                        }
-                        if ($class === GroupClassGenerator::class) {
-                            return $mockGroupClass;
-                        }
-
-                        return $objectManager->create($class, $arguments);
+            ->willReturnCallback(
+                function (
+                    string $class,
+                    array $arguments = []
+                ) use (
+                    $mockDataParser,
+                    $mockSuiteDataParser,
+                    $mockGroupClass,
+                    $objectManager
+                ) {
+                    if ($class === TestDataParser::class) {
+                        return $mockDataParser;
                     }
-                )
+                    if ($class === SuiteDataParser::class) {
+                        return $mockSuiteDataParser;
+                    }
+                    if ($class === GroupClassGenerator::class) {
+                        return $mockGroupClass;
+                    }
+
+                    return $objectManager->create($class, $arguments);
+                }
             );
 
         $objectManagerProperty = new ReflectionProperty(ObjectManager::class, 'instance');
