@@ -1,7 +1,7 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
-5.3.0
+6.0.0
 ---------
 ### Enhancement
 * Bumped phpunit/phpunit to 12.0
