@@ -1,6 +1,11 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+3.13.5
+---------
+### Fixes
+* Reverted Symfony packages that required php8.2
+
 3.13.4
 ---------
 ### Fixes
