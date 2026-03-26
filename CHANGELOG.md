@@ -3,8 +3,10 @@ Magento Functional Testing Framework Changelog
 
 3.13.5
 ---------
-### Fixes
+### Enhancement
 * Reverted Symfony packages that required php8.2
+* Provided support for Chrome 143
+* Updated `actions/cache@v2` to latest version
 
 3.13.4
 ---------
