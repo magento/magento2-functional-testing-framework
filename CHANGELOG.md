@@ -4,7 +4,7 @@ Magento Functional Testing Framework Changelog
 4.7.6
 ---------
 ### Enhancements
-* Provided support for Chrome  143
+* Provided support for Chrome 143
 * Bumped `actions/cache@v2` to `actions/cache@v4`
 
 4.7.5
