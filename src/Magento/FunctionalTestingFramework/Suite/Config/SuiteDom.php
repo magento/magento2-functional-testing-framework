@@ -7,6 +7,7 @@
 namespace Magento\FunctionalTestingFramework\Suite\Config;
 
 use Magento\FunctionalTestingFramework\Exceptions\Collector\ExceptionCollector;
+use Magento\FunctionalTestingFramework\Util\Validation\DuplicateNodeValidationUtil;
 use Magento\FunctionalTestingFramework\Util\Validation\SingleNodePerFileValidationUtil;
 
 /**
@@ -16,6 +17,14 @@ use Magento\FunctionalTestingFramework\Util\Validation\SingleNodePerFileValidati
 class SuiteDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
 {
     const SUITE_META_FILENAME_ATTRIBUTE = "filename";
+    const SUITE_META_NAME_ATTRIBUTE = "name";
+
+    /**
+     * Duplicate stepKey validation for suite hook actions
+     *
+     * @var DuplicateNodeValidationUtil
+     */
+    private $actionsValidationUtil;
 
     /** SingleNodePerFileValidationUtil
      *
@@ -42,6 +51,7 @@ class SuiteDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
         $schemaFile = null,
         $errorFormat = self::ERROR_FORMAT_DEFAULT
     ) {
+        $this->actionsValidationUtil = new DuplicateNodeValidationUtil('stepKey', $exceptionCollector);
         $this->singleNodePerFileValidationUtil = new SingleNodePerFileValidationUtil($exceptionCollector);
         parent::__construct(
             $xml,
@@ -76,6 +86,24 @@ class SuiteDom extends \Magento\FunctionalTestingFramework\Config\MftfDom
                 /** @var \DOMElement $suiteNode */
                 $suiteNode = $dom->getElementsByTagName('suite')[0];
                 $suiteNode->setAttribute(self::SUITE_META_FILENAME_ATTRIBUTE, $filename);
+                $suiteName = $suiteNode->getAttribute(self::SUITE_META_NAME_ATTRIBUTE);
+                $beforeNode = $suiteNode->getElementsByTagName('before')->item(0);
+                $afterNode = $suiteNode->getElementsByTagName('after')->item(0);
+
+                if ($beforeNode instanceof \DOMElement) {
+                    $this->actionsValidationUtil->validateChildUniqueness(
+                        $beforeNode,
+                        $filename,
+                        $suiteName . '/before'
+                    );
+                }
+                if ($afterNode instanceof \DOMElement) {
+                    $this->actionsValidationUtil->validateChildUniqueness(
+                        $afterNode,
+                        $filename,
+                        $suiteName . '/after'
+                    );
+                }
             }
         }
 
