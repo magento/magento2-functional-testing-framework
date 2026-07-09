@@ -4,6 +4,12 @@ Magento Functional Testing Framework Changelog
 4.3.12
 ---------
 
+### Enhancement
+* Provided support for chrome 143
+
+4.3.12
+---------
+
 ### Fixes
 * Allowed additional actions to read from credentials file to fix page builder failures.
 
