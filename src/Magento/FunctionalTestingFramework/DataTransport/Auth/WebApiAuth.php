@@ -59,6 +59,11 @@ class WebApiAuth
     public static function getAdminToken(?string $username = null, ?string $password = null)
     {
         $login = $username ?? getenv('MAGENTO_ADMIN_USERNAME');
+
+        if (self::hasExistingToken($login)) {
+            return self::$adminAuthTokens[$login];
+        }
+
         try {
             $encryptedSecret = CredentialStore::getInstance()->getSecret('magento/MAGENTO_ADMIN_PASSWORD');
             $secret = CredentialStore::getInstance()->decryptSecretValue($encryptedSecret);
@@ -76,10 +81,6 @@ class WebApiAuth
                     'MAGENTO_ADMIN_PASSWORD' => $secret,
                 ];
             throw new FastFailException($message, $context);
-        }
-
-        if (self::hasExistingToken($login)) {
-            return self::$adminAuthTokens[$login];
         }
 
         try {
