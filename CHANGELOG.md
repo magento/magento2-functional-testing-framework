@@ -1,5 +1,10 @@
 Magento Functional Testing Framework Changelog
 ================================================
+4.3.14
+---------
+
+### Fixes
+* Updated composer to use spomky-labs/otphp package ^11.4 version
 
 4.3.12
 ---------
