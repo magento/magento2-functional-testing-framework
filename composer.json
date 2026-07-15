@@ -23,7 +23,7 @@
         "codeception/module-asserts": "^3.0",
         "codeception/module-sequence": "^3.0",
         "codeception/module-webdriver": "^3.0",
-        "composer/composer": "^1.9 || ^2.0, !=2.2.16",
+        "composer/composer": "^2.2.26",
         "csharpru/vault-php": "^4.2.1",
         "doctrine/annotations": "^1.13",
         "guzzlehttp/guzzle": "^7.3.0",
