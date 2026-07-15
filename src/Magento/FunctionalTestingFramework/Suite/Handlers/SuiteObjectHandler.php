@@ -129,10 +129,36 @@ class SuiteObjectHandler implements ObjectHandlerInterface
         try {
             $suiteDataParser = ObjectManagerFactory::getObjectManager()->create(SuiteDataParser::class);
         } catch (\Exception $e) {
-            throw new FastFailException("Suite Data Parser Error: " . $e->getMessage());
+            throw new FastFailException("Suite Data Parser Error: " . $this->redactSecrets($e->getMessage()));
         }
 
         $suiteObjectExtractor = new SuiteObjectExtractor();
         $this->suiteObjects = $suiteObjectExtractor->parseSuiteDataIntoObjects($suiteDataParser->readSuiteData());
+    }
+
+    /**
+     * Redacts credentials (e.g. GitHub OAuth tokens) that third party libraries such as Composer
+     * may interpolate into their exception messages, preventing them from leaking into logs.
+     *
+     * @param string $message
+     * @return string
+     */
+    private function redactSecrets($message)
+    {
+        // Composer echoes the raw token in "contains invalid characters: "<token>"" messages.
+        $message = preg_replace(
+            '/(contains invalid characters:\s*")[^"]*(")/i',
+            '${1}[REDACTED]${2}',
+            $message
+        );
+
+        // Strip any GitHub token that may appear elsewhere in the message as a safety net.
+        $message = preg_replace(
+            ['/gh[oprsu]_[A-Za-z0-9_.\-]+/', '/github_pat_[A-Za-z0-9_]+/'],
+            '[REDACTED]',
+            $message
+        );
+
+        return $message;
     }
 }
