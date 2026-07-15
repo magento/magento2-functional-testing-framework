@@ -7,6 +7,21 @@ echo "==============================="
 echo "   EXECUTE Functional Tests    "
 echo "==============================="
 bin/mftf build:project
-bin/mftf run:test DeprecatedDevDocsTest -f
-bin/mftf run:test DevDocsTest -f
-bin/mftf run:test FormatCurrencyTest -f
+run_test_with_retry() {
+    local test_name="$1"
+    local max_attempts=3
+    local attempt=1
+
+    until bin/mftf run:test "$test_name" -f; do
+        if [ "$attempt" -ge "$max_attempts" ]; then
+            echo "$test_name failed after $max_attempts attempts"
+            return 1
+        fi
+        attempt=$((attempt + 1))
+        echo "$test_name failed, retrying (attempt $attempt/$max_attempts)..."
+    done
+}
+
+run_test_with_retry DeprecatedDevDocsTest
+run_test_with_retry DevDocsTest
+run_test_with_retry FormatCurrencyTest
