@@ -1,6 +1,33 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+7.0.0
+---------
+### Enhancements
+* Bumped allure-framework/allure-codeception to 2.5.0
+* Bumped allure-framework/allure-phpunit to 3.3.0
+* Bumped aws/aws-sdk-php to 3.391.0
+* Bumped codeception/codeception to 5.3.5
+* Bumped codeception/module-asserts to 3.3.0
+* Bumped codeception/module-webdriver to 4.0.5
+* Bumped composer/composer to 2.10.2
+* Bumped composer/spdx-licenses to 1.6.0
+* Bumped guzzlehttp/guzzle to 7.15.3
+* Bumped monolog/monolog to 3.10.0
+* Bumped mustache/mustache to 3.2.0
+* Bumped nikic/php-parser to 5.8.0
+* Bumped php-webdriver/webdriver to 1.16.0
+* Bumped spomky-labs/otphp to 11.5.0
+* Bumped symfony/console to 7.4.16
+* Bumped symfony/dotenv to 7.4.16
+* Bumped symfony/finder to 7.4.16
+* Bumped symfony/http-foundation to 7.4.16
+* Bumped symfony/mime to 7.4.16
+* Bumped symfony/process to 7.4.16
+* Bumped squizlabs/php_codesniffer to 3.13.6
+* Bumped php-coveralls/php-coveralls to 2.9.1
+* Bumped phpunit/phpunit to 12.5.33
+
 6.0.1
 ---------
 ### Fixes
