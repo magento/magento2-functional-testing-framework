@@ -18,15 +18,10 @@ Magento Functional Testing Framework Changelog
 * Bumped nikic/php-parser to 5.8.0
 * Bumped php-webdriver/webdriver to 1.16.0
 * Bumped spomky-labs/otphp to 11.5.0
-* Bumped symfony/console to 7.4.16
-* Bumped symfony/dotenv to 7.4.16
-* Bumped symfony/finder to 7.4.16
-* Bumped symfony/http-foundation to 7.4.16
-* Bumped symfony/mime to 7.4.16
-* Bumped symfony/process to 7.4.16
 * Bumped squizlabs/php_codesniffer to 3.13.6
 * Bumped php-coveralls/php-coveralls to 2.9.1
 * Bumped phpunit/phpunit to 12.5.33
+* Bumped symfony packages to 7.4.16
 
 6.0.1
 ---------
