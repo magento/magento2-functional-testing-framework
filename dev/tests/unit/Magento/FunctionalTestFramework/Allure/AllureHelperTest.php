@@ -83,6 +83,37 @@ class AllureHelperTest extends TestCase
     }
 
     /**
+     * A value that can't be serialize()'d (e.g. one containing a Closure) must not abort the test
+     * run: addAttachmentToCurrentStep falls back to a descriptive placeholder instead.
+     */
+    public function testAddAttachmentToCurrentStepWithUnserializableDataDoesNotThrow(): void
+    {
+        $attachment = new AttachmentResult('a');
+        Allure::setLifecycleBuilder(
+            $this->createLifecycleBuilder($this->createResultFactoryWithAttachment($attachment)),
+        );
+
+        AllureHelper::addAttachmentToCurrentStep(['closure' => fn () => null], 'unserializableException');
+
+        self::assertSame('unserializableException', $attachment->getName());
+    }
+
+    /**
+     * Same guard on the addAttachmentToLastStep path.
+     */
+    public function testAddAttachmentToLastStepWithUnserializableDataDoesNotThrow(): void
+    {
+        $attachment = new AttachmentResult('a');
+        Allure::setLifecycleBuilder(
+            $this->createLifecycleBuilder($this->createResultFactoryWithAttachment($attachment)),
+        );
+
+        AllureHelper::addAttachmentToLastStep(['closure' => fn () => null], 'unserializableException');
+
+        self::assertSame('unserializableException', $attachment->getName());
+    }
+
+    /**
      * @return iterable<string, array{string, string|null, string|null}>
      */
     public static function providerAttachmentProperties(): iterable

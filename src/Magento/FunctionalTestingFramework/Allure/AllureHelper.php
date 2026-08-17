@@ -24,11 +24,7 @@ class AllureHelper
     public static function addAttachmentToCurrentStep($data, $caption): void
     {
         if (!is_string($data)) {
-            try {
-                $data = serialize($data);
-            } catch (\Exception $exception) {
-                throw  new \Exception($data->getMessage());
-            }
+            $data = self::serializeAttachmentData($data);
         }
         if (@file_exists($data) && is_file($data)) {
             Allure::attachmentFile($caption, $data);
@@ -49,12 +45,33 @@ class AllureHelper
     public static function addAttachmentToLastStep($data, $caption): void
     {
         if (!is_string($data)) {
-            $data = serialize($data);
+            $data = self::serializeAttachmentData($data);
         }
         if (@file_exists($data) && is_file($data)) {
             Allure::attachmentFile($caption, $data);
         } else {
             Allure::attachment($caption, $data);
+        }
+    }
+
+    /**
+     * Serializes attachment data for the Allure report, falling back to a descriptive placeholder
+     * instead of letting an unserializable value (e.g. one containing a Closure) abort the whole
+     * test run: a failure to attach a debugging artifact must not be fatal to the test suite.
+     *
+     * @param mixed $data
+     * @return string
+     */
+    private static function serializeAttachmentData($data): string
+    {
+        try {
+            return serialize($data);
+        } catch (\Exception $exception) {
+            return sprintf(
+                'Unable to serialize attachment data of type "%s": %s',
+                is_object($data) ? get_class($data) : gettype($data),
+                $exception->getMessage()
+            );
         }
     }
 
