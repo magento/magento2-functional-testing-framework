@@ -403,7 +403,7 @@ class MagentoWebDriver extends WebDriver
         $timeout = $timeout ?? $this->_getConfig()['pageload_timeout'];
 
         try {
-            $this->waitForJS('return !!window.jQuery && window.jQuery.active == 0;', $timeout);
+            $this->waitForJS('return (typeof window.jQuery === "undefined") || window.jQuery.active == 0;', $timeout);
         } catch (\Exception $exceptione) {
             $this->debug("js never executed, performing {$timeout} second wait.");
             $this->wait($timeout);
