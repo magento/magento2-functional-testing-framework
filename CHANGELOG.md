@@ -1,6 +1,12 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+6.0.1
+---------
+### Enhancement
+* Fixed token visibility issue on git pr
+* Fixed git actions pinged to master
+
 6.0.0
 ---------
 ### Enhancement
