@@ -47,7 +47,38 @@ abstract class AbstractComposer
      */
     public function __construct($composerFile)
     {
-        $this->composer = \Composer\Factory::create(new BufferIO(), $composerFile);
+        try {
+            $this->composer = \Composer\Factory::create(new BufferIO(), $composerFile);
+        } catch (\Exception $e) {
+            // Composer may interpolate raw credentials (e.g. a malformed GitHub token) into its
+            // exception messages; never let those reach logs/CI output unredacted.
+            throw new \UnexpectedValueException(self::redactSecrets($e->getMessage()));
+        }
+    }
+
+    /**
+     * Redacts credentials that Composer may interpolate into its exception messages.
+     *
+     * @param string $message
+     * @return string
+     */
+    private static function redactSecrets($message)
+    {
+        $knownSecrets = array_filter([getenv('GITHUB_TOKEN'), getenv('COMPOSER_AUTH')]);
+        foreach ($knownSecrets as $secret) {
+            if (is_string($secret) && strlen($secret) > 8) {
+                $message = str_replace($secret, '[REDACTED]', $message);
+            }
+        }
+
+        return preg_replace(
+            [
+                '/gh[oprsu]_[A-Za-z0-9_.\-]+/',
+                '/github_pat_[A-Za-z0-9_]+/',
+            ],
+            '[REDACTED]',
+            $message
+        );
     }
 
     /**
