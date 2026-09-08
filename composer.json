@@ -25,7 +25,7 @@
         "guzzlehttp/guzzle": "^7.3.0",
         "laminas/laminas-diactoros": "^3.0",
         "monolog/monolog": "^2.3||^3.0",
-        "mustache/mustache": "~2.5 || ^3.0",
+        "mustache/mustache": "~2.5||^3.0",
         "nikic/php-parser": "^4.4||^5.0",
         "php": ">=8.2",
         "php-webdriver/webdriver": "^1.14.0",
