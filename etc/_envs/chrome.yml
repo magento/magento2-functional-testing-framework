@@ -7,5 +7,5 @@ modules:
         \Magento\FunctionalTestingFramework\Module\MagentoWebDriver:
             browser: 'chrome'
             capabilities:
-                chromeOptions:
+                goog:chromeOptions:
                     args: ["--start-maximized", "--disable-extensions", "--enable-automation"]

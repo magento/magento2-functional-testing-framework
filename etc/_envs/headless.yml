@@ -8,6 +8,6 @@ modules:
             browser: 'chrome'
             window_size: false
             capabilities:
-                chromeOptions:
+                goog:chromeOptions:
                     args: ["--headless", "--disable-gpu", "--disable-extensions"]
                     binary: "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
