@@ -20,7 +20,7 @@ class FinalImplementation extends AbstractRule implements ClassAware, MethodAwar
     /**
      * @inheritdoc
      */
-    public function apply(AbstractNode $node)
+    public function apply(AbstractNode $node): void
     {
         if ($node->isFinal()) {
             $this->addViolation($node, [$node->getType(), $node->getFullQualifiedName()]);
