@@ -15,21 +15,12 @@
         </xs:choice>
     </xs:complexType>
     <xs:complexType name="actionsRefType">
-        <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:group ref="actionTypeTags"/>
-                <xs:element ref="arguments"/>
-                <xs:element ref="annotations"/>
-            </xs:choice>
-            <xs:sequence minOccurs="0">
-                <xs:group ref="returnTags"/>
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:group ref="actionTypeTags"/>
-                    <xs:element ref="arguments"/>
-                    <xs:element ref="annotations"/>
-                </xs:choice>
-            </xs:sequence>
-        </xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="actionTypeTags"/>
+            <xs:element ref="arguments"/>
+            <xs:element ref="annotations"/>
+            <xs:element type="returnType" name="return"/>
+        </xs:choice>
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="filename"/>
         <xs:attribute type="xs:string" name="insertBefore"/>
