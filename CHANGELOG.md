@@ -1,6 +1,13 @@
 Magento Functional Testing Framework Changelog
 ================================================
 
+5.0.8
+---------
+### Enhancements
+* Added support for Selenium 4 and Chrome 157
+### Fixes
+* Updated composer dependencies to fix security vulnerabilities
+
 5.0.7
 ---------
 ### Fixes
