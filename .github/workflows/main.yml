@@ -121,7 +121,7 @@ jobs:
         php-versions: ['8.4', '8.5']
     services:
       chrome:
-        image: selenium/standalone-chrome:3.141.59-zirconium
+        image: selenium/standalone-chrome:4.51.0-20261010
         ports:
           - 4444:4444
     steps:
