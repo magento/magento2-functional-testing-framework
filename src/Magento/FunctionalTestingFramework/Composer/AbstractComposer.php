@@ -42,10 +42,16 @@ abstract class AbstractComposer
     protected $composer;
 
     /**
+     * @var string
+     */
+    private $composerFile;
+
+    /**
      * @param string $composerFile
      */
     public function __construct($composerFile)
     {
+        $this->composerFile = $composerFile;
         $this->composer = \Composer\Factory::create(new BufferIO(), $composerFile);
     }
 
@@ -57,12 +63,14 @@ abstract class AbstractComposer
     protected function getComposer()
     {
         try {
-            $this->composer = \Composer\Factory::create(new BufferIO(), $composerFile);
+            $this->composer = \Composer\Factory::create(new BufferIO(), $this->composerFile);
         } catch (\Exception $e) {
             // Composer may interpolate raw credentials (e.g. a malformed GitHub token) into its
             // exception messages; never let those reach logs/CI output unredacted.
             throw new \UnexpectedValueException(self::redactSecrets($e->getMessage()));
         }
+
+        return $this->composer;
     }
 
     /**
