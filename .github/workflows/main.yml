@@ -129,7 +129,7 @@ jobs:
     services:
       chrome:
         # Selenium 4 standalone; /wd/hub remains valid for php-webdriver. --shm-size avoids Chrome crashes in CI.
-        image: selenium/standalone-chrome:4.27.0
+        image: selenium/standalone-chrome:4.51.0-20261010
         ports:
           - 4444:4444
         options: --shm-size=2gb
