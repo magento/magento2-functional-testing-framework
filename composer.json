@@ -47,9 +47,9 @@
         "codacy/coverage": "^1.4",
         "php-coveralls/php-coveralls": "^1.0||^2.2",
         "phpmd/phpmd": "^2.8.0",
-        "phpunit/phpunit": "<=9.5.20",
+        "phpunit/phpunit": "^9.5.20",
         "sebastian/phpcpd": "~6.0.0",
-        "squizlabs/php_codesniffer": "~3.6.0"
+        "squizlabs/php_codesniffer": "^3.6.0"
     },
     "suggest": {
         "hoa/console": "Enables <pause /> action and interactive console functionality"

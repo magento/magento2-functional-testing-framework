@@ -3,13 +3,10 @@ Magento Functional Testing Framework Changelog
 4.3.15
 ---------
 
-### Enhancement
-* Bumped CI Selenium Docker image to 4.51.0
-* Updated Chrome capability configuration to use the W3C `goog:chromeOptions` key
+### Enhancements
+* Added support for Selenium 4 and Chrome 157
 ### Fixes
-* Fixed `SELENIUM_CLOSE_ALL_SESSIONS` example `Group` classes crashing on Selenium 4,
-  which removed the legacy `GET /sessions` command used by `RemoteWebDriver::getAllSessions()`;
-  active sessions are now discovered via the Grid `/status` endpoint when the legacy call is unavailable
+* Updated composer dependencies to fix security vulnerabilities
 
 4.3.14
 ---------
