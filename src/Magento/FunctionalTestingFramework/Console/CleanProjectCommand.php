@@ -87,7 +87,7 @@ class CleanProjectCommand extends Command
                 $output->writeln($file->getRealPath());
             }
 
-            $fileSystem->remove($file);
+            $fileSystem->remove($file->getPathname());
         }
 
         // delete files specified for removal
