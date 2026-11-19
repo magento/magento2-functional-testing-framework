@@ -22,7 +22,7 @@
                 <xs:element ref="annotations"/>
             </xs:choice>
             <xs:sequence minOccurs="0">
-                <xs:group ref="returnTags"/>
+                <xs:element type="returnType" name="return"/>
                 <xs:choice minOccurs="0" maxOccurs="unbounded">
                     <xs:group ref="actionTypeTags"/>
                     <xs:element ref="arguments"/>
