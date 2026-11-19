@@ -170,7 +170,7 @@ class RunTestCommand extends BaseGenerateCommand
         if ($this->pauseEnabled()) {
             $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL;
         } else {
-            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') . ' run functional ';
+            $codeceptionCommand = self::getCodeceptCommand() . ' run functional ';
         }
 
         $testsDirectory = FilePathFormatter::format(TESTS_MODULE_PATH) .
@@ -221,7 +221,7 @@ class RunTestCommand extends BaseGenerateCommand
         if ($this->pauseEnabled()) {
             $codeceptionCommand = self::CODECEPT_RUN_FUNCTIONAL . '--verbose --steps --debug '.$xml;
         } else {
-            $codeceptionCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept')
+            $codeceptionCommand = self::getCodeceptCommand()
                 . ' run functional --verbose --steps '.$xml;
         }
 
