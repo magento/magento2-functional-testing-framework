@@ -280,6 +280,19 @@ class BaseGenerateCommand extends Command
     }
 
     /**
+     * Returns the shell command that runs vendor/bin/codecept with the PHP binary running MFTF
+     *
+     * Running the script directly would use its "#!/usr/bin/env php" shebang, i.e. whichever php is first on PATH.
+     *
+     * @return string
+     */
+    public static function getCodeceptCommand(): string
+    {
+        return escapeshellarg(PHP_BINARY) . ' '
+            . escapeshellarg((string)realpath(PROJECT_ROOT . '/vendor/bin/codecept'));
+    }
+
+    /**
      * Runs the bin/mftf codecept:run command and returns exit code
      *
      * @param string          $commandStr

@@ -92,7 +92,7 @@ class BuildProjectCommand extends Command
         $setupEnvCommand->run($commandInput, $output);
 
         // TODO can we just import the codecept symfony command?
-        $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
+        $codeceptBuildCommand = BaseGenerateCommand::getCodeceptCommand() .  ' build';
         $process = Process::fromShellCommandline($codeceptBuildCommand);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);

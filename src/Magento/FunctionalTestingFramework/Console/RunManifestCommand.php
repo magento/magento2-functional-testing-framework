@@ -128,7 +128,7 @@ class RunManifestCommand extends Command
             $command = $this->getApplication()->find(BaseGenerateCommand::CODECEPT_RUN);
             $subReturnCode = $command->run($input, $output);
         } else {
-            $codeceptionCommand = realpath(PROJECT_ROOT . "/vendor/bin/codecept")
+            $codeceptionCommand = BaseGenerateCommand::getCodeceptCommand()
                 . " run functional --verbose --steps " . $manifestLine;
 
             // run the codecept command in a sub process
