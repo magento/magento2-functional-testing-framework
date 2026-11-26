@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34c293938655bb1ebfa7d867491813e6",
+    "content-hash": "57f54f4288bc8aeef3a5916bea72b6c8",
     "packages": [
         {
             "name": "allure-framework/allure-codeception",
@@ -5700,7 +5700,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-16T14:15:10+00:00"
+            "time": "2026-09-16T14:15:10+00:00",
+            "published-time": "2026-11-04T11:25:34+00:00"
         },
         {
             "name": "symfony/dotenv",
@@ -6077,16 +6078,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v5.4.56",
+            "version": "v5.4.57",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "6c66f8dc46282c3cae6a851aa051927800c4bf7b"
+                "reference": "fc674f5de38b72e6fc43ebcb965f53d045d398e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/6c66f8dc46282c3cae6a851aa051927800c4bf7b",
-                "reference": "6c66f8dc46282c3cae6a851aa051927800c4bf7b",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/fc674f5de38b72e6fc43ebcb965f53d045d398e0",
+                "reference": "fc674f5de38b72e6fc43ebcb965f53d045d398e0",
                 "shasum": ""
             },
             "require": {
@@ -6133,7 +6134,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v5.4.56"
+                "source": "https://github.com/symfony/http-foundation/tree/v5.4.57"
             },
             "funding": [
                 {
@@ -6153,7 +6154,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T07:37:33+00:00"
+            "time": "2026-11-24T17:11:07+00:00",
+            "published-time": "2026-11-25T09:16:46+00:00"
         },
         {
             "name": "symfony/mime",
@@ -6664,7 +6666,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-28T09:35:49+00:00"
+            "time": "2026-10-28T09:35:49+00:00",
+            "published-time": "2026-10-28T10:07:45+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -6828,7 +6831,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-25T15:50:05+00:00"
+            "time": "2026-09-25T15:50:05+00:00",
+            "published-time": "2026-09-30T10:23:35+00:00"
         },
         {
             "name": "symfony/polyfill-php81",
@@ -8381,5 +8385,5 @@
         "ext-openssl": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
