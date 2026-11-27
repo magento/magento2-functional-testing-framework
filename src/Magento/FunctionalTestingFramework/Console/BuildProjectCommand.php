@@ -16,7 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
+use Symfony\Component\Process\PhpProcess;
 use Magento\FunctionalTestingFramework\Util\Env\EnvProcessor;
 use Symfony\Component\Yaml\Yaml;
 use Magento\FunctionalTestingFramework\Util\Path\FilePathFormatter;
@@ -93,7 +93,7 @@ class BuildProjectCommand extends Command
 
         // TODO can we just import the codecept symfony command?
         $codeceptBuildCommand = realpath(PROJECT_ROOT . '/vendor/bin/codecept') .  ' build';
-        $process = Process::fromShellCommandline($codeceptBuildCommand);
+        $process = new PhpProcess($codeceptBuildCommand);
         $process->setWorkingDirectory(TESTS_BP);
         $process->setIdleTimeout(600);
         $process->setTimeout(0);
