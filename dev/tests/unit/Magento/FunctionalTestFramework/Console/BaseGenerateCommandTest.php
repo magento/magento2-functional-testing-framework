@@ -266,4 +266,17 @@ class BaseGenerateCommandTest extends TestCase
 
         return $method->invokeArgs($command, [$groupArray]);
     }
+
+    /**
+     * The codecept sub process is started with the PHP binary that runs MFTF.
+     *
+     * @return void
+     */
+    public function testGetCodeceptCommandUsesRuntimePhpBinary(): void
+    {
+        $this->assertSame(
+            escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg(realpath(PROJECT_ROOT . '/vendor/bin/codecept')),
+            BaseGenerateCommand::getCodeceptCommand()
+        );
+    }
 }
