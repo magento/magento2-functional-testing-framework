@@ -13,6 +13,7 @@ use Magento\FunctionalTestingFramework\Exceptions\TestFrameworkException;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Module;
 use Facebook\WebDriver\Chrome\ChromeOptions;
+use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * Group class is Codeception Extension which is allowed to handle to all internal events.
@@ -179,7 +180,7 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                 $webDriverConfig['port'],
                 $webDriverConfig['path']
             );
-            $availableSessions = RemoteWebDriver::getAllSessions($wdHost);
+            $availableSessions = $this->getActiveSessions($wdHost);
             foreach ($availableSessions as $session) {
                 try {
                     $chromeOptions = new ChromeOptions();
@@ -192,6 +193,50 @@ class functionalSuiteHooks extends \Codeception\GroupObject
                     // Session already closed so nothing to do
                 }
             }
+        }
+    }
+
+    /**
+     * Retrieve all active WebDriver sessions from the Selenium server.
+     *
+     * Falls back to parsing Selenium 4 Grid's "/status" endpoint when the legacy
+     * JSON Wire "GET /sessions" command (removed in Selenium 4) is unsupported.
+     *
+     * @param string $wdHost
+     * @return array
+     */
+    private function getActiveSessions(string $wdHost): array
+    {
+        try {
+            return RemoteWebDriver::getAllSessions($wdHost);
+        } catch (\Exception $exception) {
+            return $this->getActiveSessionsFromGridStatus($wdHost);
+        }
+    }
+
+    /**
+     * Parse Selenium 4 Grid's "/status" endpoint for active session ids.
+     *
+     * @param string $wdHost
+     * @return array
+     */
+    private function getActiveSessionsFromGridStatus(string $wdHost): array
+    {
+        try {
+            $client = new GuzzleClient(['timeout' => 15, 'http_errors' => false]);
+            $status = json_decode((string) $client->get($wdHost . '/status')->getBody(), true);
+            $sessions = [];
+            foreach ($status['value']['nodes'] ?? [] as $node) {
+                foreach ($node['slots'] ?? [] as $slot) {
+                    if (!empty($slot['session']['sessionId'])) {
+                        $sessions[] = ['id' => $slot['session']['sessionId']];
+                    }
+                }
+            }
+            return $sessions;
+        } catch (\Exception $exception) {
+            print("Failed trying to retrieve active WebDriver sessions. Exception message: " . $exception->getMessage() . " Test execution will continue." . PHP_EOL);
+            return [];
         }
     }
 
